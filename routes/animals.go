@@ -6,8 +6,17 @@ import (
 )
 
 func AddAnimal(c *gin.Context) {
-	controllers.AddAnimal(c);
+	controllers.AddAnimal(c)
 }
 
+func DeleteAnimal(c *gin.Context) {
+	controllers.DeleteAnimal(c)
+}
 
+func GetAnimalById(c *gin.Context) {
+	controllers.GetAnimalById(c)
+}
 
+func UpdateAnimal(c *gin.Context) {
+	controllers.UpdateAnimal(c)
+}

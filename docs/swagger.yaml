@@ -22,6 +22,12 @@ definitions:
     properties:
       name:
         type: string
+      userID:
+        type: integer
+      race:
+        type: string
+      animaltype:
+        type: string
     type: object
 info:
   contact: {}
@@ -292,4 +298,96 @@ paths:
       security:
       - BearerAuth: []
       summary: Create Animal
+      /animal/{id}:
+        delete:
+      consumes:
+      - application/json
+      description: Exclui um animal
+      operationId: delete-animal
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Animal ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Animal'
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Excluid um Animal
+      get:
+      consumes:
+      - application/json
+      description: Exibe os detalhes de um animal pelo ID
+      operationId: get-animal-by-int
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Animal ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Animal'
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Recupera um Animal pelo id
+      put:
+      consumes:
+      - application/json
+      description: Atualiza um Animal sobre a utilização da aplicação
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Udpdate Animal
+        in: body
+        name: animal
+        required: true
+        schema:
+          $ref: '#/definitions/model.Animal'
+      - description: Animal ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Animal'
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Atualiza um Animal
 swagger: "2.0"

@@ -9,7 +9,7 @@ type Users struct {
 	Email	   string `json:"email"`
 	Name	   string `json:"name"`
 	UserType   string `json:"userType"`
-	Contact	   int `json:"contact"`
+	Contact	   string `json:"contact"`
 	NumberOfAnsweredQuestions string `json:"numberOfAnsweredQuestions"`
 	Animals []Animal `json:"animals"` //lista de animais do utlizador 
 	Answers []Answers `json:"answers"`//lista de respostas do utilizador

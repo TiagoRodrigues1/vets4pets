@@ -436,6 +436,148 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/animal/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exclui um animal",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exclui um animal pelo ID",
+                "operationId": "delete-animal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Animal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Animal"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe os detalhes do Animal de dado ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera um Animal pelo id",
+                "operationId": "get-animal-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Animal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Animal"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Atualiza um animal sobre a utilização da aplicação",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Atualiza um Animal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Udpdate Animal",
+                        "name": "animal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Animal"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Animal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Animal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -473,6 +615,15 @@ var doc = `{
             "type": "object",
             "properties": {
                 "name": {
+                    "type": "string"
+                },
+                "userID" : {
+                    "type": "integer"
+                },
+                "race": {
+                    "type": "string"
+                },
+                "animaltype": {
                     "type": "string"
                 }
             }
