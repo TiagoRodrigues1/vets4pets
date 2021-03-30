@@ -14,6 +14,6 @@ type Users struct {
 	Animals []Animal `json:"animals"` //lista de animais do utlizador 
 	Answers []Answer `json:"answers"`//lista de respostas do utilizador
 	Questions []Question `json:"questions"` //lista de perguntas do utilizador
-
+	Appointment []Appointment `json:"appointment"` //lista de appointments do utilizador
 }
 

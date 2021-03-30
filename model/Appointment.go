@@ -2,7 +2,6 @@ package model
 
 import "github.com/jinzhu/gorm"
 	
-
 type Appointment struct {
 	gorm.Model `swaggerignore:"true"`
 	ShowedUp bool `json:"showedUp"`
@@ -12,4 +11,5 @@ type Appointment struct {
 	Year int `json:"year"`
 	Hour int `json:"hour"`
 	Minutes int `json:"minutes"`
+	VetID uint `gorm:"TYPE:integer REFERENCES users"`
 }	
