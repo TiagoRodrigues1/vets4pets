@@ -12,5 +12,4 @@ type Appointment struct {
 	Year int `json:"year"`
 	Hour int `json:"hour"`
 	Minutes int `json:"minutes"`
-	
-}
+}	

@@ -29,6 +29,13 @@ definitions:
       animaltype:
         type: string
     type: object
+  model.Question:
+   properties:
+    question:
+        type: string
+    userID:
+        type: integer
+    type: object
 info:
   contact: {}
 paths:
@@ -390,4 +397,35 @@ paths:
       security:
       - BearerAuth: []
       summary: Atualiza um Animal
+    /question:
+        post:
+      consumes:
+      - application/json
+      description: Create Question
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Create Question
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/model.Question'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Question'
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Create Question
 swagger: "2.0"

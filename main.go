@@ -17,9 +17,9 @@ func init() {
 	services.Db.AutoMigrate(&model.Evaluation{})
 	services.Db.AutoMigrate(&model.Users{})
 	services.Db.AutoMigrate(&model.Animal{})
-	services.Db.AutoMigrate(&model.Questions{})
-	services.Db.AutoMigrate(&model.Answers{})
-	services.Db.AutoMigrate(&model.Attachements{})
+	services.Db.AutoMigrate(&model.Question{})
+	services.Db.AutoMigrate(&model.Answer{})
+	services.Db.AutoMigrate(&model.Attachement{})
 	services.Db.AutoMigrate(&model.Appointment{})
 	
 	defer services.Db.Close()
@@ -73,6 +73,18 @@ func main() {
 		animal.DELETE("/:id",routes.DeleteAnimal)
 		animal.GET("/:id",routes.GetAnimalById)
 		animal.PUT("/:id",routes.UpdateAnimal)
+	}
+
+	question := router.Group("api/v1/question")
+	question.Use(services.AuthorizationRequired()) 
+	{
+		question.POST("/",routes.AddQuestion)
+	}
+
+	answer := router.Group("api/v1/answer")
+	answer.Use(services.AuthorizationRequired())
+	{
+		answer.POST("/",routes.AddAnswer)
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

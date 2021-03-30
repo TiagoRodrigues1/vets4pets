@@ -12,7 +12,8 @@ type Users struct {
 	Contact	   string `json:"contact"`
 	NumberOfAnsweredQuestions string `json:"numberOfAnsweredQuestions"`
 	Animals []Animal `json:"animals"` //lista de animais do utlizador 
-	Answers []Answers `json:"answers"`//lista de respostas do utilizador
-	Questions []Questions `json:"questions"` //lista de perguntas do utilizador
+	Answers []Answer `json:"answers"`//lista de respostas do utilizador
+	Questions []Question `json:"questions"` //lista de perguntas do utilizador
+
 }
 
