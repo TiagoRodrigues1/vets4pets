@@ -4,6 +4,7 @@ import (
 	"projetoapi/model"
 	"projetoapi/routes"
 	"projetoapi/services"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	swaggerFiles "github.com/swaggo/files"
@@ -20,7 +21,7 @@ func init() {
 	services.Db.AutoMigrate(&model.Question{})
 	services.Db.AutoMigrate(&model.Answer{})
 	services.Db.AutoMigrate(&model.Appointment{})
-	
+
 	defer services.Db.Close()
 }
 
@@ -60,38 +61,39 @@ func main() {
 	}
 
 	user := router.Group("api/v1/user")
-	user.Use(services.AuthorizationRequired())	
+	user.Use(services.AuthorizationRequired())
 	{
-		user.GET("/:id",routes.GetUserByID)
-		user.PUT("/:id",routes.UpdateUser)
+		user.GET("/:id", routes.GetUserByID)
+		user.PUT("/:id", routes.UpdateUser)
+		user.GET("/:id/animals", routes.GetAnimalsFromUserID)
 	}
 
 	animal := router.Group("api/v1/animal")
-	animal.Use(services.AuthorizationRequired())	
+	animal.Use(services.AuthorizationRequired())
 	{
 		animal.POST("/", routes.AddAnimal)
-		animal.DELETE("/:id",routes.DeleteAnimal)
-		animal.GET("/:id",routes.GetAnimalById)
-		animal.PUT("/:id",routes.UpdateAnimal)
+		animal.DELETE("/:id", routes.DeleteAnimal)
+		animal.GET("/:id", routes.GetAnimalById)
+		animal.PUT("/:id", routes.UpdateAnimal)
 	}
 
 	question := router.Group("api/v1/question")
-	question.Use(services.AuthorizationRequired()) 
+	question.Use(services.AuthorizationRequired())
 	{
-		question.POST("/",routes.AddQuestion)
+		question.POST("/", routes.AddQuestion)
 	}
 
 	answer := router.Group("api/v1/answer")
 	answer.Use(services.AuthorizationRequired())
 	{
-		answer.POST("/",routes.AddAnswer)
+		answer.POST("/", routes.AddAnswer)
 	}
 
 	appointment := router.Group("api/v1/appointment")
 	appointment.Use(services.AuthorizationRequired())
 	{
-		appointment.POST("/",routes.AddAppointment)
-		appointment.PUT("/:id",routes.UpdateAppointment)
+		appointment.POST("/", routes.AddAppointment)
+		appointment.PUT("/:id", routes.UpdateAppointment)
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
