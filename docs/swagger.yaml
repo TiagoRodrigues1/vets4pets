@@ -289,8 +289,37 @@ paths:
       security:
       - BearerAuth: []
       summary: Atualiza um Usuario
-    /question:
-        post:
+  /user/{id}/animals:
+    get:
+      consumes:
+      - application/json
+      description: Exibe os animais de um usuario pelo ID
+      operationId: get-animals-by-user-int
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Animal'
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Recupera os Animais de um Usuario pelo id
+  /question:
+    post:
       consumes:
       - application/json
       description: Create Question

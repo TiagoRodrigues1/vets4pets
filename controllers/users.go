@@ -4,19 +4,20 @@ import (
 	"net/http"
 	"projetoapi/model"
 	"projetoapi/services"
+
 	"github.com/gin-gonic/gin"
 )
 
 func GetUserByID(c *gin.Context) { //Ir buscar o utilizador por ID
 	var user model.Users
 	id := c.Param("id")
-	services.Db.First(&user,id)
+	services.Db.First(&user, id)
 	//fmt.Println(user)
-	if(user.ID == 0) {
-		c.JSON(http.StatusNotFound,gin.H{"status": http.StatusNotFound, "message": "User not Found!"})
+	if user.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User not Found!"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK,"data" : user})
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": user})
 }
 
 func UpdateUser(c *gin.Context) {
@@ -36,4 +37,19 @@ func UpdateUser(c *gin.Context) {
 
 	services.Db.Save(user)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Update succeeded!"})
+}
+
+func GetAnimalsFromUserID(c *gin.Context) {
+	var user model.Users
+	var animals []model.Animal
+	id := c.Param("id")
+
+	services.Db.First(&user, id)
+	if user.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User not found!"})
+		return
+	}
+	services.Db.Where("user_id = ?", user.ID).Find(&animals)
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": animals})
 }
