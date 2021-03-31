@@ -15,7 +15,7 @@ definitions:
     properties:
       password:
         type: string
-      username:
+      email:
         type: string
     type: object
   model.Animal:
@@ -34,6 +34,25 @@ definitions:
     question:
         type: string
     userID:
+        type: integer
+    type: object
+  model.Appointment:
+    properties:
+      day:
+        type: integer
+      month: 
+        type: integer
+      year:
+        type: integer
+      hour:
+        type: integer
+      minutes:
+        type: integer
+      showedUp:
+        type: boolean
+      animalID:
+        type: integer
+      vetID:
         type: integer
     type: object
 info:
@@ -274,7 +293,7 @@ paths:
       security:
       - BearerAuth: []
       summary: Atualiza uma avaliação
-      /animal:
+  /animal:
         post:
       consumes:
       - application/json
@@ -305,19 +324,19 @@ paths:
       security:
       - BearerAuth: []
       summary: Create Animal
-      /animal/{id}:
-        delete:
+  /animal/{id}:
+    get:
       consumes:
       - application/json
-      description: Exclui um animal
-      operationId: delete-animal
+      description: Exibe os detalhes de um usuario pelo ID
+      operationId: get-user-by-int
       parameters:
       - description: Token
         in: header
         name: Authorization
         required: true
         type: string
-      - description: Animal ID
+      - description: User ID
         in: path
         name: id
         required: true
@@ -328,57 +347,29 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Animal'
+            $ref: '#/definitions/model.Users'
         "404":
           description: Not found
       security:
       - BearerAuth: []
-      summary: Excluid um Animal
-      get:
+      summary: Recupera um Usuario pelo id
+    put:
       consumes:
       - application/json
-      description: Exibe os detalhes de um animal pelo ID
-      operationId: get-animal-by-int
+      description: Atualiza um Usuario sobre a utilização da aplicação
       parameters:
       - description: Token
         in: header
         name: Authorization
         required: true
         type: string
-      - description: Animal ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Animal'
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Recupera um Animal pelo id
-      put:
-      consumes:
-      - application/json
-      description: Atualiza um Animal sobre a utilização da aplicação
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Udpdate Animal
+      - description: Udpdate User
         in: body
-        name: animal
+        name: user
         required: true
         schema:
-          $ref: '#/definitions/model.Animal'
-      - description: Animal ID
+          $ref: '#/definitions/model.Users'
+      - description: User ID
         in: path
         name: id
         required: true
@@ -389,14 +380,14 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Animal'
+            $ref: '#/definitions/model.Users'
         "400":
           description: Bad request
         "404":
           description: Not found
       security:
       - BearerAuth: []
-      summary: Atualiza um Animal
+      summary: Atualiza um Usuario
     /question:
         post:
       consumes:
@@ -428,4 +419,71 @@ paths:
       security:
       - BearerAuth: []
       summary: Create Question
+    /appointment:
+      post:
+      consumes:
+      - application/json
+      description: Create Appointment
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Create Appointment
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/model.Appointment'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Appointment'
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Create Appointment
+    /appointment/{id}:
+      put:
+        consumes:
+      - application/json
+      description: Atualiza um Appointment sobre a utilização da aplicação
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Udpdate Appointment
+        in: body
+        name: appointment
+        required: true
+        schema:
+          $ref: '#/definitions/model.Appointment'
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Appointment'
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Atualiza um Appointment
 swagger: "2.0"

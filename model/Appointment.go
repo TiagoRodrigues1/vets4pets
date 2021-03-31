@@ -1,6 +1,7 @@
 package model
 
 import "github.com/jinzhu/gorm"
+
 	
 type Appointment struct {
 	gorm.Model `swaggerignore:"true"`

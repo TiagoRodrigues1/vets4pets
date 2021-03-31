@@ -19,7 +19,6 @@ func init() {
 	services.Db.AutoMigrate(&model.Animal{})
 	services.Db.AutoMigrate(&model.Question{})
 	services.Db.AutoMigrate(&model.Answer{})
-	services.Db.AutoMigrate(&model.Attachement{})
 	services.Db.AutoMigrate(&model.Appointment{})
 	
 	defer services.Db.Close()
@@ -64,6 +63,7 @@ func main() {
 	user.Use(services.AuthorizationRequired())	
 	{
 		user.GET("/:id",routes.GetUserByID)
+		user.PUT("/:id",routes.UpdateUser)
 	}
 
 	animal := router.Group("api/v1/animal")
@@ -87,6 +87,12 @@ func main() {
 		answer.POST("/",routes.AddAnswer)
 	}
 
+	appointment := router.Group("api/v1/appointment")
+	appointment.Use(services.AuthorizationRequired())
+	{
+		appointment.POST("/",routes.AddAppointment)
+		appointment.PUT("/:id",routes.UpdateAppointment)
+	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
 }

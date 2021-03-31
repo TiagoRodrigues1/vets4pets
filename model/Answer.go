@@ -7,4 +7,5 @@ type Answer struct {
 	Answer string `json:"answer"`
 	UserID uint `gorm:"TYPE:integer REFERENCES users"` //user que respondeu
 	QuestionID uint `gorm:"TYPE:integer REFERENCES questions"`
+	Attachement []byte `json:"attachement"`
 }

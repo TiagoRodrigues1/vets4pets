@@ -15,6 +15,7 @@ RUN go get -u github.com/gin-contrib/cors
 RUN go get -u github.com/rs/cors/wrapper/gin
 RUN go get -u github.com/dgrijalva/jwt-go
 RUN go get -u github.com/stretchr/testify
+RUN go get -u golang.org/x/crypto/bcrypt
 # HOT RELOAD
 RUN go get -u github.com/githubnemo/CompileDaemon
 

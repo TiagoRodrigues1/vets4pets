@@ -7,4 +7,5 @@ type Question struct {
 	Question string `json:"question"`
 	UserID uint `gorm:"TYPE:integer REFERENCES users"` //quem fez a pergunta
 	Answers []Answer `json:"answers"`
+	Attachement []byte `json:"attachement"`
 }
