@@ -13,3 +13,7 @@ func AddAppointment(c *gin.Context) {
 func UpdateAppointment(c *gin.Context) {
 	controllers.UpdateAppointment(c)
 }
+
+func DeleteAppointment(c *gin.Context) {
+	controllers.DeleteAppointment(c)
+}

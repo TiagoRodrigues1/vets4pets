@@ -822,17 +822,6 @@
                 }
             }
         },
-        "model.Evaluation": {
-            "type": "object",
-            "properties": {
-                "Note": {
-                    "type": "string"
-                },
-                "Rating": {
-                    "type": "integer"
-                }
-            }
-        },
         "model.Users": {
             "type": "object",
             "properties": {
