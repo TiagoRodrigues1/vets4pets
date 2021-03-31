@@ -6,7 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Calendar struct {
+type Reminder struct {
 	gorm.Model `swaggerignore:"true"`
 	AnimalID   uint      `gorm:"TYPE:integer REFERENCES animals"`
 	Date       time.Time `json:"date"`
