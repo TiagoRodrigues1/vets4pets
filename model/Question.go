@@ -8,4 +8,5 @@ type Question struct {
 	UserID uint `gorm:"TYPE:integer REFERENCES users"` //quem fez a pergunta
 	Answers []Answer `json:"answers"`
 	Attachement []byte `json:"attachement"`
+	Closed bool `json:"closed"`
 }

@@ -15,13 +15,11 @@ var identityKey = "id"
 
 func init() {
 	services.OpenDatabase()
-	services.Db.AutoMigrate(&model.Evaluation{})
 	services.Db.AutoMigrate(&model.Users{})
 	services.Db.AutoMigrate(&model.Animal{})
 	services.Db.AutoMigrate(&model.Question{})
 	services.Db.AutoMigrate(&model.Answer{})
 	services.Db.AutoMigrate(&model.Appointment{})
-
 	defer services.Db.Close()
 }
 
@@ -35,23 +33,10 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	// NO AUTH
-	router.GET("/echo/:echo", routes.EchoRepeat)
-
 	// AUTH
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
-
-	evaluation := router.Group("/api/v1/evaluation")
-	evaluation.Use(services.AuthorizationRequired())
-	{
-		evaluation.POST("/", routes.AddEvaluation)
-		evaluation.GET("/", routes.GetAllEvaluation)
-		evaluation.GET("/:id", routes.GetEvaluationById)
-		evaluation.PUT("/:id", routes.UpdateEvaluation)
-		evaluation.DELETE("/:id", routes.DeleteEvaluation)
-	}
 
 	auth := router.Group("/api/v1/auth")
 	{
@@ -92,8 +77,9 @@ func main() {
 	appointment := router.Group("api/v1/appointment")
 	appointment.Use(services.AuthorizationRequired())
 	{
-		appointment.POST("/", routes.AddAppointment)
-		appointment.PUT("/:id", routes.UpdateAppointment)
+		appointment.POST("/",routes.AddAppointment)
+		appointment.PUT("/:id",routes.UpdateAppointment)
+		appointment.DELETE("/:id",routes.DeleteAppointment)
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")

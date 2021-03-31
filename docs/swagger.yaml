@@ -4,13 +4,6 @@ definitions:
       username:
         type: string
     type: object
-  model.Evaluation:
-    properties:
-      Note:
-        type: string
-      Rating:
-        type: integer
-    type: object
   model.Users:
     properties:
       password:
@@ -201,98 +194,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Adicionar uma avaliação
-  /evaluation/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Exclui uma avaliação realizada
-      operationId: get-string-by-int
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Evaluation ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Evaluation'
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Exclui uma avaliação pelo ID
-    get:
-      consumes:
-      - application/json
-      description: Exibe os detalhes de uma avaliação pelo ID
-      operationId: get-evaluation-by-int
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Evaluation ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Evaluation'
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Recupera uma avaliação pelo id
-    put:
-      consumes:
-      - application/json
-      description: Atualiza uma avaliação sobre a utilização da aplicação
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Udpdate evaluation
-        in: body
-        name: evaluation
-        required: true
-        schema:
-          $ref: '#/definitions/model.Evaluation'
-      - description: Evaluation ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Evaluation'
-        "400":
-          description: Bad request
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Atualiza uma avaliação
   /animal:
         post:
       consumes:
@@ -324,7 +225,7 @@ paths:
       security:
       - BearerAuth: []
       summary: Create Animal
-  /animal/{id}:
+  /users/{id}:
     get:
       consumes:
       - application/json
@@ -515,4 +416,68 @@ paths:
       security:
       - BearerAuth: []
       summary: Atualiza um Appointment
+      /animal/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Exibe os detalhes de um Animal pelo ID
+      operationId: get-animal-by-int
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Animal ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Animal'
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Recupera um Animal pelo id
+    put:
+      consumes:
+      - application/json
+      description: Atualiza um Animal sobre a utilização da aplicação
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Udpdate Animal
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.Animal'
+      - description: Animal ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Animal'
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Atualiza um Animal
 swagger: "2.0"
