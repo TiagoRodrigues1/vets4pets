@@ -19,7 +19,10 @@ func init() {
 	services.Db.AutoMigrate(&model.Animal{})
 	services.Db.AutoMigrate(&model.Question{})
 	services.Db.AutoMigrate(&model.Answer{})
+	services.Db.AutoMigrate(&model.Reminder{})
 	services.Db.AutoMigrate(&model.Appointment{})
+	services.Db.AutoMigrate(&model.Clinic{})
+	services.Db.AutoMigrate(&model.Prescription{})
 	defer services.Db.Close()
 }
 
@@ -77,9 +80,9 @@ func main() {
 	appointment := router.Group("api/v1/appointment")
 	appointment.Use(services.AuthorizationRequired())
 	{
-		appointment.POST("/",routes.AddAppointment)
-		appointment.PUT("/:id",routes.UpdateAppointment)
-		appointment.DELETE("/:id",routes.DeleteAppointment)
+		appointment.POST("/", routes.AddAppointment)
+		appointment.PUT("/:id", routes.UpdateAppointment)
+		appointment.DELETE("/:id", routes.DeleteAppointment)
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")

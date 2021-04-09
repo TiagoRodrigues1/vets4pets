@@ -12,4 +12,5 @@ type Appointment struct {
 	AnimalID   uint      `gorm:"TYPE:integer REFERENCES animals"`
 	Date       time.Time `json:"date"`
 	VetID      uint      `gorm:"TYPE:integer REFERENCES users"`
+	ReminderID uint      `gorm:"TYPE:integer REFERENCES reminders"`
 }
