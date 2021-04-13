@@ -1,0 +1,79 @@
+<div fxLayoutAlign = "center center" fxFlexFill class = "main-div">
+    <mat-card fxFlex = "25">
+        <mat-toolbar  >Register Page</mat-toolbar>
+        <form fxLayoutAlign = "stretch" fxLayout = "column" class = "register-form" [formGroup] = "form" (ngSubmit) = "onSubmit()" > 
+          <mat-form-field>
+            <input matInput placeholder="Name" formControlName = "name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+          </mat-form-field>
+          <div *ngIf="submitted && f.name.errors">
+            <div *ngIf="f.name.errors.required" style="color:red;font-size: small;" >Name is required</div>
+        </div>
+  
+          <mat-form-field>
+            <input matInput placeholder="Email" formControlName = "email" type="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+          </mat-form-field>
+          <div *ngIf="submitted && f.email.errors">
+            <div *ngIf="f.email.errors.required" style="color:red;font-size: small;" >Email is required</div>
+            <div *ngIf="f.email.errors.pattern" style="color:red;font-size: small;" >Email not valid</div>
+        </div>
+  
+            <mat-form-field>
+              <input matInput placeholder="Username" formControlName = "username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" >
+            </mat-form-field>
+            <div *ngIf="submitted && f.username.errors" style="color: red;font-size: small;">
+              <div *ngIf="f.username.errors.required">Username is required</div>
+          </div>
+  
+            <mat-form-field>
+              <input matInput placeholder="Contact" formControlName = "contact" [ngClass]="{ 'is-invalid': submitted && f.contact.errors }">
+            </mat-form-field>
+            <div *ngIf="submitted && f.contact.errors" style="color: red;font-size: small;">
+              <div *ngIf="f.contact.errors.required">Contact is required</div>
+              <div *ngIf="f.contact.errors.pattern" style="color:red;font-size: small;" >Contact not valid</div>
+          </div>
+  
+            <mat-form-field appearance="fill">
+              <mat-label>Birthday</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName = "birthday" [ngClass]="{ 'is-invalid': submitted && f.birthday.errors }">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <div *ngIf="submitted && f.birthday.errors" style="color: red;font-size: small;">
+              <div *ngIf="f.birthday.errors.required">Birthday is required</div>
+          </div>
+  
+  
+            <mat-radio-group aria-label="Select an option" formControlName = "gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
+              <mat-radio-button value="0" [value] = "false">Male</mat-radio-button>
+              <mat-radio-button value="1" [value] = "true">Female</mat-radio-button>
+            </mat-radio-group>
+            <div *ngIf="submitted && f.gender.errors" style="color: red;font-size: small;">
+              <div *ngIf="f.gender.errors.required">Gender is required</div>
+          </div>
+            <br> 
+            <mat-form-field>
+                <input matInput type = "password" placeholder="Password" formControlName = "password" name = "password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+              </mat-form-field>
+              <div *ngIf="submitted && f.password.errors" style="color: red;font-size: small;">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+                <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+            </div>
+              <mat-form-field>
+                <input matInput type = "password" placeholder="Confirm Password" formControlName = "passwordConfirm" class= "form-control" [ngClass]="{ 'is-invalid': submitted && f.passwordConfirm.errors }" >
+              </mat-form-field>
+              <div *ngIf="submitted && f.passwordConfirm.errors" style="color: red;">
+                <div *ngIf="f.passwordConfirm.errors.required">Confirm Password is required</div>
+                <div *ngIf="f.passwordConfirm.errors.minlength">Confirm Password must be at least 6 characters</div>
+                <div *ngIf="f.passwordConfirm.hasError('passwordMismatch')">Passwords don't match</div>
+            </div>
+              <button mat-raised-button type ="submit">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Register</button>
+              <br> 
+              <a mat-raised-button routerLink="/account/login" routerLinkActive="active">Login</a>
+  
+          </form>
+                  
+    </mat-card>
+  </div>
+  
