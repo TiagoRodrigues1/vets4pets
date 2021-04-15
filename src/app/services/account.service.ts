@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Pet } from '../models/pet.model';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -40,8 +41,23 @@ logout() {
 register(user: User) {
   return this.http.post(`${environment.apiUrl}/auth/register`, user);
 }
-  public get userValue(): User {
-    return this.userSubject.value;
+  
+getPets(id: number): Observable<Pet[]> {
+  return this.http.get<Pet[]>(`${environment.apiUrl}/userAnimals/${id}`);
 }
 
+public get userValue(): User {
+  return this.userSubject.value;
+}
+
+processError(err) {
+  let message = '';
+  if(err.error instanceof ErrorEvent) {
+   message = err.error.message;
+  } else {
+   message = `Error Code: ${err.status}\nMessage: ${err.message}`;
+  }
+  console.log(message);
+  return throwError(message);
+}
 }

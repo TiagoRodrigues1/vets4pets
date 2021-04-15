@@ -5,10 +5,18 @@
       </mat-sidenav>
       <mat-sidenav-content >
         <div class="main_content">
-          <div style="padding: 20px">
-            <button mat-button (click)="pets()">Olá</button>
-              
-           
+          <div style="padding: 20px;display:flex; flex-direction: row;flex-wrap: wrap;">
+            <mat-card class="example-card" *ngFor = "let pet of Pet" style ="padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%">
+              <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>{{pet.name}}</mat-card-title>
+                <mat-card-subtitle>{{pet?.race}}</mat-card-subtitle>
+              </mat-card-header>
+              <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+              <mat-card-content>
+              </mat-card-content>
+            </mat-card>      
+
           </div>
         </div>
       </mat-sidenav-content>

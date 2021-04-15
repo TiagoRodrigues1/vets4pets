@@ -23,6 +23,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { PetsComponent } from './pets/pets.component';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -50,11 +51,13 @@ import { PetsComponent } from './pets/pets.component';
     MatListModule,
     MatButtonModule,
     NoopAnimationsModule,
-    RouterModule
+    RouterModule,
+    MatCardModule,    
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    LeftMenuComponent
   ], 
   exports: [
     HeaderComponent,
