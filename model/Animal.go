@@ -10,5 +10,4 @@ type Animal struct {
 	Picture []byte `json:"picture"`
 	VaccinationCard []byte	`json:"vaccinationCard"`
 	UserID uint `gorm:"TYPE:integer REFERENCES users"`
-
 }
