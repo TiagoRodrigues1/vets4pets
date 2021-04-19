@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Clinic } from '../models/clinic.model';
 import { Pet } from '../models/pet.model';
 import { User } from '../models/user.model';
 
@@ -15,7 +16,7 @@ export class AccountService {
   private userSubject: BehaviorSubject<User>;
   public user: Observable<User>;
 
-  constructor(
+  constructor (
     private router: Router,private http: HttpClient) {
     this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user')));
     this.user = this.userSubject.asObservable();
@@ -46,6 +47,25 @@ getPets(id: number): Observable<Pet[]> {
   return this.http.get<Pet[]>(`${environment.apiUrl}/userAnimals/${id}`);
 }
 
+createPet (pet : Pet) {
+  return this.http.post(`${environment.apiUrl}/animal/`,pet);
+}
+
+deletePet(id: number) {
+  return this.http.delete(`${environment.apiUrl}/animal/${id}`);
+}
+
+editPet(id:number, pet: Pet) {
+  return this.http.put(`${environment.apiUrl}/animal/${id}`,pet);
+}
+
+getClinics() :Observable<Clinic[]> {
+  return this.http.get<Clinic[]>(`${environment.apiUrl}/clinic/`)
+}
+
+
+
+
 public get userValue(): User {
   return this.userSubject.value;
 }
@@ -60,4 +80,5 @@ processError(err) {
   console.log(message);
   return throwError(message);
 }
+
 }

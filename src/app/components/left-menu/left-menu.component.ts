@@ -11,7 +11,6 @@ interface Page {
   link: string;
   name: string;
   icon: string;
-  click: string;
 }
 
 @Component({
@@ -28,9 +27,11 @@ export class LeftMenuComponent implements OnInit {
   public linkText: boolean = false;
   
   public pages: Page[] = [
-    {name: 'Pets', link:'/pets', icon: 'pets',click: 'pets()'},
-    {name: 'Starred', link:'some-link', icon: 'star',click: ''},
-    {name: 'Send email', link:'some-link', icon: 'send',click: ''}
+    {name: 'Veterinarios', link:'/clinic', icon: 'store'},
+    {name: 'Pets', link:'/pets', icon: 'pets'},
+    {name: 'Adoptions', link:'/adoptions', icon: 'favorite'},
+    {name: 'Forum', link:'some-link', icon: 'supervisor_account'},
+    {name: 'Veterinarios perto de si', link:'/maps', icon: 'place'},
   ]
   
   constructor(private _sidenavService: SidenavService,private accountService: AccountService) { 

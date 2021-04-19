@@ -24,7 +24,24 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { PetsComponent } from './pets/pets.component';
 import { MatCardModule } from '@angular/material/card';
-
+import { AddPetComponent } from './add-pet/add-pet.component';
+import { MatInputModule } from '@angular/material/input';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatSelectModule} from '@angular/material/select';
+import {MatRadioModule} from '@angular/material/radio';
+import { ClinicComponent } from './clinics/clinic/clinic.component';
+import { ClinicProfileComponent } from './clinics/clinic-profile/clinic-profile.component';
+import { AppointmentComponent } from './clinics/appointment/appointment.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { ChoosePetComponent } from './clinics/choose-pet/choose-pet.component';
+import { MatSortModule } from "@angular/material/sort";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTableModule } from "@angular/material/table";
 
 @NgModule({
   declarations: [
@@ -33,6 +50,11 @@ import { MatCardModule } from '@angular/material/card';
     HeaderComponent,
     LeftMenuComponent,
     PetsComponent,
+    AddPetComponent,
+    ClinicComponent,
+    ClinicProfileComponent,
+    AppointmentComponent,
+    ChoosePetComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,16 +75,29 @@ import { MatCardModule } from '@angular/material/card';
     NoopAnimationsModule,
     RouterModule,
     MatCardModule,    
+    MatInputModule,
+    MatDialogModule,
+    MatGridListModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatNativeDateModule,
+    DateTimePickerModule,
+    DateRangePickerModule,
+    MatPaginatorModule, 
+    MatProgressSpinnerModule, 
+    MatSortModule, 
+    MatTableModule
+
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    LeftMenuComponent
-  ], 
+    LeftMenuComponent], 
   exports: [
     HeaderComponent,
-    LeftMenuComponent
-  ],
-  bootstrap: [AppComponent]
+    LeftMenuComponent],
+  bootstrap: [AppComponent],
+  entryComponents:[AddPetComponent]
 })
 export class AppModule { }

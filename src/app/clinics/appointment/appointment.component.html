@@ -1,0 +1,11 @@
+<script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+
+<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
+    <h2 style = "padding-left: 20px;font-family: Arial, Helvetica, sans-serif;display: inline-block;">Create an Appointment</h2>
+      <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
+      <form style ="padding-left:20px;padding-top: 20px;" class = "appointment-form" fxLayoutAlign = "stretch" [formGroup] = "form" (ngSubmit) = "onSubmit()">
+          <ejs-datetimepicker id = "datepicker" [min]='minDate' [max]='maxDate' formControlName = "date"></ejs-datetimepicker>
+         <mat-error *ngIf = "form.controls.date.hasError('required') && form.controls.date.touched" style="color:red;font-size: small;">Date is <strong>required</strong> </mat-error>
+         <button  mat-raised-button type="submit" style = "margin-left: 85%;resize:both;">Submit</button>
+      </form>  
+</div>  

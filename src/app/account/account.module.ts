@@ -14,7 +14,7 @@ import { MatDatepickerModule} from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 
 
@@ -38,6 +38,6 @@ import { RouterModule } from '@angular/router';
     FlexLayoutModule,
     MatButtonModule,
     RouterModule
-  ]
+  ],
 })
 export class AccountModule { }

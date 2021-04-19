@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { Pet } from '../models/pet.model';
 import { AccountService } from '../services/account.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AddPetComponent } from '../add-pet/add-pet.component';
+import { PetService } from '../services/pet.service';
 
 @Component({
   selector: 'app-pets',
@@ -14,7 +17,8 @@ export class PetsComponent implements OnInit {
   string : string;
   payload;
   Pet : Pet[];
-  constructor(private accountService: AccountService) { 
+  status: string;
+  constructor(private accountService: AccountService, private dialog: MatDialog, private petService: PetService) { 
   }
 
   ngOnInit(): void {
@@ -41,4 +45,28 @@ export class PetsComponent implements OnInit {
       return parseInt(userString.UserID);
     } 
   }
+
+  onCreate() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;  
+    dialogConfig.width = "35%"
+    this.dialog.open(AddPetComponent,dialogConfig);
+  }
+
+  deletePet(id:number) {
+    this.accountService.deletePet(id).subscribe(() => this.status = 'Delete Sucessful');
+    window.location.reload();
+  }
+
+  editPet(pet) {
+    this.petService.populateForm(pet);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;  
+    dialogConfig.width = "35%"
+    this.dialog.open(AddPetComponent,dialogConfig);
+  }
+ 
+
 }

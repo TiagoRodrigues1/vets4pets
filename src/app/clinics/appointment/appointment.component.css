@@ -1,18 +1,4 @@
-.main-div mat-card {
-    padding: 0px;
-      margin-top: 17%;
-}
-
-.login-form {
-    padding: 20px
-}
-
-.mat-toolbar {
-    background: #52b788;
-    color: #fff;
-  }
-
-  ::ng-deep .mat-focused .mat-form-field-label {
+::ng-deep .mat-focused .mat-form-field-label {
     /*change color of label*/
     color: #52b788 !important;
    }
@@ -26,7 +12,8 @@
    /*change color of underline when focused*/
    background-color: #52b788 !important;
   }
-
-  .mat-raised-button{
+  
+  .mat-raised-button {
     color: #52b788 !important;
   }
+ 

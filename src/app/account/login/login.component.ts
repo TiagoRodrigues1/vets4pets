@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { AccountService } from 'src/app/services/account.service';
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   loading = false;
   submitted = false;
-  
+
   constructor(private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
@@ -21,7 +22,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: ['', Validators.required],
+      email: ['',[Validators.required,Validators.email]],
       password: ['', Validators.required]
   });
   }
@@ -50,5 +51,6 @@ export class LoginComponent implements OnInit {
             }
         });
 }
+
 
 }

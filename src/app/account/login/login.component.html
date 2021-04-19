@@ -3,18 +3,19 @@
         <mat-toolbar>Login Page</mat-toolbar>
         <form fxLayoutAlign = "stretch" fxLayout = "column" class = "login-form" [formGroup] = "form" (ngSubmit) = "onSubmit()">
             <mat-form-field>
-              <input matInput placeholder="Email" formControlName = "email" >
+              <input matInput placeholder = "Email" formControlName = "email" type = "email" ngModel email >
             </mat-form-field>
-            <div *ngIf="f.email.errors"> 		   
-              <div *ngIf="f.email.errors.pattern" style="color:red;font-size: small;" >
-               Email not valid.
-              </div> 
-           </div> 
+            <mat-error *ngIf="f.email.hasError('email') && f.email.hasError('required') " style="color:red;font-size: small;">
+              Please enter a valid email address
+            </mat-error>
+            <mat-error *ngIf="f.email.hasError('required') && f.email.touched" style="color:red;font-size: small;">
+              Email is <strong>required</strong>
+            </mat-error>
             <mat-form-field>
                 <input matInput type = "password" placeholder="Password" formControlName = "password">
               </mat-form-field>
               <button mat-raised-button type ="submit">
-                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1" type = "submit"></span>
                 Login</button>
               <br> 
               <a mat-raised-button routerLink="/account/register" routerLinkActive="active">Register</a>
