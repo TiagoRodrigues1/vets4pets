@@ -25,3 +25,7 @@ func RemVet(c *gin.Context) {
 func GetClinics(c *gin.Context) {
 	controllers.GetClinics(c)
 }
+
+func GetVetsClinic(c *gin.Context) {
+	controllers.GetVetsClinic(c)
+}

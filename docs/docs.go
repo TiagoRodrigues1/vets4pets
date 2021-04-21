@@ -1077,6 +1077,51 @@ var doc = `{
                 }
             }
         },
+        "/vetsClinic/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe os vets de uma clinica",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exibe os vets de uma clinica",
+                "operationId": "get-vets-by-clinic-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID da  clinica",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Vet"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            } 
+        },
         "/adoption": {
             "post": {
                 "security": [
@@ -1378,6 +1423,20 @@ var doc = `{
                 }
             }
         },
+        "model.Vet": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Animal": {
             "type": "object",
             "properties": {
@@ -1492,20 +1551,8 @@ var doc = `{
         "model.Appointment": {
             "type": "object",
             "properties": {
-                "day": {
-                    "type":"integer"
-                },
-                "month": {
-                    "type":"integer" 
-                },
-                "year": {
-                    "type":"integer" 
-                },
-                "hour": {
-                    "type":"integer" 
-                },
-                "minutes": {
-                    "type":"integer" 
+                "date": {
+                    "type":"date"
                 },
                 "showedUp": {
                     "type":"boolean" 

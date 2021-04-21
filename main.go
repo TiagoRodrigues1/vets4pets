@@ -149,6 +149,12 @@ func main() {
 		
 	}
 
+	vetsclinic := router.Group("api/v1/vetsClinic")
+	vetsclinic.Use(services.AuthorizationRequired())
+	{
+		vetsclinic.GET("/:id",routes.GetVetsClinic);
+	}
+
 	clinic1 := router.Group("api/v1/clinicRem")
 	clinic1.Use(services.AuthorizationRequired())
 	{
@@ -164,6 +170,8 @@ func main() {
 		vaccine.GET("/:id/",routes.GetVaccines)
 		
 	}
+
+
 	
 	
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

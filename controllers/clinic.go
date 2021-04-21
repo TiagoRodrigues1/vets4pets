@@ -91,4 +91,18 @@ func GetClinics(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": clinics})
 }
 
+func GetVetsClinic(c *gin.Context) {
+	var clinic model.Clinic
+	var vets []model.Users
+	id := c.Param("id")
+	services.Db.First(&clinic, id)
+	if clinic.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "clinic not found!"})
+		return
+	}
+	fmt.Print(id)
+	services.Db.Where("clinic_id = ?", clinic.ID).Select("id,name,email,contact").Find(&vets)  //select id,name,email,contact from users where clinic_id = x;
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": vets})
+}
+
 

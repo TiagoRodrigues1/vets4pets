@@ -876,6 +876,46 @@
                 }
             }
         },
+        "get": {
+            "security": [
+                {
+                    "BearerAuth": []
+                }
+            ],
+            "description": "Exibe as clinicas ordenadas por id",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "summary": "Exibe as clinicas ordenadas por id",
+            "operationId": "get-adoptions-by-time-int",
+            "parameters": [
+                {
+                    "type": "string",
+                    "description": "Token",
+                    "name": "Authorization",
+                    "in": "header",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "#/definitions/model.Clinic"
+                    }
+                },
+                "404": {
+                    "description": "Not found"
+                }
+            }
+        }
+     
+    },
+    "/clinic/{id}": {
+      
         "delete": {
             "security": [
                 {
@@ -919,6 +959,7 @@
                 }
             }
         }
+     
     },
     "/clinic/{id}/{UserID}": {
         "put": {
@@ -1071,6 +1112,49 @@
         }
     },
     "/adoption/{id}": {
+        "get": {
+            "security": [
+                {
+                    "BearerAuth": []
+                }
+            ],
+            "description": "Exibe as adoções criadas por um user",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "summary": "Exibe as adoções criadas por um user",
+            "operationId": "get-adoptions-by-user-int",
+            "parameters": [
+                {
+                    "type": "string",
+                    "description": "Token",
+                    "name": "Authorization",
+                    "in": "header",
+                    "required": true
+                },
+                {
+                    "type": "integer",
+                    "description": "UserID",
+                    "name": "id",
+                    "in": "path",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "#/definitions/model.Adoption"
+                    }
+                },
+                "404": {
+                    "description": "Not found"
+                }
+            }
+        },
         "delete": {
             "security": [
                 {
@@ -1099,6 +1183,44 @@
                     "description": "Adoption ID",
                     "name": "id",
                     "in": "path",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "#/definitions/model.Adoption"
+                    }
+                },
+                "404": {
+                    "description": "Not found"
+                }
+            }
+        }
+    },
+    "/adoptionByTime": {
+        "get": {
+            "security": [
+                {
+                    "BearerAuth": []
+                }
+            ],
+            "description": "Exibe as adoções ordenadas por data",
+            "consumes": [
+                "application/json"
+            ],
+            "produces": [
+                "application/json"
+            ],
+            "summary": "Exibe as adoções ordenadas por data",
+            "operationId": "get-adoptions-by-time-int",
+            "parameters": [
+                {
+                    "type": "string",
+                    "description": "Token",
+                    "name": "Authorization",
+                    "in": "header",
                     "required": true
                 }
             ],
@@ -1329,7 +1451,7 @@
     "model.Clinic": {
         "type": "object",
         "properties": {
-            "userID" : {
+            "UserID" : {
                 "type": "integer"
             },
             "name": {
