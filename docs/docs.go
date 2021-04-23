@@ -1552,7 +1552,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "date": {
-                    "type":"date"
+                    "type":"string",
+                    "format": "date-time"
                 },
                 "showedUp": {
                     "type":"boolean" 
