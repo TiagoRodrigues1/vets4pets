@@ -105,6 +105,14 @@ func main() {
 	{
 		question.POST("/", routes.AddQuestion)
 		question.DELETE("/:id", routes.DeleteQuestion)
+		question.GET("/:id", routes.GetQuestion)
+	}
+
+	questions := router.Group("api/v1/questions")
+	questions.Use(services.AuthorizationRequired())
+	{
+		questions.GET("/", routes.GetQuestionByTime)
+	
 	}
 
 	answer := router.Group("api/v1/answer")
@@ -130,6 +138,7 @@ func main() {
 		adoption.POST("/", routes.AddAdoption)
 		adoption.DELETE("/:id",routes.DeleteAdoption)
 		adoption.GET("/:id",routes.GetAdoptionsByUser)
+		adoption.PUT("/:id", routes.UpdateAdoption)
 	}
 
 	

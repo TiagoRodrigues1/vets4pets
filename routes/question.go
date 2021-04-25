@@ -14,3 +14,13 @@ func DeleteQuestion(c *gin.Context) {
 	controllers.DeleteQuestion(c)
 }
 
+func GetQuestion(c *gin.Context) {
+	controllers.GetQuestion(c)
+}
+
+
+func GetQuestionByTime(c *gin.Context) {
+	controllers.GetQuestionByTime(c)
+}
+
+

@@ -21,6 +21,10 @@ func GetAdoptionsByUser(c *gin.Context) {
 func GetAdoptionsByTime(c *gin.Context) {
 	controllers.GetAdoptionsByTime(c)
 }
+func UpdateAdoption(c *gin.Context) {
+	controllers.UpdateAdoption(c)
+}
+
 
 
 

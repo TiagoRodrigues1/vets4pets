@@ -56,3 +56,22 @@ func GetAdoptionsByTime(c *gin.Context) {
 	services.Db.Order("created_at desc").Find(&adoptions)	
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": adoptions})
 }
+
+func UpdateAdoption(c *gin.Context) {
+	var adoption model.Adoption
+	id := c.Param("id")
+
+	services.Db.First(&adoption, id)
+	if adoption.ID == 0 {
+		c.JSON(http.StatusNotFound,gin.H{"status": http.StatusNotFound, "message": "Adoption not found!"})
+		return
+	} 
+
+	if err := c.ShouldBindJSON(&adoption); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Check request!"})
+		return
+	}
+
+	services.Db.Save(adoption)
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Update succeeded!"})
+}

@@ -28,7 +28,7 @@ func AddClinic(c *gin.Context) {
     	c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusBadRequest,"message": "Error! User does not exist"})
         return
     }
-	if user.UserType != "manager" {
+	if user.UserType != "manager" &&  user.UserType != "admin"{
 		c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusBadRequest,"message": "Error! User does not have permission"})
 		return
 	}

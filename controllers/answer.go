@@ -32,7 +32,9 @@ func AddAnswer(c *gin.Context) {
     }
 
 	user.NumberOfAnsweredQuestions++				//Atualiza n de perguntas respondidas
-	services.Db.Save(user)							//Guarda o user
+	question.Answers++
+	services.Db.Save(&user)							//Guarda o user
+	services.Db.Save(&question)
 	services.Db.Save(&answer)						//Guarda a nova pergunta
 	c.JSON(http.StatusCreated, gin.H{"status":http.StatusCreated,"message":"Created Successfully","resourceId" : answer.ID})
 }
@@ -59,6 +61,7 @@ func GetAnswers(c *gin.Context) {
 		return
 	}
 	services.Db.Where("question_id = ?", question.ID).Find(&answers)	
-
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": answers})
+	 services.Db.Close()	
 }
+

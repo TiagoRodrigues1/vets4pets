@@ -10,9 +10,12 @@ type Adoption struct {
 	UserID uint `gorm:"TYPE:integer REFERENCES users"`
 	Text string `json:"text"`
 	Adopted bool `json:"adopted"`
+	City string `json:"city"`
+	Birth int `json:"birth"`
+	Email string `json:"email"`
+	Phonenumber string `json:"phonenumber"`
 	Attachement1 []byte `json:"attachement"`
 	Attachement2 []byte `json:"attachement"`
 	Attachement3 []byte`json:"attachement"`
-	Attachement4 []byte `json:"attachement"`
-	
+	Attachement4 []byte `json:"attachement"`	
 }

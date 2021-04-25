@@ -20,6 +20,7 @@ func AddQuestion(c *gin.Context) {
     	c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusBadRequest,"message": "Error! User does not exist"})
         return
     }
+	question.Answers=0
 	services.Db.Save(&question)
 	c.JSON(http.StatusCreated, gin.H{"status":http.StatusCreated,"message":"Created Successfully", "resourceId": question.ID})
 }
@@ -41,3 +42,23 @@ func DeleteQuestion(c *gin.Context) {
 	//services.Db.Delete(&answers)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeded!"})
 }
+
+func GetQuestionByTime(c *gin.Context) {
+	var questions []model.Question
+	services.Db.Order("created_at desc").Find(&questions)	
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": questions})
+}
+
+func GetQuestion(c *gin.Context) {
+	var question model.Question
+	id := c.Param("id")
+	services.Db.First(&question, id)
+	if question.ID == 0 {
+		c.JSON(http.StatusNotFound,gin.H{"status": http.StatusNotFound, "message": "question not found!"})
+		return
+	} 
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": question})
+}
+
+
+

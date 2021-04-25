@@ -525,6 +525,49 @@ var doc = `{
             }
         },
         "/question/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe os detalhes de uma pergunta",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera uma pergunta por id",
+                "operationId": "get-question-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Question"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
             "delete": {
                 "security": [
                     {
@@ -553,6 +596,44 @@ var doc = `{
                         "description": "Pergunta ID",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Question"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/questions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe as perguntas recentes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exibe as perguntas ordenadas por data",
+                "operationId": "get-questions-by-time-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -1215,6 +1296,60 @@ var doc = `{
                     }
                 }
             },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Atualiza uma Adoption",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Atualiza uma Adoption",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Adoption",
+                        "name": "adoption",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Adoption"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Adoption ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Adoption"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
             "delete": {
                 "security": [
                     {
@@ -1457,8 +1592,14 @@ var doc = `{
         "model.Question": {
             "type": "object",
             "properties": {
+                "questiontitle": {
+                    "type": "string"
+                },
                 "question": {
                     "type": "string"
+                },
+                "answers": {
+                    "type": "integer"
                 },
                 "userID": {
                     "type": "integer"
@@ -1508,8 +1649,21 @@ var doc = `{
                 "text": {
                     "type": "string"
                 },
+                "city": {
+                    "type": "string"
+                },
+                "birth": {
+                    "type": "integer"
+                },
+                "phonenumber": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
                 "adopted": {
-                    "type":"boolean" 
+                    "type":"boolean" ,
+                    "default": false
                     
                 }
             }

@@ -28,7 +28,7 @@ func AuthorizationRequired() gin.HandlerFunc {
 
 			// before request
 			c.Next()
-			defer Db.Close()
+			//defer Db.Close()						//Isto estava a dar erro de dbclose
 		}
 	}
 }
