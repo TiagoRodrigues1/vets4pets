@@ -42,6 +42,4 @@ export class CustomValidatorService {
       return parseInt(userString.UserID);
     } 
   }
-
-
 }

@@ -26,23 +26,37 @@ import { PetsComponent } from './pets/pets.component';
 import { MatCardModule } from '@angular/material/card';
 import { AddPetComponent } from './add-pet/add-pet.component';
 import { MatInputModule } from '@angular/material/input';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatSelectModule} from '@angular/material/select';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
 import { ClinicComponent } from './clinics/clinic/clinic.component';
 import { ClinicProfileComponent } from './clinics/clinic-profile/clinic-profile.component';
 import { AppointmentComponent } from './clinics/appointment/appointment.component';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { DatePickerModule, DateTimePickerModule, TimePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { ChoosePetComponent } from './clinics/choose-pet/choose-pet.component';
 import { MatSortModule } from "@angular/material/sort";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableModule } from "@angular/material/table";
+import { ChooseVetComponent } from './clinics/choose-vet/choose-vet.component';
+import { VetComponent } from './backoffice/vet/vet.component';
+import { ManagerComponent } from './backoffice/manager/manager.component';
+import { AdminComponent } from './backoffice/admin/admin.component';
+import { AddClinicComponent } from './backoffice/admin/add-clinic/add-clinic.component';
+import { ManageAppointmentComponent } from './backoffice/vet/manage-appointment/manage-appointment.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
+import interactionPlugin from '@fullcalendar/interaction';
 
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  interactionPlugin
+]);
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,6 +69,12 @@ import { MatTableModule } from "@angular/material/table";
     ClinicProfileComponent,
     AppointmentComponent,
     ChoosePetComponent,
+    ChooseVetComponent,
+    AdminComponent,
+    VetComponent,
+    ManagerComponent,
+    AddClinicComponent,
+    ManageAppointmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,8 +107,11 @@ import { MatTableModule } from "@angular/material/table";
     MatPaginatorModule, 
     MatProgressSpinnerModule, 
     MatSortModule, 
-    MatTableModule
-
+    MatTableModule,
+    TimePickerModule,
+    DatePickerModule,
+    NgbModule,
+    FullCalendarModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

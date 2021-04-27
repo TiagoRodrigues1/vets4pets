@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { AccountService } from 'src/app/services/account.service';
@@ -14,6 +13,8 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   loading = false;
   submitted = false;
+  error = '';
+  emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
 
   constructor(private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -22,8 +23,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: ['',[Validators.required,Validators.email]],
-      password: ['', Validators.required]
+      email: ['',[Validators.required,Validators.pattern(this.emailPattern)]],
+      password: ['', Validators.required] //,Validators.minLength(6)]
   });
   }
 
@@ -31,7 +32,6 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-
     // stop here if form is invalid
     if (this.form.invalid) {
         return;
@@ -47,7 +47,9 @@ export class LoginComponent implements OnInit {
                 this.router.navigateByUrl(returnUrl);
             },
             error: error => {
-                this.loading = false;
+              console.log(error);
+              this.error = error;
+              this.loading = false;
             }
         });
 }

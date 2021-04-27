@@ -1,0 +1,16 @@
+<script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+
+<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
+    <h2 style = "padding-left: 20px;font-family: Arial, Helvetica, sans-serif;display: inline-block;">Appoitment Details</h2>
+      <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
+      <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" >
+            <mat-label style = "font-size:20px">Title</mat-label>
+            <p>{{displayData.title}}</p>
+            <mat-label style = "font-size:20px">Start Date</mat-label>
+            <p>{{displayData.start}}</p>
+
+        <div mat-dialog-actions>
+          <button mat-button class="close"  (click) ="onNoClick()">CLOSE</button>
+      </div>
+      </form>  
+</div>

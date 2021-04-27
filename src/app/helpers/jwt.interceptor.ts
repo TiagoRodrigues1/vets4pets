@@ -8,9 +8,13 @@ import {
 import { Observable } from 'rxjs';
 import { AccountService } from '../services/account.service';
 import { environment } from 'src/environments/environment';
+import { User } from '../models/user.model';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
+  string: string;
+  user: User;
+  payload: any;
 
   constructor(private accountService: AccountService) {}
 

@@ -13,7 +13,11 @@
  background-color: #52b788 !important;
 }
 
-.mat-raised-button{
-  color: #52b788 !important;
+.mat-button{
+  color: #ffff !important;
+  background-color: #52b788 !important;
 }
-
+.close {
+  color: #52b788 !important;
+  background-color: #ffff !important;
+ }

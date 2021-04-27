@@ -1,0 +1,61 @@
+<app-header [sidenav]="leftSidenav"></app-header>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #leftSidenav mode="side" opened>
+    <app-left-menu></app-left-menu>
+  </mat-sidenav>
+  <mat-sidenav-content >
+    <div class="main_content">
+        <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+        <h2 style = "padding-left: 10px;padding-top: 7px;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif inline-block;color:#52b788">MANAGE CLINICS</h2>
+          <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource">
+          
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let clinic"> {{clinic?.name}}  </td>
+                <td mat-footer-cell *matFooterCellDef>TESTE</td>
+              </ng-container>
+          
+              <ng-container matColumnDef="contact">
+                <th mat-header-cell *matHeaderCellDef> Contact </th>
+                <td mat-cell *matCellDef="let clinic"> {{clinic?.contact}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let clinic">{{clinic?.email}}</td>
+              </ng-container>
+              
+              <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef> Address </th>
+                <td mat-cell *matCellDef="let clinic">{{clinic?.address}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="delete/edit">
+                <th mat-header-cell *matHeaderCellDef>Manage Clinic</th>
+                <td mat-cell *matCellDef ="let clinic" >
+                    <button mat-icon-button color = "primary"  floating ="true" > <mat-icon  (click) = "editClinic(clinic)" style ="color:rgb(82,183,136)">edit</mat-icon> </button> 
+                    <button mat-icon-button type="button" style ="color:red" (click) ="deleteClinic(clinic.ID)"><mat-icon>delete</mat-icon> </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-toolbar>
+                <mat-toolbar-row> <span class="example-spacer"></span>
+                  <button  mat-fab color="primary"  title="New Adoption" style="background-color: #009879;" (click) = "onCreate()">
+                    <mat-icon>add</mat-icon>
+                  </button>
+            <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons style ="width: 100%;background-color: whitesmoke;"></mat-paginator>
+        </mat-toolbar-row>
+    </mat-toolbar>
+            </div>  
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+
+

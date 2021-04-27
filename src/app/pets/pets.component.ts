@@ -18,8 +18,7 @@ export class PetsComponent implements OnInit {
   payload;
   Pet : Pet[];
   status: string;
-  constructor(private accountService: AccountService, private dialog: MatDialog, private petService: PetService) { 
-  }
+  constructor(private accountService: AccountService, private dialog: MatDialog, private petService: PetService) {}
 
   ngOnInit(): void {
     this.pets();
@@ -47,9 +46,11 @@ export class PetsComponent implements OnInit {
   }
 
   onCreate() {
+    this.petService.form.reset();
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;  
+    dialogConfig.disableClose = true;
     dialogConfig.width = "35%"
     this.dialog.open(AddPetComponent,dialogConfig);
   }
@@ -64,6 +65,7 @@ export class PetsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;  
+    dialogConfig.disableClose = true;
     dialogConfig.width = "35%"
     this.dialog.open(AddPetComponent,dialogConfig);
   }

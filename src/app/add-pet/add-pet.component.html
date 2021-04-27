@@ -4,13 +4,13 @@
     <h2 style = "padding-left: 20px;font-family: Arial, Helvetica, sans-serif;display: inline-block;">New Pet</h2>
       <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
       <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "service.form" (ngSubmit) = "onSubmit()">
-        <mat-form-field style = "width:80%">
-          <input matInput placeholder="Name" formControlName = "name" >
+        <mat-form-field style = "width:95%">
+          <input matInput placeholder="Name" formControlName = "name" maxlength="20">
         </mat-form-field>
         <mat-error *ngIf="service.form.controls.name.hasError('required') && service.form.controls.name.touched" style="color:red;font-size: small;">
           Name is <strong>required</strong>
          </mat-error>
-        <mat-form-field style = "width:80%">
+        <mat-form-field style = "width:95%">
           <mat-label>Type of Pet</mat-label>
           <mat-select formControlName = "animaltype">
             <mat-option *ngFor = "let animal of animalType" [value] = "animal.type">
@@ -21,7 +21,7 @@
         <mat-error *ngIf="service.form.controls.animaltype.hasError('required') && service.form.controls.animaltype.touched" style="color:red;font-size: small;">
           Animal Type is <strong>required</strong>
         </mat-error>
-        <mat-form-field style = "width:80%">
+        <mat-form-field style = "width:95%">
           <input matInput placeholder="Race" formControlName = "race">
         </mat-form-field>
         <mat-error *ngIf="service.form.controls.race.hasError('required') && service.form.controls.race.touched" style="color:red;font-size: small;">
@@ -29,7 +29,10 @@
         </mat-error>
         <div class="file-upload">
           <input type="file" name="image" accept="image/x-png,image/gif,image/jpeg" />
-          <button  mat-raised-button type="submit" style = "margin-left: 200px;" >Submit</button>
         </div>
+          <div mat-dialog-actions>
+          <button mat-button type="submit">SUBMIT</button>
+          <button mat-button class="close"  (click) ="onNoClick()">CLOSE</button>
+      </div>
       </form>  
 </div>

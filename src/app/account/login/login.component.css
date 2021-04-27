@@ -1,7 +1,7 @@
 .main-div mat-card {
     padding: 0px;
-      margin-top: 17%;
-}
+    margin-top: 17%;
+  }
 
 .login-form {
     padding: 20px
@@ -30,3 +30,10 @@
   .mat-raised-button{
     color: #52b788 !important;
   }
+
+  /* ::ng-deep.mat-typography {
+  width: 100%;
+  background-image:url('../../../assets/img/2024571.jpg');
+  background-size: cover;
+  background-position: center;
+} */

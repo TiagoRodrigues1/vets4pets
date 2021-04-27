@@ -1,8 +1,9 @@
 export class Clinic {
-    id: number;
+    ID: number;
     name: string;
     contact: string;
     email: string;
     address: string;
-    UserID: number; //manager da clinica 
+    UserID: number; //manager da clinica
+
 }

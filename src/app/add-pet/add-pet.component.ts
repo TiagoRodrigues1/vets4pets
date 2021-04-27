@@ -5,6 +5,7 @@ import { AccountService } from 'src/app/services/account.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PetsComponent } from '../pets/pets.component';
 import { PetService } from '../services/pet.service';
+import { CustomValidatorService } from '../services/custom-validator.service';
 interface AnimalType {
   type : string,
   viewValue: string,
@@ -26,7 +27,7 @@ export class AddPetComponent implements OnInit {
     {type: 'guinea-pig',viewValue:'Guinea Pig'},
     {type: 'bird',viewValue:'Bird'},
   ];
-  constructor(private accountService: AccountService,private router: Router,private route: ActivatedRoute,private dialogRef: MatDialogRef<PetsComponent>,private petService: PetService) { }
+  constructor(private accountService: AccountService,private router: Router,private route: ActivatedRoute,private dialogRef: MatDialogRef<PetsComponent>,private petService: PetService, private val : CustomValidatorService) { }
 
   ngOnInit(): void {
   }
@@ -36,6 +37,7 @@ onSubmit() {
     if (this.petService.form.invalid) {
       return;
   }
+  this.petService.form.get('UserID').setValue(this.val.getUserId());
   console.log(this.petService.form.value);
   this.accountService.createPet(this.petService.form.value).pipe(first()).subscribe({
     next: () => {
@@ -48,12 +50,12 @@ onSubmit() {
   if (this.petService.form.invalid) {
     return;
 }
-  console.log(this.petService.form.get('ID').value);
+  //console.log(this.petService.form.get('ID').value);
   this.accountService.editPet(this.petService.form.get('ID').value,this.petService.form.value).subscribe();
   this.onClose();
   window.location.reload();
-}
   }
+}
 
 onClose() {
   this.petService.form.reset();
@@ -67,6 +69,9 @@ populateForm() {
 
   get service() {
     return this.petService;
+  }
+  onNoClick() {
+    this.dialogRef.close();
   }
 }
 

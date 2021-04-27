@@ -1,24 +1,29 @@
+<div class ="teste"  >
 <div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
-    <mat-card fxFlex = "25">
-        <mat-toolbar>Login Page</mat-toolbar>
-        <form fxLayoutAlign = "stretch" fxLayout = "column" class = "login-form" [formGroup] = "form" (ngSubmit) = "onSubmit()">
-            <mat-form-field>
-              <input matInput placeholder = "Email" formControlName = "email" type = "email" ngModel email >
+  <mat-card fxFlex = "50">
+      <mat-toolbar>Login Page</mat-toolbar>
+      <form fxLayoutAlign = "stretch" fxLayout = "column" class = "login-form" [formGroup] = "form" (ngSubmit) = "onSubmit()">
+          <mat-form-field>
+            <input matInput placeholder = "Email" formControlName = "email" type = "email" ngModel email >
+          </mat-form-field>
+          <div *ngIf="(f.email.touched || f.email.dirty) && f.email.errors">
+            <div *ngIf="f.email.errors.required" style="color:red;font-size: small;" >Email is <strong>required</strong></div>
+            <div *ngIf="f.email.errors.pattern" style="color:red;font-size: small;" >Email not <strong>valid</strong></div>
+        </div>
+          <mat-form-field>
+              <input matInput type = "password" placeholder="Password" formControlName = "password">
             </mat-form-field>
-            <mat-error *ngIf="f.email.hasError('email') && f.email.hasError('required') " style="color:red;font-size: small;">
-              Please enter a valid email address
-            </mat-error>
-            <mat-error *ngIf="f.email.hasError('required') && f.email.touched" style="color:red;font-size: small;">
-              Email is <strong>required</strong>
-            </mat-error>
-            <mat-form-field>
-                <input matInput type = "password" placeholder="Password" formControlName = "password">
-              </mat-form-field>
-              <button mat-raised-button type ="submit">
-                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1" type = "submit"></span>
-                Login</button>
-              <br> 
-              <a mat-raised-button routerLink="/account/register" routerLinkActive="active">Register</a>
-          </form>   
-    </mat-card>
+            <div *ngIf="(f.password.touched || f.password.dirty) && f.password.errors" style="color: red;font-size: small;">
+              <div *ngIf="f.password.errors.required">Password is <strong>required</strong></div>
+              <!-- <div *ngIf="f.password.errors.minlength">Password must be at least <strong>6</strong> characters</div> --> 
+          </div>
+            <button mat-raised-button type ="submit" [disabled] = "loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1" type = "submit"></span>
+              Login</button>
+            <br> 
+            <a mat-raised-button routerLink="/account/register" routerLinkActive="active">Register</a>
+            <div *ngIf="error" style="color: red;font-size:medium;padding-top: 10px;">{{error}}</div>
+        </form>
+  </mat-card>
+</div>
 </div>
