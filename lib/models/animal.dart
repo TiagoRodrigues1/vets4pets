@@ -1,23 +1,26 @@
 
 class Animal{
+  int id;
+  int user_id;
   String name;
-  String animalType;
+  String animaltype;
   String race;
+
   //List<Image> picture;
 
-  Animal(this.name, this.animalType, this.race); //testar com bigodes dentro dos ()
-  /* // TESTAR COMO FACTORY
-  factory Animal.fromJson(Map<String, dynamic> json) {
-    return Animal(
-      name: json['name'],
-      animalType: json['animaltype'],
-      race: json['race'],
-    );
-  }
-  */
-  Animal.fromJson(Map<String, dynamic> json)
-      : name = json["name"],
-        animalType = json["animaltype"],
-        race = json["race"];
+ Animal({this.id, this.user_id, this.name, this.animaltype, this.race});
+
+    factory Animal.fromJson(Map<String,dynamic> json){
+        return Animal(
+          id : json["ID"],
+          user_id : json["UserID"],
+          name : json["name"],
+          animaltype : json["animaltype"],
+          race: json["race"]
+         
+        );
+
+
+    }
   
 }
