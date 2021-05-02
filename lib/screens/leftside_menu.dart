@@ -33,7 +33,7 @@ class NavDrawer extends StatelessWidget {
               onTap: () {
                Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PetsPage()),
+                MaterialPageRoute(builder: (context) => IndexPage()),
                 );
                 //Navigator.pop(context);
               },

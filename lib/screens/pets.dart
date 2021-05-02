@@ -1,133 +1,280 @@
 import 'dart:io';
-
 import '../models/animal.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../main.dart';
+import 'dart:convert' as convert;
 
+import '../jwt.dart';
 
-
-final storage = FlutterSecureStorage();
-
-
-  class PetsPage extends StatelessWidget{
-
- Future <List<Animal>> GetPets(int id) async {
-    var response = await http.get(
-        Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
-         headers: {HttpHeaders.authorizationHeader: ""},
-        );
-    var jsonResponse;
-    if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
-      if (jsonResponse != null) {
-        return json.decode(response.body)['data'];
-      }
-    } else {
-      print("User $id as no pets");
-    }
-  }
-
-
-
- 
-
+class IndexPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('User List'),
-      ),
-      body: Container(
-        child: FutureBuilder<List<dynamic>>(
-          future: GetPets(1),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(snapshot.hasData){
-              return ListView.builder(
-                  padding: EdgeInsets.all(8),
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index){
-                    return
-                      Card(
-                        child: Column(
-                          children: <Widget>[
-                            ListTile(
-                              leading: CircleAvatar(
-                                radius: 30,
-                                backgroundImage: NetworkImage(snapshot.data[index]['picture']['large'])),
-                              title: Text(snapshot.data.id),
-                              subtitle: Text(snapshot.data.name),
-                              trailing: Text(snapshot.data.animaltype),
-                            )
-                          ],
-                        ),
-                      );
-                  });
-            }else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
-
-
-        ),
-      ),
-    );
-  }
-
+  _IndexPageState createState() => _IndexPageState();
 }
 
-/*
-class PetsPage extends StatefulWidget {
-   PetsPage({Key key}) : super(key: key);
-
-  @override
-  _PetsPage createState() => _PetsPage();
-}
-
-
-class _PetsPage extends StatelessWidget {
-  late Future<Animal> futurePets;
-
+class _IndexPageState extends State<IndexPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _animaltypeController = TextEditingController();
+  final TextEditingController _raceController = TextEditingController();
+  List pets = [];
+  List pet = [];
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    futurePets = GetPets(1);
-}
+    this.getPets();
+  }
 
+  getPets() async {
+    var jwt = await storage.read(key: "jwt");
 
+    var results = parseJwtPayLoad(jwt);
+    int id = results["UserID"];
+    var response = await http.get(
+      Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
 
- 
+    if (response.statusCode == 200) {
+      var items = json.decode(response.body)['data'];
+      setState(() {
+        pets = items;
+        isLoading = false;
+      });
+      print(json.decode(response.body)['data']);
+    } else {
+      pets = [];
+      isLoading = false;
+    }
+  }
 
+  addPet(String name, String animaltype, String race, BuildContext context) async {
+    var jwt = await storage.read(key: "jwt");
+    var results = parseJwtPayLoad(jwt);
+    int id = results["UserID"];
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    var response = await http.post(
+      Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
+      body: convert.jsonEncode(<String,dynamic>{
+        "name": name,
+        "userID": id,
+        "race": race,
+        "animaltype": animaltype,
+      },
+      
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Fetch Data Example'),
-        ),
-        body: Center(
-          child: FutureBuilder<Animal>(
-            future: futurePets,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data!.id);
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+  }
 
-              // By default, show a loading spinner.
-              return CircularProgressIndicator();
+
+    deletePet(int id) async {
+    var jwt = await storage.read(key: "jwt");
+    var response = await http.delete(
+      Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+    print(response.body);
+     if (response.statusCode == 200) {
+      print("Pet $id was deleted");
+    }
+  }
+   
+ 
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Pets List"),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'New Pet',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => _buildAddpet(),
+                
+              );
+              
             },
           ),
+        ],
+      ),
+      body: getBody(),
+    );
+  }
+
+  Widget getBody() {
+    if (pets.contains(null) || pets.length < 0 || isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return ListView.builder(
+        itemCount: pets.length,
+        itemBuilder: (context, index) {
+          return getCard(pets[index]);
+        });
+  }
+
+  Widget getCard(item) {
+    var id = item['ID'];
+    var name = item['name'];
+    var animaltype = item['animaltype'];
+    var profileUrl =
+        'https://cdn.discordapp.com/attachments/537753005953384448/838351477395292210/f_00001b.png';
+    return Card(
+        elevation: 1.5,
+        child: new InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => buildShowPet(item),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ListTile(
+              title: Row(
+                children: <Widget>[
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(60 / 2),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(profileUrl))),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width - 190,
+                          child: Text(
+                            name,
+                            style: TextStyle(fontSize: 17),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        animaltype.toString(),
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      
+                    ],
+                    
+                  ),
+                   IconButton(
+        
+            icon: const Icon(Icons.delete,color:Colors.red),
+            onPressed: () {
+              deletePet(id);
+            },
+          ),
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+
+  Widget buildShowPet(item) {
+    var id = item['ID'];
+    var name = item['name'];
+    var animaltype = item['animaltype'];
+    var race = item['race'];
+    return new AlertDialog(
+      
+      title: const Text('Pet Perfil'),
+      
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(id.toString()),
+          Text(name.toString()),
+          Text(animaltype.toString()),
+          Text(race.toString()),
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          textColor: Theme.of(context).primaryColor,
+          child: const Text('Close'),
         ),
+       
+      ],
+      
+    );
+  }
+
+  Widget _buildAddpet() {
+    return new AlertDialog(
+      content: Stack(
+        children: <Widget>[
+          Positioned(
+            right: -40.0,
+            top: -40.0,
+            child: InkResponse(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+          Form(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: "Pet Name"),
+                    controller: _nameController,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: "Animal Type"),
+                    controller: _animaltypeController,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: "Race"),
+                    controller: _raceController,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FlatButton(
+                    child: Text("Submit"),
+                    onPressed: () {
+                      var name = _nameController.text;
+                      var animaltype = _animaltypeController.text;
+                      var race = _raceController.text;
+                      print(race+  " " + animaltype +  " "+ name);
+                      addPet(name, animaltype, race, context);
+                      Navigator.of(context).pop();
+                    },
+                    textColor: Theme.of(context).primaryColor,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
-*/
+}

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final storage = FlutterSecureStorage();
+
 
 class RegisterPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();

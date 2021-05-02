@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:convert' show json, base64, ascii;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
+import 'main.dart';
+
 
 
 class MyApp extends StatelessWidget {
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
+    
     if(jwt == null) return "";
     return jwt;
   }

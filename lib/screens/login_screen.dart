@@ -5,8 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'leftside_menu.dart';
 import 'register_screen.dart';
+import '../main.dart';
+import '../jwt.dart';
 
-var url = 'localhost:8081/api/v1/auth/login';
+
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -27,9 +29,16 @@ class LoginPage extends StatelessWidget {
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       if (jsonResponse != null) {
-        print('access token is -> ${json.decode(response.body)['token']}');
-
-        print(response.body);
+       
+        var token=json.decode(response.body)['token'];
+        await storage.write(key: 'jwt', value: token);
+       // print(response.body);
+       // print(token);
+      /* print(parseJwtPayLoad(token));
+        var results=(parseJwtPayLoad(token)).values.toList();*/
+        var results=parseJwtPayLoad(token);
+        int id=results["UserID"];
+        print(id);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavDrawer()),
