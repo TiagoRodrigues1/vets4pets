@@ -36,10 +36,8 @@ class NavDrawer extends StatelessWidget {
                 leading: Icon(Icons.pets),
                 title: Text('Pets'),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PetsPage()),
-                  );
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => PetsPage()), (Route<dynamic> route) => false);
+
                 },
               ),
               ExpansionTile(

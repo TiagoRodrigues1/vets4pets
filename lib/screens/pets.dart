@@ -4,11 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:http/http.dart' as http;
-
 import '../main.dart';
 import 'dart:convert' as convert;
-
 import '../jwt.dart';
+import 'leftside_menu.dart';
 
 class PetsPage extends StatefulWidget {
   @override
@@ -30,7 +29,6 @@ class _IndexPageState extends State<PetsPage> {
 
   getPets() async {
     var jwt = await storage.read(key: "jwt");
-
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
     var response = await http.get(
@@ -87,6 +85,13 @@ class _IndexPageState extends State<PetsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back ),
+            tooltip: 'New Pet',
+            onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => NavDrawer()), (Route<dynamic> route) => false);
+            },
+          ),
         title: Text("Pets List"),
         actions: <Widget>[
           IconButton(
@@ -265,7 +270,6 @@ class _IndexPageState extends State<PetsPage> {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
-                      //print(race+  " " + animaltype +  " "+ name);
                       addPet(name, animaltype, race, context);
                       Navigator.of(context).pop();
                    

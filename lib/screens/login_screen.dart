@@ -32,13 +32,6 @@ class LoginPage extends StatelessWidget {
        
         var token=json.decode(response.body)['token'];
         await storage.write(key: 'jwt', value: token);
-       // print(response.body);
-       // print(token);
-      /* print(parseJwtPayLoad(token));
-        var results=(parseJwtPayLoad(token)).values.toList();*/
-        var results=parseJwtPayLoad(token);
-        int id=results["UserID"];
-        print(id);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavDrawer()),
