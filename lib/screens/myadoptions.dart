@@ -1,21 +1,23 @@
 import 'dart:io';
 import 'package:hello_world/models/animaltypes.dart';
+import '../models/animal.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:http/http.dart' as http;
-
+import 'dart:async';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../main.dart';
 import 'dart:convert' as convert;
 
 import '../jwt.dart';
 
-class PetsPage extends StatefulWidget {
+class MyAdoptionsPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
 }
 
-class _IndexPageState extends State<PetsPage> {
+class _IndexPageState extends State<MyAdoptionsPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animaltypeController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
@@ -25,61 +27,20 @@ class _IndexPageState extends State<PetsPage> {
   @override
   void initState() {
     super.initState();
-    this.getPets();
+    this.getAdoptions();
   }
 
-  getPets() async {
-    var jwt = await storage.read(key: "jwt");
-
-    var results = parseJwtPayLoad(jwt);
-    int id = results["UserID"];
-    var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
-      headers: {HttpHeaders.authorizationHeader: jwt},
-    );
-
-    if (response.statusCode == 200) {
-      var items = json.decode(response.body)['data'];
-      setState(() {
-        pets = items;
-        isLoading = false;
-      });
-      print(json.decode(response.body)['data']);
-    } else {
-      pets = [];
-      isLoading = false;
-    }
+  getAdoptions() async {
+  
   }
 
-  addPet(String name, String animaltype, String race, BuildContext context) async {
-    var jwt = await storage.read(key: "jwt");
-    var results = parseJwtPayLoad(jwt);
-    int id = results["UserID"];
-
-    var response = await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
-      body: convert.jsonEncode(<String,dynamic>{
-        "name": name,
-        "userID": id,
-        "race": race,
-        "animaltype": animaltype,
-      },),
-      headers: {HttpHeaders.authorizationHeader: jwt},
-    );
-      print(response.body);
+  addAdoption(String name, String animaltype, String race, BuildContext context) async {
+   
   }
 
 
-    deletePet(int id) async {
-    var jwt = await storage.read(key: "jwt");
-    var response = await http.delete(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
-      headers: {HttpHeaders.authorizationHeader: jwt},
-    );
-    print(response.body);
-     if (response.statusCode == 200) {
-      print("Pet $id was deleted");
-    }
+    deleteAdoption(int id) async {
+   
   }
 
 
@@ -87,16 +48,13 @@ class _IndexPageState extends State<PetsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pets List"),
+        title: Text("Latest Adoptions"),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'New Pet',
+            icon: const Icon(Icons.person),
+            tooltip: 'My Adoptions',
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => _buildAddpet(),
-              );             
+                         
             },
           ),
         ],
@@ -128,7 +86,7 @@ class _IndexPageState extends State<PetsPage> {
           onTap: () {
             showDialog(
               context: context,
-              builder: (BuildContext context) => buildShowPet(item),
+              builder: (BuildContext context) => buildShowAdoption(item),
             );
           },
           child: Padding(
@@ -172,8 +130,7 @@ class _IndexPageState extends State<PetsPage> {
         
             icon: const Icon(Icons.delete,color:Colors.red),
             onPressed: () {
-              deletePet(id);
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => PetsPage()), (Route<dynamic> route) => false);
+            
             },
           ),
                 ],
@@ -183,7 +140,7 @@ class _IndexPageState extends State<PetsPage> {
         ));
   }
 
-  Widget buildShowPet(item) {
+  Widget buildShowAdoption(item) {
     var id = item['ID'];
     var name = item['name'];
     var animaltype = item['animaltype'];
@@ -216,7 +173,7 @@ class _IndexPageState extends State<PetsPage> {
     );
   }
 
-  Widget _buildAddpet() {
+  Widget _buildAddAdoption() {
     
     return new AlertDialog(
       content: Stack(
@@ -265,8 +222,8 @@ class _IndexPageState extends State<PetsPage> {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
-                      //print(race+  " " + animaltype +  " "+ name);
-                      addPet(name, animaltype, race, context);
+                      print(race+  " " + animaltype +  " "+ name);
+                     //
                       Navigator.of(context).pop();
                    
                     },

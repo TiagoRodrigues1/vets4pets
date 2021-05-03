@@ -23,7 +23,8 @@ class RegisterPage extends StatelessWidget {
     var response = await http.post(
         Uri.parse('http://52.47.179.213:8081/api/v1/auth/register'),
         body: convert.jsonEncode(
-            <String, String>{"password": password, "email": email}));
+            <String, String>{"email": email,"password": password }));
+            print(response.statusCode);
     var jsonResponse;
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
