@@ -39,10 +39,6 @@ class _IndexPageState extends State<AdoptionsPage> {
   }
 
 
-    deleteAdoption(int id) async {
-   
-  }
-
 
  
   Widget build(BuildContext context) {
@@ -126,13 +122,7 @@ class _IndexPageState extends State<AdoptionsPage> {
                     ],
                     
                   ),
-                   IconButton(
-        
-            icon: const Icon(Icons.delete,color:Colors.red),
-            onPressed: () {
-            
-            },
-          ),
+           
                 ],
               ),
             ),
@@ -222,8 +212,7 @@ class _IndexPageState extends State<AdoptionsPage> {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
-                      print(race+  " " + animaltype +  " "+ name);
-                     //
+                     
                       Navigator.of(context).pop();
                    
                     },

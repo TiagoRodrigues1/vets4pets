@@ -38,7 +38,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+flutter_secure_storage: ^3.3.1+1
+select_form_field: "^2.0.0"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

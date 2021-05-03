@@ -14,12 +14,18 @@ class PetsPage extends StatefulWidget {
   _IndexPageState createState() => _IndexPageState();
 }
 
+class Constants{
+  Constants._();
+  static const double padding =20;
+  static const double avatarRadius =45;
+}
+
 class _IndexPageState extends State<PetsPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animaltypeController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
   List pets = [];
-  List<Map<String,dynamic>> petsType = animalTypes;
+  List<Map<String, dynamic>> petsType = animalTypes;
   bool isLoading = false;
   @override
   void initState() {
@@ -42,7 +48,7 @@ class _IndexPageState extends State<PetsPage> {
         pets = items;
         isLoading = false;
       });
-      print(json.decode(response.body)['data']);
+     
     } else {
       pets = [];
       isLoading = false;
@@ -53,45 +59,45 @@ class _IndexPageState extends State<PetsPage> {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-
     var response = await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
-      body: convert.jsonEncode(<String,dynamic>{
-        "name": name,
-        "userID": id,
-        "race": race,
-        "animaltype": animaltype,
-      },),
+      body: convert.jsonEncode(
+        <String, dynamic>{
+          "name": name,
+          "userID": id,
+          "race": race,
+          "animaltype": animaltype,
+        },
+      ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-      print(response.body);
+    print(response.body);
   }
 
-
-    deletePet(int id) async {
+  deletePet(int id) async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.delete(
       Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     print(response.body);
-     if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
       print("Pet $id was deleted");
     }
   }
 
-
- 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back ),
-            tooltip: 'New Pet',
-            onPressed: () {
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => NavDrawer()), (Route<dynamic> route) => false);
-            },
-          ),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => NavDrawer()),
+                (Route<dynamic> route) => false);
+          },
+        ),
         title: Text("Pets List"),
         actions: <Widget>[
           IconButton(
@@ -101,7 +107,7 @@ class _IndexPageState extends State<PetsPage> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) => _buildAddpet(),
-              );             
+              );
             },
           ),
         ],
@@ -169,18 +175,18 @@ class _IndexPageState extends State<PetsPage> {
                         animaltype.toString(),
                         style: TextStyle(color: Colors.grey),
                       ),
-                      
                     ],
-                    
                   ),
-                   IconButton(
-        
-            icon: const Icon(Icons.delete,color:Colors.red),
-            onPressed: () {
-              deletePet(id);
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => PetsPage()), (Route<dynamic> route) => false);
-            },
-          ),
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      deletePet(id);
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => PetsPage()),
+                          (Route<dynamic> route) => false);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -188,53 +194,82 @@ class _IndexPageState extends State<PetsPage> {
         ));
   }
 
+
+
   Widget buildShowPet(item) {
-    var id = item['ID'];
-    var name = item['name'];
-    var animaltype = item['animaltype'];
-    var race = item['race'];
-    return new AlertDialog(
-      
-      title: const Text('Pet Perfil'),
-      
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(id.toString()),
-          Text(name.toString()),
-          Text(animaltype.toString()),
-          Text(race.toString()),
-        ],
+      return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Constants.padding),
       ),
-      actions: <Widget>[
-        new FlatButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          textColor: Theme.of(context).primaryColor,
-          child: const Text('Close'),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: contentBox(context,item),
+    );
+  }
+
+
+ contentBox(context,item){
+   var name=item['name'];
+   var animaltype=item['animaltype'];
+   var race=item['race'];
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(left: Constants.padding,top: Constants.avatarRadius
+              + Constants.padding, right: Constants.padding,bottom: Constants.padding
+          ),
+          margin: EdgeInsets.only(top: Constants.avatarRadius),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(Constants.padding),
+            boxShadow: [
+              BoxShadow(color: Colors.black,offset: Offset(0,10),
+              blurRadius: 10
+              ),
+            ]
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(name,style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600),),
+              SizedBox(height: 15,),
+              Text(animaltype ,style: TextStyle(fontSize: 14),textAlign: TextAlign.center,),
+              SizedBox(height: 22,),
+              Text(race ,style: TextStyle(fontSize: 14),textAlign: TextAlign.center,),
+              SizedBox(height: 22,),
+              Align(
+                alignment: Alignment.bottomRight,
+                child:TextButton(                                    
+                  style: TextButton.styleFrom(primary: Colors.green),
+                    onPressed: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Close",style: TextStyle(fontSize: 18),)),
+              ),
+            ],
+          ),
         ),
-       
+        Positioned(
+          left: Constants.padding,
+            right: Constants.padding,
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: Constants.avatarRadius,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(Constants.avatarRadius)),
+                  child: Image.network("https://cdn.discordapp.com/attachments/537753005953384448/838351477395292210/f_00001b.png")
+              ),
+            ),
+        ),
       ],
-      
     );
   }
 
   Widget _buildAddpet() {
-    
     return new AlertDialog(
       content: Stack(
         children: <Widget>[
-          Positioned(
-            right: -40.0,
-            top: -40.0,
-            child: InkResponse(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
           Form(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -264,17 +299,19 @@ class _IndexPageState extends State<PetsPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text("Submit"),
+                    style: TextButton.styleFrom(primary: Colors.green),
                     onPressed: () {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
                       addPet(name, animaltype, race, context);
-                      Navigator.of(context).pop();
-                   
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => PetsPage()),
+                          (Route<dynamic> route) => false);
                     },
-                    textColor: Theme.of(context).primaryColor,
                   ),
                 )
               ],
@@ -284,6 +321,4 @@ class _IndexPageState extends State<PetsPage> {
       ),
     );
   }
-
-  
 }

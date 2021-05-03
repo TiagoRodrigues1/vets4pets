@@ -177,7 +177,11 @@ class _IndexPageState extends State<MyAdoptionsPage> {
         
             icon: const Icon(Icons.delete,color:Colors.red),
             onPressed: () {
-            
+                deleteAdoption(id);
+                  Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => MyAdoptionsPage()),
+                          (Route<dynamic> route) => false);
             },
           ),
                 ],
