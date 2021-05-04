@@ -1,0 +1,23 @@
+<script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+
+<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
+  <div fxFlex="row" fxLayoutGap="10px" class="header" style ="background-color:#52b788">
+    <h1 style = "padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white;">Appoitment Details</h1>
+</div>
+      <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
+      <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" >
+            <mat-label style = "font-size:18px">Title</mat-label>
+            <p>{{displayData.title}}</p>
+            <mat-label style = "font-size:18px">Start Date</mat-label>
+            <p>{{date}}</p>
+            <mat-label style = "font-size:18px">Pet Name</mat-label>
+            <p>{{pet?.name}}</p>
+            <mat-label style = "font-size:18px">Pet Type</mat-label>
+            <p>{{pet?.animaltype}}</p>
+            <mat-label style = "font-size:18px">Pet Race</mat-label>
+            <p>{{pet?.race}}</p>
+        <div mat-dialog-actions>
+          <button mat-button class="close1" (click) ="onNoClick()">CLOSE</button>
+      </div>
+      </form>  
+</div>

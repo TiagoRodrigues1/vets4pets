@@ -27,11 +27,11 @@ export class LeftMenuComponent implements OnInit {
   public linkText: boolean = false;
   
   public pages: Page[] = [
-    {name: 'Veterinarios', link:'/clinic', icon: 'store'},
+    {name: 'Veterinaries', link:'/clinic', icon: 'store'},
     {name: 'Pets', link:'/pets', icon: 'pets'},
     {name: 'Adoptions', link:'/adoptions', icon: 'favorite'},
     {name: 'Forum', link:'some-link', icon: 'supervisor_account'},
-    {name: 'Veterinarios perto de si', link:'/maps', icon: 'place'},
+    {name: 'Near Vets', link:'/maps', icon: 'place'},
   ]
   
   constructor(private _sidenavService: SidenavService,private accountService: AccountService) { 

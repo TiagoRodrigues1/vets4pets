@@ -15,13 +15,13 @@ export class RegisterComponent implements OnInit {
   loading = false;
   submitted = false;
   emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
-  
+  phoneRegex = '^(?:2\d|9[1236])[0-9]{7}$';
   constructor(private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
     private customValidator : CustomValidatorService) { }
-
+    error:string;
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       gender: ['', Validators.required],
-      contact: ['', Validators.required],
+      contact: ['', [Validators.required,Validators.pattern(this.phoneRegex)]],
       birthday: ['', Validators.required],
   },{
     validator: this.customValidator.passwordMatchValidator("password","passwordConfirm")
@@ -57,6 +57,7 @@ export class RegisterComponent implements OnInit {
                 this.router.navigate(['../login'], { relativeTo: this.route });
             },
             error: error => {
+                this.error = error;
                 this.loading = false;
             }
         });

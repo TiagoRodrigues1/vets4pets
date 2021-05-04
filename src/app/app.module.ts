@@ -52,6 +52,17 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
 import interactionPlugin from '@fullcalendar/interaction';
+import { UserProfileComponent } from './user/user-profile/user-profile.component';
+import { EditUserProfileComponent } from './user/edit-user-profile/edit-user-profile.component';
+import { EditUserComponent } from './backoffice/admin/edit-user/edit-user.component';
+import { DisplayAppointmentComponent } from './user/display-appointment/display-appointment.component';
+import { AppointmentDetailsComponent } from './user/appointment-details/appointment-details.component';
+import { AlertComponent } from './user/alert/alert.component';
+import { DeletePetComponent } from './pets/delete-pet/delete-pet.component';
+import { PetProfileComponent } from './pets/pet-profile/pet-profile.component';
+import { ShowVaccinesComponent } from './pets/show-vaccines/show-vaccines.component';
+import { PipeVaccinePipe } from './pets/show-vaccines/pipe-vaccine.pipe';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -75,6 +86,17 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     ManagerComponent,
     AddClinicComponent,
     ManageAppointmentComponent,
+    UserProfileComponent,
+    EditUserProfileComponent,
+    EditUserComponent,
+    DisplayAppointmentComponent,
+    AppointmentDetailsComponent,
+    AlertComponent,
+    DeletePetComponent,
+    PetProfileComponent,
+    ShowVaccinesComponent,
+    PipeVaccinePipe,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -119,7 +141,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     LeftMenuComponent], 
   exports: [
     HeaderComponent,
-    LeftMenuComponent],
+    LeftMenuComponent,
+    AlertComponent],
   bootstrap: [AppComponent],
   entryComponents:[AddPetComponent]
 })

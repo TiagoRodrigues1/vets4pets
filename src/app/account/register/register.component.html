@@ -29,7 +29,7 @@
           </mat-form-field>
           <div *ngIf="(f.contact.touched || f.contact.dirty) && f.contact.errors" style="color: red;font-size: small;">
             <div *ngIf="f.contact.errors.required">Contact is  <strong>required</strong></div>
-            <div *ngIf="f.contact.errors.pattern" style="color:red;font-size: small;" >Contact not valid</div>
+            <div *ngIf="f.contact.errors.pattern" style="color:red;font-size: small;" >Contact not <strong>valid</strong></div>
         </div>
 
           <mat-form-field appearance="fill">
@@ -41,6 +41,7 @@
           <div *ngIf="(f.birthday.touched || f.birthday.dirty) && f.birthday.errors" style="color: red;font-size: small;">
             <div *ngIf="f.birthday.errors.required">Birthday is <strong>required</strong></div>
         </div>
+
           <mat-radio-group aria-label="Select an option" formControlName = "gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
             <mat-radio-button value="0" [value] = "false">Male</mat-radio-button>
             <mat-radio-button value="1" [value] = "true">Female</mat-radio-button>
@@ -59,7 +60,7 @@
             <mat-form-field>
               <input matInput type = "password" placeholder="Confirm Password" formControlName = "passwordConfirm" [ngClass]="{ 'is-invalid': submitted && f.passwordConfirm.errors }" >
             </mat-form-field>
-            <div *ngIf="(f.passwordConfirm.touched || f.passwordConfirm.dirty) && f.passwordConfirm.errors" style="color: red;">
+            <div *ngIf="(f.passwordConfirm.touched || f.passwordConfirm.dirty) && f.passwordConfirm.errors" style="color: red;font-size: small;">
               <div *ngIf="f.passwordConfirm.errors.required">Confirm Password is <strong>required</strong></div>
               <div *ngIf="f.passwordConfirm.errors.minlength">Confirm Password must be at least <strong>6</strong> characters</div>
               <div *ngIf="f.passwordConfirm.hasError('passwordMismatch')">Passwords <strong>don't match</strong></div>
@@ -69,6 +70,7 @@
               Register</button>
             <br> 
             <a mat-raised-button routerLink="/account/login" routerLinkActive="active">Login</a>
-        </form>
+            <div *ngIf="error" style="color: red;font-size:small;padding-top: 10px;">{{error}}</div>
+          </form>
   </mat-card>
 </div>

@@ -13,7 +13,7 @@ import { ClinicService } from 'src/app/services/clinic.service';
 export class ClinicComponent implements OnInit {
   Clinic : Clinic[];
   s: string;
-  constructor(private accountService: AccountService, private router: Router,private clinicService: ClinicService) { }
+  constructor(private accountService: AccountService, private router: Router) { }
 
   ngOnInit(): void {
     this.clinics();

@@ -1,0 +1,17 @@
+<form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "form" (ngSubmit) = "onSubmit()">
+    <mat-form-field style = "width:95%">
+<mat-label>Type of User</mat-label>
+<mat-select formControlName = "userType">
+  <mat-option *ngFor = "let user of userType" [value] = "user.type">
+     {{user.viewValue}} 
+  </mat-option>
+</mat-select>
+</mat-form-field>
+<mat-error *ngIf="form.controls.userType.hasError('required') && form.controls.userType.touched" style="color:red;font-size: small;">
+User Type is <strong>required</strong>
+</mat-error>
+<div mat-dialog-actions>
+    <button mat-button type="submit">SUBMIT</button>
+    <button mat-button class="close"  (click) ="onNoClick()">CLOSE</button>
+</div>
+</form>

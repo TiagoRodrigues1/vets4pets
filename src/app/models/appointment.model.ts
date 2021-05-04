@@ -1,12 +1,12 @@
 export class Appointment {
     ID: number;
-    animalID: number;
+    AnimalID: number;
     vetID: number;
     date: Date;
     showedUp: boolean;
     
     constructor(animalID:number,vetID:number,date:Date) {
-        this.animalID = animalID;
+        this.AnimalID = animalID;
         this.vetID = vetID;
         this.date = date;
     }

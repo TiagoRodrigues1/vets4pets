@@ -6,6 +6,9 @@ import { AccountService } from '../services/account.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddPetComponent } from '../add-pet/add-pet.component';
 import { PetService } from '../services/pet.service';
+import { AlertService } from '../services/alert.service';
+import { DeletePetComponent } from './delete-pet/delete-pet.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pets',
@@ -18,7 +21,7 @@ export class PetsComponent implements OnInit {
   payload;
   Pet : Pet[];
   status: string;
-  constructor(private accountService: AccountService, private dialog: MatDialog, private petService: PetService) {}
+  constructor(private accountService: AccountService, private dialog: MatDialog, private petService: PetService,private alertService: AlertService,private router: Router) {}
 
   ngOnInit(): void {
     this.pets();
@@ -48,27 +51,32 @@ export class PetsComponent implements OnInit {
   onCreate() {
     this.petService.form.reset();
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;  
     dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;  
     dialogConfig.width = "35%"
     this.dialog.open(AddPetComponent,dialogConfig);
   }
 
   deletePet(id:number) {
-    this.accountService.deletePet(id).subscribe(() => this.status = 'Delete Sucessful');
-    window.location.reload();
+    this.petService.form.reset();
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;  
+    dialogConfig.width = "20%"
+    dialogConfig.data = id;
+    this.dialog.open(DeletePetComponent,dialogConfig);
   }
 
   editPet(pet) {
     this.petService.populateForm(pet);
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;  
     dialogConfig.disableClose = true;
     dialogConfig.width = "35%"
     this.dialog.open(AddPetComponent,dialogConfig);
   }
  
-
+  goProfile(id:number) {
+    this.router.navigate([`/pets/${id}`],{state: {data: id}});
+  }
 }

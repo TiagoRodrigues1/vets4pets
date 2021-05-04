@@ -1,0 +1,10 @@
+::ng-deep.fc-daygrid-event-dot {
+    cursor:pointer;
+}
+::ng-deep.fc-event-time {
+    cursor:pointer;
+}
+
+::ng-deep.fc-event-title {
+    cursor:pointer;
+}

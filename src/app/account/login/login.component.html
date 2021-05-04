@@ -23,6 +23,10 @@
             <br> 
             <a mat-raised-button routerLink="/account/register" routerLinkActive="active">Register</a>
             <div *ngIf="error" style="color: red;font-size:medium;padding-top: 10px;">{{error}}</div>
+            <small>
+              <br> 
+            <a routerLink = "/account/forgot-password" routerLinkActive="active">Reset Password</a>
+          </small>
         </form>
   </mat-card>
 </div>

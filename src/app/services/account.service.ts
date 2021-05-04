@@ -10,6 +10,7 @@ import { Appointment } from '../models/appointment.model';
 import { Clinic } from '../models/clinic.model';
 import { Pet } from '../models/pet.model';
 import { User } from '../models/user.model';
+import { Vaccines } from '../models/vaccines';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +47,27 @@ register(user: User) {
   return this.http.post(`${environment.apiUrl}/auth/register`, user);
 }
   
+refreshToken() {
+  return this.http.put<any>(`${environment.apiUrl}/auth/refresh_token`,{}, {withCredentials: true}).pipe(
+    map((user) => {
+      localStorage.setItem('user', JSON.stringify(user));
+      this.userSubject.next(user);
+      return user;
+    }));
+}
+
+validateResetToken(token:string) {
+  return this.http.post(`${environment.apiUrl}/auth/validate_reset_token`,{token})
+}
+
+forgotPassword(email:string) { //ToDo---------------
+  return this.http.post(`${environment.apiUrl}/auth/forgot_password`,{email});
+}
+
+resetPassword(token:string, password: string, passwordConfirm: string) {
+  return this.http.post(`${environment.apiUrl}/auth/reset_password`,{token,password,passwordConfirm});
+}
+
 getPets(id: number): Observable<Pet[]> {
   return this.http.get<Pet[]>(`${environment.apiUrl}/userAnimals/${id}`);
 }
@@ -79,8 +101,8 @@ createClinic(clinic:Clinic) {
 }
 
 editClinic(id:number, clinic: Clinic) {
-  return this.http.put(`${environment.apiUrl}/clinic/${id}`,clinic);
-}
+  return this.http.put(`${environment.apiUrl}/clinic/${id}`,clinic); //falta fazer o endpoint
+} 
 
 deleteClinic(id:number) {
   return this.http.delete(`${environment.apiUrl}/clinic/${id}`);
@@ -92,6 +114,26 @@ getAppointmentByVet(id:number): Observable<Appointment[]> {
 
 getAppointment(id:number): Observable<Appointment> {
   return this.http.get<Appointment>(`${environment.apiUrl}/appointment/${id}`)
+}
+
+getUsers(): Observable<User[]> {
+  return this.http.get<User[]>(`${environment.apiUrl}/user/`)
+}
+
+editUser(id:number, user:User) {
+  return this.http.put(`${environment.apiUrl}/user/${id}`,user)
+}
+
+getAppointmentsUser(id:number) {
+  return this.http.get(`${environment.apiUrl}/appointmentOfuser/${id}`)
+}
+
+getPet(id:number, userID: number): Observable<Pet> {
+  return this.http.get<Pet>(`${environment.apiUrl}/animal/${id}/${userID}`)
+}
+
+getVaccinesByPet(id:number):Observable<Vaccines[]> {
+  return this.http.get<Vaccines[]>(`${environment.apiUrl}/vaccine/${id}/`);
 }
 public get userValue(): User {
   return this.userSubject.value;

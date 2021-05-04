@@ -1,11 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Clinic } from 'src/app/models/clinic.model';
+import { User } from 'src/app/models/user.model';
 import { AccountService } from 'src/app/services/account.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { AddClinicComponent } from './add-clinic/add-clinic.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
+
 
 @Component({
   selector: 'app-admin',
@@ -13,19 +17,30 @@ import { AddClinicComponent } from './add-clinic/add-clinic.component';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   status: string;
 
   ELEMENT_DATA: Clinic[] = [];
   displayedColumns:string[] = ['name','contact','email','address','delete/edit'];
   dataSource = new MatTableDataSource<Clinic>(this.ELEMENT_DATA);
+
+
+  ELEMENT_DATAUser: User[] = [];
+  displayedColumnsUser:string [] = ['name','contact','email','username','userType','delete/edit'];
+  dataSourceUser = new MatTableDataSource<User>(this.ELEMENT_DATAUser);
+
   constructor(private accountService: AccountService,private adminService: AdminService,private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getClinics();
+    this.getUsers();
   }
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator = this.paginator.toArray()[0];
+    this.dataSource.sort = this.sort.toArray()[0];
+    this.dataSourceUser.paginator = this.paginator.toArray()[1];
+    this.dataSource.sort = this.sort.toArray()[1];
   }
 
   getClinics() {
@@ -46,7 +61,6 @@ export class AdminComponent implements OnInit {
   editClinic(clinic) {
     this.adminService.populateForm(clinic);
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;  
     dialogConfig.disableClose = true;
     dialogConfig.width = "35%"
@@ -57,5 +71,21 @@ export class AdminComponent implements OnInit {
     this.accountService.deleteClinic(id).subscribe(() => this.status = 'Delete Sucessful');
     window.location.reload();
   }
-}
 
+  getUsers() {
+    let resp = this.accountService.getUsers();
+    resp.subscribe(report => this.dataSourceUser.data = report ['data'] as User[]);
+    console.log(this.dataSourceUser.data);
+    
+  }
+ 
+  editUser(user:User) {
+    //this.adminService.populateForm(user);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;  
+    dialogConfig.disableClose = true;
+    dialogConfig.width = "35%"
+    dialogConfig.data = user;
+    this.dialog.open(EditUserComponent,dialogConfig);
+  }
+}

@@ -8,6 +8,7 @@ import {
 import { Observable, throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AccountService } from '../services/account.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -19,7 +20,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       if ([401, 403].includes(err.status) && this.accountService.userValue) {
           // auto logout if 401 or 403 response returned from api
           this.accountService.logout();
-      }
+      } 
 
       const error = err.error?.message || err.statusText;
       console.error(err);

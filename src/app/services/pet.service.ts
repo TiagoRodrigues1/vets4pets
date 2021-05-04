@@ -15,7 +15,7 @@ export class PetService {
     form: FormGroup = this.formBuilder.group({
     ID: null,
     name: ['',[Validators.required,Validators.maxLength(20)]],
-    //picture: ['',Validators.required],
+    //profilePicture: ['',Validators.required],
     animaltype: ['',Validators.required],
     race: ['',Validators.required],
     UserID: []
