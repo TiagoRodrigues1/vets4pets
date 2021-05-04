@@ -1,16 +1,11 @@
 import 'dart:io';
 import 'package:hello_world/models/animaltypes.dart';
-import '../models/animal.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:select_form_field/select_form_field.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../main.dart';
 import 'dart:convert' as convert;
-
-import '../jwt.dart';
+import 'AdoptionDetailsPage.dart';
 
 class AdoptionsPage extends StatefulWidget {
   @override
@@ -21,8 +16,8 @@ class _IndexPageState extends State<AdoptionsPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animaltypeController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
-  List pets = [];
-  List<Map<String,dynamic>> petsType = animalTypes;
+  List adoptions = [];
+  List<Map<String,dynamic>> adoptionsType = animalTypes;
   bool isLoading = false;
   @override
   void initState() {
@@ -31,13 +26,28 @@ class _IndexPageState extends State<AdoptionsPage> {
   }
 
   getAdoptions() async {
+   var jwt = await storage.read(key: "jwt");
+    var response = await http.get(
+      Uri.parse('http://52.47.179.213:8081/api/v1/adoptionByTime'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
   
+    if (response.statusCode == 200) {
+      var items = json.decode(response.body)['data'];
+      setState(() {
+        adoptions = items;
+        isLoading = false;
+      });
+      print(json.decode(response.body)['data']);
+    } else {
+      adoptions = [];
+      isLoading = false;
+  }
   }
 
   addAdoption(String name, String animaltype, String race, BuildContext context) async {
-   
+  
   }
-
 
 
  
@@ -47,10 +57,13 @@ class _IndexPageState extends State<AdoptionsPage> {
         title: Text("Latest Adoptions"),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.person),
-            tooltip: 'My Adoptions',
+            icon: const Icon(Icons.add),
+            tooltip: 'New Adoption',
             onPressed: () {
-                         
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => _buildAddAdoption(),
+              );
             },
           ),
         ],
@@ -60,13 +73,13 @@ class _IndexPageState extends State<AdoptionsPage> {
   }
 
   Widget getBody() {
-    if (pets.contains(null) || pets.length < 0 || isLoading) {
+    if (adoptions.contains(null) || adoptions.length < 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
-        itemCount: pets.length,
+        itemCount: adoptions.length,
         itemBuilder: (context, index) {
-          return getCard(pets[index]);
+          return getCard(adoptions[index]);
         });
   }
 
@@ -74,16 +87,24 @@ class _IndexPageState extends State<AdoptionsPage> {
     var id = item['ID'];
     var name = item['name'];
     var animaltype = item['animaltype'];
+    var race = item['race'];
+    var userID = item['userID'];
+    var birth =item['birth'];
+
+    var text = item['text'];
+    var status= item['adopted'];
+    var city= item['city'];
+    
     var profileUrl =
         'https://cdn.discordapp.com/attachments/537753005953384448/838351477395292210/f_00001b.png';
     return Card(
         elevation: 1.5,
         child: new InkWell(
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) => buildShowAdoption(item),
-            );
+           Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AdoptionDetailsPage()),
+                    );
           },
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -109,19 +130,21 @@ class _IndexPageState extends State<AdoptionsPage> {
                           width: MediaQuery.of(context).size.width - 190,
                           child: Text(
                             name,
-                            style: TextStyle(fontSize: 17),
+                            style: TextStyle(fontSize: 15),
                           )),
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        animaltype.toString(),
+                      Text("Type: " +
+                        animaltype +" |"+ " Race: " + race,
                         style: TextStyle(color: Colors.grey),
                       ),
-                      
                     ],
-                    
                   ),
+                    // ignore: missing_required_param
+                    IconButton(
+                      icon: status==true?const Icon(Icons.check_circle,color:Colors.green) : const Icon(Icons.cancel ,color:Colors.red)
+          ),
            
                 ],
               ),
@@ -135,18 +158,22 @@ class _IndexPageState extends State<AdoptionsPage> {
     var name = item['name'];
     var animaltype = item['animaltype'];
     var race = item['race'];
+    var userID = item['UserID'];
+    var text = item['text'];
+    var status= item['adopted'];
     return new AlertDialog(
-      
-      title: const Text('Pet Perfil'),
-      
+      title: const Text('Adoption'),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(id.toString()),
           Text(name.toString()),
           Text(animaltype.toString()),
           Text(race.toString()),
+           Text(userID.toString()),
+            Text(text.toString()),
+             Text(status.toString()),
+              Text(id.toString()),
         ],
       ),
       actions: <Widget>[
@@ -164,19 +191,10 @@ class _IndexPageState extends State<AdoptionsPage> {
   }
 
   Widget _buildAddAdoption() {
-    
-    return new AlertDialog(
+     return new AlertDialog(
       content: Stack(
         children: <Widget>[
-          Positioned(
-            right: -40.0,
-            top: -40.0,
-            child: InkResponse(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
+        
           Form(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -184,19 +202,19 @@ class _IndexPageState extends State<AdoptionsPage> {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: TextFormField(
-                    decoration: InputDecoration(labelText: "Pet Name"),
+                    decoration: InputDecoration(labelText: "Title"),
                     controller: _nameController,
                   ),
                 ),
-                Padding(
+                /*Padding(
                   padding: EdgeInsets.all(8.0),
                   child: SelectFormField(
                     decoration: InputDecoration(labelText: "Animal Type"),
                     type: SelectFormFieldType.dropdown,
-                     items: petsType,
+                    items: typeoptions,
                     controller: _animaltypeController,
                   ),
-                ),
+                ),*/
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: TextFormField(
@@ -206,17 +224,18 @@ class _IndexPageState extends State<AdoptionsPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text("Submit"),
+                    style: TextButton.styleFrom(
+                      primary: Colors.green,
+                    ),
                     onPressed: () {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
-                     
+                      addAdoption(race, animaltype, name, context);
                       Navigator.of(context).pop();
-                   
                     },
-                    textColor: Theme.of(context).primaryColor,
                   ),
                 )
               ],
@@ -226,6 +245,4 @@ class _IndexPageState extends State<AdoptionsPage> {
       ),
     );
   }
-
-  
 }

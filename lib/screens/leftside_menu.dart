@@ -3,8 +3,6 @@ import 'package:hello_world/screens/pets.dart';
 import 'package:hello_world/screens/adoptions.dart';
 import 'package:hello_world/screens/myadoptions.dart';
 
-import 'forum.dart';
-
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

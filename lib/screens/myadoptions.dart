@@ -22,7 +22,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
   final TextEditingController _animaltypeController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
   List adoptions = [];
-  List<Map<String,dynamic>> typeoptions = animalTypes;
+  List<Map<String, dynamic>> typeoptions = animalTypes;
   bool isLoading = false;
   @override
   void initState() {
@@ -31,7 +31,6 @@ class _IndexPageState extends State<MyAdoptionsPage> {
   }
 
   getAdoptions() async {
-
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
@@ -40,7 +39,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/adoption/1'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-  print(response.body);
+    print(response.body);
     if (response.statusCode == 200) {
       var items = json.decode(response.body)['data'];
       setState(() {
@@ -54,40 +53,39 @@ class _IndexPageState extends State<MyAdoptionsPage> {
     }
   }
 
-  addAdoption(String name, String animaltype, String race, BuildContext context) async {
+  addAdoption(
+      String name, String animaltype, String race, BuildContext context) async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
 
     var response = await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/adoption/'),
-      body: convert.jsonEncode(<String,dynamic>{
-        "name": name,
-        "userID": id,
-        "race": race,
-        "animaltype": animaltype,
-      },),
+      body: convert.jsonEncode(
+        <String, dynamic>{
+          "name": name,
+          "userID": id,
+          "race": race,
+          "animaltype": animaltype,
+        },
+      ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-      print(response.body);
+    print(response.body);
   }
-  
 
-
-    deleteAdoption(int id) async {
+  deleteAdoption(int id) async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.delete(
       Uri.parse('http://52.47.179.213:8081/api/v1/adoption/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     print(response.body);
-     if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
       print("Pet $id was deleted");
     }
   }
 
-
- 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -97,10 +95,10 @@ class _IndexPageState extends State<MyAdoptionsPage> {
             icon: const Icon(Icons.add),
             tooltip: 'New Adoption',
             onPressed: () {
-                       showDialog(
+              showDialog(
                 context: context,
                 builder: (BuildContext context) => _buildAddAdoption(),
-              );       
+              );
             },
           ),
         ],
@@ -157,7 +155,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
-                          width: MediaQuery.of(context).size.width -190,
+                          width: MediaQuery.of(context).size.width - 190,
                           child: Text(
                             name,
                             style: TextStyle(fontSize: 17),
@@ -169,21 +167,19 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                         race,
                         style: TextStyle(color: Colors.grey),
                       ),
-                      
                     ],
-                    
                   ),
-                   IconButton(
-        
-            icon: const Icon(Icons.delete,color:Colors.red),
-            onPressed: () {
-                deleteAdoption(id);
-                  Navigator.of(context).pushAndRemoveUntil(
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      deleteAdoption(id);
+                      Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                              builder: (BuildContext context) => MyAdoptionsPage()),
+                              builder: (BuildContext context) =>
+                                  MyAdoptionsPage()),
                           (Route<dynamic> route) => false);
-            },
-          ),
+                    },
+                  ),
                 ],
               ),
             ),
@@ -197,9 +193,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
     var animaltype = item['animaltype'];
     var race = item['race'];
     return new AlertDialog(
-      
       title: const Text('Pet Perfil'),
-      
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,33 +205,24 @@ class _IndexPageState extends State<MyAdoptionsPage> {
         ],
       ),
       actions: <Widget>[
-        new FlatButton(
+        new TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          textColor: Theme.of(context).primaryColor,
+          style: TextButton.styleFrom(
+            primary: Colors.green,
+          ),
           child: const Text('Close'),
         ),
-       
       ],
-      
     );
   }
 
   Widget _buildAddAdoption() {
-    
     return new AlertDialog(
       content: Stack(
         children: <Widget>[
-          Positioned(
-            right: -40.0,
-            top: -40.0,
-            child: InkResponse(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
+        
           Form(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -245,11 +230,11 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: TextFormField(
-                    decoration: InputDecoration(labelText: "Pet Name"),
+                    decoration: InputDecoration(labelText: "Title"),
                     controller: _nameController,
                   ),
                 ),
-                Padding(
+                /*Padding(
                   padding: EdgeInsets.all(8.0),
                   child: SelectFormField(
                     decoration: InputDecoration(labelText: "Animal Type"),
@@ -257,7 +242,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                     items: typeoptions,
                     controller: _animaltypeController,
                   ),
-                ),
+                ),*/
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: TextFormField(
@@ -267,18 +252,19 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text("Submit"),
+                    style: TextButton.styleFrom(
+                      primary: Colors.green,
+                    ),
                     onPressed: () {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
-                      print(race+  " " + animaltype +  " "+ name);
-                     addAdoption(race,animaltype,name,context);
+                      print(race + " " + animaltype + " " + name);
+                      addAdoption(race, animaltype, name, context);
                       Navigator.of(context).pop();
-                   
                     },
-                    textColor: Theme.of(context).primaryColor,
                   ),
                 )
               ],
@@ -288,6 +274,4 @@ class _IndexPageState extends State<MyAdoptionsPage> {
       ),
     );
   }
-
-  
 }

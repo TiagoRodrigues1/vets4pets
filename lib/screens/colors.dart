@@ -10,9 +10,9 @@ class AppColorsTheme {
   AppColorsTheme({this.primarySwatch, this.titleBarGradientStartColor, this.titleBarGradientEndColor, this.textColor, this.secondaryGradientColor});
 
   static final AppColorsTheme myTheme = new AppColorsTheme(
-    primarySwatch: Colors.deepPurple,
-    titleBarGradientStartColor : Colors.deepPurple,
-    titleBarGradientEndColor: Colors.deepPurple,
+    primarySwatch: Colors.green,
+    titleBarGradientStartColor : Colors.greenAccent,
+    titleBarGradientEndColor: Colors.green[300],
     textColor: Colors.black,
     secondaryGradientColor: Colors.grey[300]
   );
