@@ -62,7 +62,7 @@ class LoginPage extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'Password'),
               ),
               TextButton(
-                  style: TextButton.styleFrom(primary: Colors.green),
+                  style: TextButton.styleFrom(primary: Colors.green[300]),
                   onPressed: () async {
                     var username = _usernameController.text;
                     var password = _passwordController.text;

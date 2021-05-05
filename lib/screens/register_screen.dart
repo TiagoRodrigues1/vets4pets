@@ -48,6 +48,7 @@ class RegisterPage extends StatelessWidget {
             children: <Widget>[
               TextField(
                 controller: _nameController,
+               
                 decoration: InputDecoration(labelText: 'Name'),
               ),
               TextField(
@@ -67,7 +68,7 @@ class RegisterPage extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'Password'),
               ),
               TextButton(
-                  style: TextButton.styleFrom(primary: Colors.green),
+                  style: TextButton.styleFrom(primary: Colors.green[300]),
                   onPressed: () async {
                     var email = _emailController.text;
                     var password = _passwordController.text;

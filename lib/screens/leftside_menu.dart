@@ -41,16 +41,17 @@ class NavDrawer extends StatelessWidget {
               ),
               ExpansionTile(
                 leading: Icon(Icons.favorite),
-                title: Text("Adoptions"),
+                title: Text("Adoptions",
+                
+                ),
+                
                 children: <Widget>[
                   ListTile(
                 leading: Icon(Icons.star_border),
                 title: Text('My Adoptions'),
                 onTap: () {
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyAdoptionsPage()),
-                  );
+                                     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MyAdoptionsPage()), (Route<dynamic> route) => false);
+
                 }),
                     ListTile(
                 leading: Icon(Icons.access_time),

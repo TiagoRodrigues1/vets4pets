@@ -180,11 +180,11 @@ class _IndexPageState extends State<PetsPage> {
                   IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
-                      deletePet(id);
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => PetsPage()),
-                          (Route<dynamic> route) => false);
+                     
+                     showDialog(
+                        context: context,
+                        builder: (BuildContext context) => _showDialog(id),
+                      );
                     },
                   ),
                 ],
@@ -241,7 +241,7 @@ class _IndexPageState extends State<PetsPage> {
               Align(
                 alignment: Alignment.bottomRight,
                 child:TextButton(                                    
-                  style: TextButton.styleFrom(primary: Colors.green),
+                  style: TextButton.styleFrom(primary: Colors.green[300]),
                     onPressed: (){
                       Navigator.of(context).pop();
                     },
@@ -301,7 +301,7 @@ class _IndexPageState extends State<PetsPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextButton(
                     child: Text("Submit"),
-                    style: TextButton.styleFrom(primary: Colors.green),
+                    style: TextButton.styleFrom(primary: Colors.green[300]),
                     onPressed: () {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
@@ -321,4 +321,38 @@ class _IndexPageState extends State<PetsPage> {
       ),
     );
   }
+
+ Widget _showDialog(int id) {
+    return AlertDialog(
+      title: new Text("Delete pet",textAlign: TextAlign.center,),
+      content: new Text("Are you sure that you want to delete this pet?",textAlign: TextAlign.center),
+      actions: <Widget>[
+        new TextButton(
+          child: new Text("No"),
+          onPressed: () {
+             Navigator.of(context).pop();
+          },
+        ),
+        Padding(
+          padding:const EdgeInsets.only(left:178),
+          child: TextButton(
+             style: TextButton.styleFrom(
+                      primary: Colors.red,
+                    ),
+            child: new Text("Yes"),
+            onPressed: () {
+              deletePet(id);
+            Navigator.of(context).pop();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => PetsPage()),
+                (Route<dynamic> route) => false); 
+            },
+          ),
+        ),
+      ],
+    );
+  }
 }
+  
+

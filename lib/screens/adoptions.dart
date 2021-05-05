@@ -4,8 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
-import 'dart:convert' as convert;
-import 'AdoptionDetailsPage.dart';
+import 'adoptiondetails.dart';
 
 class AdoptionsPage extends StatefulWidget {
   @override
@@ -84,17 +83,10 @@ class _IndexPageState extends State<AdoptionsPage> {
   }
 
   Widget getCard(item) {
-    var id = item['ID'];
     var name = item['name'];
     var animaltype = item['animaltype'];
     var race = item['race'];
-    var userID = item['userID'];
-    var birth =item['birth'];
-
-    var text = item['text'];
-    var status= item['adopted'];
-    var city= item['city'];
-    
+    var status= item['adopted'];  
     var profileUrl =
         'https://cdn.discordapp.com/attachments/537753005953384448/838351477395292210/f_00001b.png';
     return Card(
@@ -103,7 +95,7 @@ class _IndexPageState extends State<AdoptionsPage> {
           onTap: () {
            Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AdoptionDetailsPage()),
+                      MaterialPageRoute(builder: (context) => AdoptionDetailsPage(animal:item)),
                     );
           },
           child: Padding(
@@ -144,8 +136,7 @@ class _IndexPageState extends State<AdoptionsPage> {
                     // ignore: missing_required_param
                     IconButton(
                       icon: status==true?const Icon(Icons.check_circle,color:Colors.green) : const Icon(Icons.cancel ,color:Colors.red)
-          ),
-           
+          ),     
                 ],
               ),
             ),
@@ -153,42 +144,7 @@ class _IndexPageState extends State<AdoptionsPage> {
         ));
   }
 
-  Widget buildShowAdoption(item) {
-    var id = item['ID'];
-    var name = item['name'];
-    var animaltype = item['animaltype'];
-    var race = item['race'];
-    var userID = item['UserID'];
-    var text = item['text'];
-    var status= item['adopted'];
-    return new AlertDialog(
-      title: const Text('Adoption'),
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(name.toString()),
-          Text(animaltype.toString()),
-          Text(race.toString()),
-           Text(userID.toString()),
-            Text(text.toString()),
-             Text(status.toString()),
-              Text(id.toString()),
-        ],
-      ),
-      actions: <Widget>[
-        new FlatButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          textColor: Theme.of(context).primaryColor,
-          child: const Text('Close'),
-        ),
-       
-      ],
-      
-    );
-  }
+
 
   Widget _buildAddAdoption() {
      return new AlertDialog(
@@ -227,7 +183,7 @@ class _IndexPageState extends State<AdoptionsPage> {
                   child: TextButton(
                     child: Text("Submit"),
                     style: TextButton.styleFrom(
-                      primary: Colors.green,
+                      primary: Colors.green[300],
                     ),
                     onPressed: () {
                       var name = _nameController.text;
