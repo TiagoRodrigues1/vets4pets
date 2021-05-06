@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hello_world/screens/forumdetail.dart';
 import 'colors.dart';
 
 class ForumPage extends StatefulWidget {
@@ -53,7 +54,6 @@ class _ForumPageState extends State<ForumPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("kkkkkkkk");
     return Scaffold(
       appBar: new AppBar(
         centerTitle: false,
@@ -162,7 +162,12 @@ class EntryItem extends StatelessWidget {
           ,
         ),
                     
-       // onTap: () {Navigator.pushNamed(context, '/forum/1');},
+        onTap: () {
+           Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ForumDetailPage()),
+                  );
+        },
       )
     );
   }
