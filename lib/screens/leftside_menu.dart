@@ -3,6 +3,8 @@ import 'package:hello_world/screens/pets.dart';
 import 'package:hello_world/screens/adoptions.dart';
 import 'package:hello_world/screens/myadoptions.dart';
 
+import 'forum.dart';
+
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -77,12 +79,12 @@ class NavDrawer extends StatelessWidget {
                     ListTile(
                 leading: Icon(Icons.question_answer),
                 title: Text('Latest posts'),
-               /* onTap: () {
+                onTap: () {
                       Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ForumPage()),
                   );
-                }*/),
+                }),
                   ],
               ),
               ListTile(

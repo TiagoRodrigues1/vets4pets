@@ -16,17 +16,7 @@ class AdoptionDetailsPage extends StatelessWidget {
       ),
     );
 
-    final coursePrice = Container(
-      padding: const EdgeInsets.all(7.0),
-      decoration: new BoxDecoration(
-          border: new Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(5.0)),
-      child: new Text(
-        "AI",
-        style: TextStyle(color: Colors.white),
-      ),
-    );
-
+  
     final topContent = Stack(
       children: <Widget>[
         Container(
@@ -51,7 +41,6 @@ class AdoptionDetailsPage extends StatelessWidget {
       ],
     );
 
-    //final bottomContentText =  Container(
 
     final bottomContentText = Container(
       child: Center(
