@@ -1,133 +1,195 @@
 import 'package:flutter/material.dart';
-import 'colors.dart';
+import 'package:intl/intl.dart';
+import 'forum.dart';
 
-class ForumDetailPage extends StatefulWidget {
-  @override
-  _ForumDetailPageState createState() => new _ForumDetailPageState();
-}
+import 'dart:io';
+import 'package:hello_world/models/animaltypes.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import '../main.dart';
+import 'adoptiondetails.dart';
+
 
 var ForumPostArr = [
-  new ForumPostEntry("User1", "2 Days ago", 0 , 0 , "HelloHello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,"),
-  new ForumPostEntry("User2", "23 Hours ago", 1 , 0 , "TEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTO"),
-  new ForumPostEntry("User3", "2 Days ago", 5 , 0 , "TEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOtate."),
-  new ForumPostEntry("User4", "2 Days ago", 0 , 0 , "TOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTE"),
+  new ForumPostEntry("User1", "2 Days ago", 0, 0,
+      "HelloHello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,Hello,"),
+  new ForumPostEntry("User2", "23 Hours ago", 1, 0,
+      "TEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTO"),
+  new ForumPostEntry(
+      "User3", "2 Days ago", 5, 0, "TEXTOTEXTOTEXTOTEXTOTEXTOTEXTOTEXTOtate."),
+  new ForumPostEntry("User4", "2 Days ago", 0, 0,
+      "TOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTE"),
+  new ForumPostEntry("User4", "2 Days ago", 0, 0,
+      "TOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTE"),
+  new ForumPostEntry("User4", "2 Days ago", 0, 0,
+      "TOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTE"),
+  new ForumPostEntry("User4", "2 Days ago", 0, 0,
+      "TOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTETOTE"),
 ];
 
-class _ForumDetailPageState extends State<ForumDetailPage> {
+class ForumDetailPage extends StatefulWidget {
+  final Map<String, dynamic> question;
+  
+  ForumDetailPage({Key key, this.question}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    
-
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Forum Detail"),
-      ),
-      body: new Column(
-        children: <Widget>[
-       // questionSection,
-       
-
-         
-          new Expanded(
-              child: new Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: responses,
-          ))
-        ],
-      ),
-    );
-  }
+  _ForumDetailPageState createState() => _ForumDetailPageState();
 }
 
-var questionSection = Container(
+class _ForumDetailPageState extends State<ForumDetailPage> {
+
+  List answers=[];
+      bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    this.getAnswers(widget.question['ID']);
+  }
+
+  
+ getAnswers(int id) async {
+   var jwt = await storage.read(key: "jwt");
+    var response = await http.get(
+      Uri.parse('http://52.47.179.213:8081/api/v1/answer/$id'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+  print(response.body);
+    if (response.statusCode == 200) {
+      var items = json.decode(response.body)['data'];
+      setState(() {
+       answers = items;
+        isLoading = false;
+      });
+      print(json.decode(response.body)['data']);
+    } else {
+      answers = [];
+      isLoading = false;
+  }
+  }
+
+
+
+
+
+
+
+
+
+
+  Widget build(BuildContext context) {
+    print(widget.question);
+    var date = widget.question['CreatedAt'];
+    DateTime parseDate =
+        new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(date);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
+    var outputDate = outputFormat.format(inputDate);
+    //print(outputDate);
+
+    var questionSection = new Container(
       margin: const EdgeInsets.all(5.0),
-      decoration: new BoxDecoration(
-        color: Colors.green[300],
+      decoration: BoxDecoration(
+        color: Colors.green,
         borderRadius: const BorderRadius.all(const Radius.circular(20.0)),
       ),
-      child: new Column(
+      child: Column(
         children: <Widget>[
-          new Container(
-            decoration: new BoxDecoration(
-              color: Colors.green[300],
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.green,
               borderRadius: const BorderRadius.only(
                   topLeft: const Radius.circular(20.0),
                   topRight: const Radius.circular(20.0)),
             ),
-            child: new Row(
+            child: Row(
               children: <Widget>[
-                new Icon(
+                Icon(
                   Icons.person,
                   size: 50.0,
                 ),
-                new Expanded(
-                  child: new Column(
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new Text(
-                        "TITULOTITULOTITULO"
-                      ),
-                      new Text(
-                        "horas"
-                      ),
+                      Text("User" + widget.question['ID'].toString()),
+                      Text(widget.question['questiontitle']),
                     ],
                   ),
                 ),
-             
+                Text(outputDate),
               ],
             ),
           ),
           new Container(
-            height: 100,
             width: 400,
-            margin: const EdgeInsets.only(left: 2.0,right: 2.0,bottom: 2.0),
+            margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
             padding: const EdgeInsets.all(8.0),
-            decoration: new BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: const BorderRadius.only(bottomLeft :const Radius.circular(20.0),bottomRight :const Radius.circular(20.0))
-            ),
-            child: new Text("Texto"),
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: const Radius.circular(20.0),
+                    bottomRight: const Radius.circular(20.0))),
+            child: Text(widget.question['question']),
           ),
         ],
       ),
     );
 
-    var responses = new Container(
-      padding: const EdgeInsets.all(8.0),
-      child: new ListView.builder(
-        itemBuilder: (BuildContext context, int index) => new ForumPost(ForumPostArr[index]),
-        itemCount: ForumPostArr.length,
-      )
+    return Scaffold(
+      appBar: new AppBar(
+        title: new Text("Forum Detail"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[questionSection, getResponses()],
+        ),
+      ),
     );
+  }
 
-class ForumPostEntry{
+ Widget getResponses() {
+    if (answers.contains(null) || answers.length < 0 || isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: answers.length,
+        itemBuilder: (context, index) {
+          return getCard(answers[index]);
+        });
+  }
+}
+
+class ForumPostEntry {
   final String username;
   final String hours;
   final int likes;
   final int dislikes;
   final String text;
 
-  ForumPostEntry(this.username, this.hours, this.likes, this.dislikes, this.text);
+  ForumPostEntry(
+      this.username, this.hours, this.likes, this.dislikes, this.text);
 }
 
-class ForumPost extends StatelessWidget {
-  final ForumPostEntry entry;
-
-  ForumPost(this.entry);
-
-  @override
-  Widget build(BuildContext context) {
+ Widget getCard(item){
+    var date = item['CreatedAt'];
+    DateTime parseDate =new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(date);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
+    var outputDate = outputFormat.format(inputDate);
     return new Container(
       margin: const EdgeInsets.all(5.0),
       decoration: new BoxDecoration(
-        color: Colors.green[300],
+        color: Colors.green[100],
         borderRadius: const BorderRadius.all(const Radius.circular(20.0)),
       ),
       child: new Column(
         children: <Widget>[
           new Container(
             decoration: new BoxDecoration(
-              color: Colors.green[300],
+              color: Colors.green[100],
               borderRadius: const BorderRadius.only(
                   topLeft: const Radius.circular(20.0),
                   topRight: const Radius.circular(20.0)),
@@ -142,55 +204,28 @@ class ForumPost extends StatelessWidget {
                   child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new Text(
-                        entry.username
-                      ),
-                      new Text(
-                        entry.hours
-                      ),
+                      new Text(item['UserID'].toString()),
+                     
                     ],
                   ),
                 ),
-             
+                 new Text(outputDate),
               ],
             ),
           ),
           new Container(
-            margin: const EdgeInsets.only(left: 2.0,right: 2.0,bottom: 2.0),
+            width: 400,
+            margin: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 2.0),
             padding: const EdgeInsets.all(8.0),
             decoration: new BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: const BorderRadius.only(bottomLeft :const Radius.circular(20.0),bottomRight :const Radius.circular(20.0))
-            ),
-            child: new Text(entry.text),
+                color: Colors.grey[200],
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: const Radius.circular(20.0),
+                    bottomRight: const Radius.circular(20.0))),
+            child: new Text(item['answer']),
           ),
         ],
       ),
     );
   }
-}
 
-class IconWithText extends StatelessWidget {
-  final IconData iconData;
-  final String text;
-  final Color iconColor;
-
-  IconWithText(this.iconData, this.text, {this.iconColor});
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
-      child: new Row(
-        children: <Widget>[
-          new Icon(
-            this.iconData,
-            color: this.iconColor,
-          ),
-          new Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: new Text(this.text),
-          ),
-        ],
-      ),
-    );
-  }
-}

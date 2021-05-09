@@ -70,12 +70,27 @@ class NavDrawer extends StatelessWidget {
                 leading: Icon(Icons.people),
                 title: Text("Forum"),
                 children: <Widget>[
+                   ExpansionTile(
+                leading: Icon(Icons.people),
+                title: Text("My Posts"),
+                children: <Widget>[
                   ListTile(
-                leading: Icon(Icons.person),
-                title: Text('My Posts'),
+                leading: Icon(Icons.email_rounded),
+                title: Text('My Questions'),
                 onTap: () {
                    print("Nice2");
                 }),
+                    ListTile(
+                leading: Icon(Icons.forward_to_inbox_rounded ),
+                title: Text('My Answers'),
+                onTap: () {
+                      Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ForumPage()),
+                  );
+                }),
+                  ],
+              ),
                     ListTile(
                 leading: Icon(Icons.question_answer),
                 title: Text('Latest posts'),

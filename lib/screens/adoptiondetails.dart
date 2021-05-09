@@ -4,19 +4,12 @@ class AdoptionDetailsPage extends StatelessWidget {
   final Map<String, dynamic> animal;
 
   AdoptionDetailsPage({Key key, this.animal}) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context) {
     print(animal);
-    final levelIndicator = Container(
-      child: Container(
-        child: LinearProgressIndicator(
-            backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
-            valueColor: AlwaysStoppedAnimation(Colors.green)),
-      ),
-    );
-
-  
+   
     final topContent = Stack(
       children: <Widget>[
         Container(
