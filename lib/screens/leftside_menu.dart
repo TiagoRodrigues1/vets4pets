@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hello_world/screens/pets.dart';
 import 'package:hello_world/screens/adoptions.dart';
 import 'package:hello_world/screens/myadoptions.dart';
-
+import 'package:hello_world/screens/clinics.dart';
 import 'forum.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -31,7 +31,10 @@ class NavDrawer extends StatelessWidget {
                 leading: Icon(Icons.medical_services),
                 title: Text('Vets'),
                 onTap: () {
-                  Navigator.pop(context);
+                      Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ClinicPage()),
+                  );
                 },
               ),
               ListTile(

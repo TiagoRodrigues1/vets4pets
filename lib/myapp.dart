@@ -5,20 +5,20 @@ import 'main.dart';
 
 Map<int, Color> color =
 {
-50:Color.fromRGBO(136,14,79, .1),
-100:Color.fromRGBO(136,14,79, .2),
-200:Color.fromRGBO(136,14,79, .3),
-300:Color.fromRGBO(136,14,79, .4),
-400:Color.fromRGBO(136,14,79, .5),
-500:Color.fromRGBO(136,14,79, .6),
-600:Color.fromRGBO(136,14,79, .7),
-700:Color.fromRGBO(136,14,79, .8),
-800:Color.fromRGBO(136,14,79, .9),
-900:Color.fromRGBO(136,14,79, 1),
+50:Color.fromRGBO(82,183,136, .1),
+100:Color.fromRGBO(82,183,136, .2),
+200:Color.fromRGBO(82,183,136, .3),
+300:Color.fromRGBO(82,183,136, .4),
+400:Color.fromRGBO(82,183,136, .5),
+500:Color.fromRGBO(82,183,136, .6),
+600:Color.fromRGBO(82,183,136, .7),
+700:Color.fromRGBO(82,183,136, .8),
+800:Color.fromRGBO(82,183,136, .9),
+900:Color.fromRGBO(82,183,136, 1),
 };
 
 
-MaterialColor colorCustom = MaterialColor(0xFF81C784, color);
+MaterialColor colorCustom = MaterialColor(0xFF52B788, color);
 
 class MyApp extends StatelessWidget {
   Future<String> get jwtOrEmpty async {
@@ -34,7 +34,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Projeto LPI',
       theme: ThemeData(
-        primarySwatch:Colors.green,
+        primarySwatch:colorCustom,
+        primaryTextTheme:TextTheme(
+          headline6: TextStyle(color:Colors.white),
+        ),
       ),
       home: FutureBuilder(
         future: jwtOrEmpty,            
