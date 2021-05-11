@@ -17,7 +17,20 @@
   color: #ffff !important;
   background-color: #52b788 !important;
 }
-.close {
+.close1 {
   color: #52b788 !important;
   background-color: #ffff !important;
  }
+
+ .column {
+  float: left;
+  width: 33.33%;
+  padding: 0px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}

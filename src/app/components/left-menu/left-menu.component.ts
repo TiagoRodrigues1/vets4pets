@@ -23,6 +23,7 @@ export class LeftMenuComponent implements OnInit {
   user: User;
   payload;
   Pet : Pet[];
+  userH:User;
   public sideNavState: boolean = false;
   public linkText: boolean = false;
   
@@ -33,6 +34,7 @@ export class LeftMenuComponent implements OnInit {
     {name: 'Forum', link:'some-link', icon: 'supervisor_account'},
     {name: 'Near Vets', link:'/maps', icon: 'place'},
   ]
+  string: string;
   
   constructor(private _sidenavService: SidenavService,private accountService: AccountService) { 
     this.user = this.accountService.userValue;
@@ -40,8 +42,16 @@ export class LeftMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.getUser();
   }
+
+  getUser() {
+    this.string = localStorage.getItem('user');
+    this.userH = (JSON.parse(this.string));
+  }
+  
+
+
   onSinenavToggle() {
     this.sideNavState = !this.sideNavState
     

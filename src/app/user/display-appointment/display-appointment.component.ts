@@ -14,6 +14,7 @@ import { AppointmentDetailsComponent } from '../appointment-details/appointment-
 })
 export class DisplayAppointmentComponent implements OnInit {
   calendarOptions: CalendarOptions;
+  error:string;
   eventstest = [{
     id: null,
     start: null,
@@ -45,8 +46,8 @@ export class DisplayAppointmentComponent implements OnInit {
       },
     };
     },
-    (error: HttpErrorResponse) => {
-      alert(error.message);
+    error => {
+      this.error = "You don't have any appointments";
     });
   }
   eventClick(info:EventClickArg) {

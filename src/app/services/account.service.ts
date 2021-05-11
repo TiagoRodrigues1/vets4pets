@@ -4,13 +4,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-import { catchError, map, retry } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Appointment } from '../models/appointment.model';
 import { Clinic } from '../models/clinic.model';
 import { Pet } from '../models/pet.model';
 import { User } from '../models/user.model';
 import { Vaccines } from '../models/vaccines';
+import { CustomValidatorService } from './custom-validator.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,9 @@ import { Vaccines } from '../models/vaccines';
 export class AccountService {
   private userSubject: BehaviorSubject<User>;
   public user: Observable<User>;
-
+  u:User;
   constructor (
-    private router: Router,private http: HttpClient,private dialogRef: MatDialog) {
+    private router: Router,private http: HttpClient,private dialogRef: MatDialog,private val:CustomValidatorService) {
     this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user')));
     this.user = this.userSubject.asObservable();
 }
@@ -32,8 +33,13 @@ login(email, password) {
           localStorage.setItem('user', JSON.stringify(user));
           this.userSubject.next(user);
           return user;
-      }));
+      }));     
 }
+
+getUserPic(id:number) {
+  return this.http.get(`${environment.apiUrl}/userPic/${id}`);
+}
+
 
 logout() {
   // remove user from local storage and set current user to null
@@ -116,12 +122,28 @@ getAppointment(id:number): Observable<Appointment> {
   return this.http.get<Appointment>(`${environment.apiUrl}/appointment/${id}`)
 }
 
+editAppointment(id:number, app: Appointment) {
+  return this.http.put(`${environment.apiUrl}/appointment/${id}`,app)
+}
+
 getUsers(): Observable<User[]> {
   return this.http.get<User[]>(`${environment.apiUrl}/user/`)
 }
 
+getUsersNormal() : Observable<User[]> {
+  return this.http.get<User[]>(`${environment.apiUrl}/userNormal/`)
+}
+
+getUsersVet(idClinic:number) : Observable<User[]> {
+  return this.http.get<User[]>(`${environment.apiUrl}/userVet/${idClinic}`)
+}
+
 editUser(id:number, user:User) {
   return this.http.put(`${environment.apiUrl}/user/${id}`,user)
+}
+
+getUser(id:number): Observable<User> {
+  return this.http.get<User>(`${environment.apiUrl}/user/`)
 }
 
 getAppointmentsUser(id:number) {
@@ -132,13 +154,27 @@ getPet(id:number, userID: number): Observable<Pet> {
   return this.http.get<Pet>(`${environment.apiUrl}/animal/${id}/${userID}`)
 }
 
+getPetVet(id:number): Observable<Pet> {
+  return this.http.get<Pet>(`${environment.apiUrl}/animal/${id}`)
+}
+
 getVaccinesByPet(id:number):Observable<Vaccines[]> {
   return this.http.get<Vaccines[]>(`${environment.apiUrl}/vaccine/${id}/`);
 }
+
+addVetToClinic(idUser:number,id:number,user:User) {
+  return this.http.put(`${environment.apiUrl}/clinic/${id}/${idUser}`,user);
+}
+
+remVetClinic(idUser:number,user:User){
+  return this.http.put(`${environment.apiUrl}/clinicRem/${idUser}`,user);
+}
+
+
+
 public get userValue(): User {
   return this.userSubject.value;
 }
-
 
 processError(err) {
   let message = '';
@@ -150,5 +186,7 @@ processError(err) {
   console.log(message);
   return throwError(message);
 }
+
+
 
 }

@@ -18,24 +18,27 @@ import { User } from 'src/app/models/user.model';
 
 export class ChoosePetComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  ELEMENT_DATA: Pet[] = [];
-  displayedColumns:string[] = ['name','race','animaltype','button'];
-  dataSource = new MatTableDataSource<Pet>(this.ELEMENT_DATA);
+  select;
+  pets: Pet[] = [];
   string: string;
   user: User;
   payload: any;
+  selected = false;
+  error:string;
   constructor(private dialog: MatDialog,private dialogRef: MatDialogRef<AppointmentComponent>, private accountService: AccountService,@Inject(MAT_DIALOG_DATA) public data:any) { }
   
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
   ngOnInit(): void {
     this.getPets();
   }
   
-  next(id:number) {
+  next() {
+    this.error = null;
+    if(this.select != null) {
+      var id:number = this.select;
+    } else {
+      this.error = "Please Select a pet first";
+      return;
+    }
     let ids:number [] = [this.data,id];
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
@@ -48,8 +51,9 @@ export class ChoosePetComponent implements OnInit {
 
   getPets() {
     let resp = this.accountService.getPets(this.getUserId());
-    resp.subscribe(report => this.dataSource.data = report['data'] as Pet[])
+    resp.subscribe(report => this.pets  = report['data'] as Pet[])
   }
+
   getUserId()  {
     this.string = localStorage.getItem('user');
     this.user = (JSON.parse(this.string));
@@ -59,5 +63,18 @@ export class ChoosePetComponent implements OnInit {
       const userString =  JSON.parse(this.payload);
       return parseInt(userString.UserID);
     } 
+  }
+
+  onSelectCard(event:any, id:any) {
+    if(this.select != id) {
+      this.select = id;
+      this.selected = false;
+    } else {
+      this.select = null;
+    }
+    console.log(this.select);
+    this.selected = !this.selected;
+    
+
   }
 }

@@ -14,16 +14,17 @@ export class PetService {
   }
     form: FormGroup = this.formBuilder.group({
     ID: null,
-    name: ['',[Validators.required,Validators.maxLength(20)]],
-    //profilePicture: ['',Validators.required],
+    name: ['',[Validators.required,Validators.maxLength(18)]],
     animaltype: ['',Validators.required],
     race: ['',Validators.required],
+    profilePicture: [],
+    picture: [],
     UserID: []
   });
 
   populateForm(pet) {
     console.log(pet);
-    this.form.setValue(_.omit(pet,'CreatedAt','UpdatedAt','DeletedAt','picture','vaccinationCard'));
+    this.form.setValue(_.omit(pet,'CreatedAt','UpdatedAt','DeletedAt','vaccinationCard'));
   }
   
   getUserId()  {

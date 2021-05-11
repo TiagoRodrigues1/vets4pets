@@ -14,6 +14,7 @@ export class AdminService {
     contact: ['',Validators.required],
     email: ['',[Validators.required,Validators.pattern(this.emailPattern)]],
     address: ['',Validators.required],
+    profilePicture:[],
     UserID: []
   });
   populateForm(clinic) {

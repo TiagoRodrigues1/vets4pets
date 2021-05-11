@@ -4,8 +4,7 @@ export class Pet {
     animaltype: string;
     race: string;
     UserID: number;
-    picture: File;
-    profilePicture:File;
+    profilePicture:String;
+    picture: String;
     //vaccinationCard: string;
-    //picture:string;
 }

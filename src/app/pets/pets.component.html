@@ -4,18 +4,27 @@
     <app-left-menu></app-left-menu>
   </mat-sidenav>
   <mat-sidenav-content>
-    <div class="alert-section">
+   <!-- <div class="alert-section">
       <app-alert></app-alert>
-</div>
+</div> --> 
     <div class="main_content">
       <div style="padding: 20px;display:flex; flex-direction: row;flex-wrap: wrap;">
         <mat-card class="example-card" *ngFor = "let pet of Pet" style ="padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;cursor: pointer;" (click) = "goProfile(pet.ID)">
           <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title>{{pet?.name}}</mat-card-title>
+            <div mat-card-avatar *ngIf = "pet?.profilePicture; else defaultProfile" class="example-header-image" [ngStyle] = "{'background-image': 'url(' + pet?.profilePicture + ')'}"></div>
+            <ng-template #defaultProfile>
+              <div mat-card-avatar class="example-header-image" style ="background-image: url('../../assets/img/default.png');">
+              </div>
+            </ng-template>
+            <mat-card-title>{{pet?.name}}</mat-card-title> 
             <mat-card-subtitle>{{pet?.race}}</mat-card-subtitle>
           </mat-card-header>
-          <img mat-card-image src="{{pet?.profilePicture}}" alt="Photo of a Shiba Inu">
+          <div *ngIf = "pet.picture; else default">
+          <img mat-card-image src="{{pet?.picture}}" alt="profile picture of {{pet?.name}}" style ="width: 392px;height: 379.36px;margin-top: 0px;">
+        </div>
+        <ng-template #default>
+        <img mat-card-image src="../../assets/img/default-image-620x600.jpg" alt="profile picture of {{pet?.name}}">
+      </ng-template>
           <mat-card-content>
            <div style = "display: flex;justify-content: center;align-items: center;">
             <!--<button mat-icon-button color = "primary" (click) = "editPet(pet)" floating ="true" >
@@ -29,7 +38,7 @@
           </div>
         </mat-card-content>
         </mat-card>
-        <button mat-button style = "padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;color: #52b788;font-size : 100px;width:340px;height:382px" (click) = "onCreate()">+</button>
+        <button mat-button style = "padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;color: #52b788;font-size : 300px;width:405px;height:522px" (click) = "onCreate()">+</button>
       </div>
     </div>
   </mat-sidenav-content>

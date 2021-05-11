@@ -1,16 +1,14 @@
 <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
 
-<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
     <h2 style = "padding-left: 20px;font-family: Arial, Helvetica, sans-serif;display: inline-block;">New Pet</h2>
-      <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
       <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "service.form" (ngSubmit) = "onSubmit()">
         <mat-form-field style = "width:95%">
-          <input matInput placeholder="Name" formControlName = "name" maxlength="20">
+          <input matInput placeholder="Name" formControlName = "name" maxlength="18">
         </mat-form-field>
-        <mat-error *ngIf="service.form.controls.name.hasError('required') && service.form.controls.name.touched" style="color:red;font-size: small;">
-          Name is <strong>required</strong>
-         </mat-error>
-
+        <div *ngIf="(service.form.controls.name.touched || service.form.controls.name.dirty) && service.form.controls.name.errors">
+          <div *ngIf = "service.form.controls.name.required" style="color:red;font-size: small;" >Name is <strong>required</strong></div>
+        </div>
+         
         <mat-form-field style = "width:95%">
           <mat-label>Type of Pet</mat-label>
           <mat-select formControlName = "animaltype" [(ngModel)] = "departure">
@@ -19,13 +17,12 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-error *ngIf="service.form.controls.animaltype.hasError('required') && service.form.controls.animaltype.touched" style="color:red;font-size: small;">
-          Animal Type is <strong>required</strong>
-        </mat-error>
-        
+        <div *ngIf="(service.form.controls.animaltype.touched || service.form.controls.animaltype.dirty ) && service.form.controls.name.errors">
+          <div *ngIf = "service.form.controls.animaltype.required" style="color:red;font-size: small;" >Pet Type is <strong>required</strong></div>
+        </div>
               <mat-form-field style = "width:95%">
           <mat-label>Breed</mat-label>
-          <mat-select formControlName = "race">
+          <mat-select formControlName = "race"> 
             <ng-container *ngFor = "let animal of animalRace">
             <mat-option  [value] = "animal.race" *ngIf="animal.key === departure" >
                {{animal.viewValue}} 
@@ -34,16 +31,27 @@
           </mat-select>
         </mat-form-field>
       
-        <mat-error *ngIf="service.form.controls.race.hasError('required') && service.form.controls.race.touched" style="color:red;font-size: small;">
-         Race is <strong>required</strong>
-        </mat-error>
-      
-        <div class="file-upload">
-          <input type="file" name="image" accept="image/x-png,image/gif,image/jpeg" formControlName = "profilePicture" (change)="onImageChange($event)"/>
+        <div *ngIf="(service.form.controls.race.touched || service.form.controls.race.dirty) && service.form.controls.name.errors">
+          <div *ngIf = "service.form.controls.race.required" style="color:red;font-size: small;" >Pet Race is <strong>required</strong></div>
         </div>
-          <div mat-dialog-actions>
-          <button mat-button type="submit">SUBMIT</button>
-          <button mat-button class="close"  (click) ="onNoClick()">CLOSE</button>
+      <div class = "row">
+        <div class = "column">
+        <div class="file-upload">
+          <input type="file" name="image" accept="image/x-png,image/jpeg" (change)="fileChangeEvent($event)"/>
+        </div>
       </div>
+      <div class = "column">
+        <div *ngIf = "image">
+          <img src="{{image}}" alt="show pic" style ="width:190px;height:115px">
+        </div>
+      </div>
+     </div>
+     <div *ngIf = "imageError" style ="font-size: small;color: red;">{{imageError}}</div>
+     <div fxLayout = "row">
+          <div mat-dialog-actions [ngStyle] = "{'padding-top': (image) ? '6%' : '20%' }" >
+          <button mat-button type="submit" >SUBMIT</button>
+          <button mat-button class="close1" (click) ="onNoClick()">CLOSE</button>
+      </div>
+    </div>
+
       </form>  
-</div>

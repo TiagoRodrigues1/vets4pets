@@ -15,10 +15,12 @@ import { ManageAppointmentComponent } from './manage-appointment/manage-appointm
 export class VetComponent implements OnInit {
   calendarOptions: CalendarOptions;
   eventstest = [{
-    id: null,
     start: null,
     title: null,
     allday:false,
+    extendedProps:{
+      appointment:null,
+    }
   }];
   app: Appointment[];
   name:string;
@@ -34,7 +36,7 @@ export class VetComponent implements OnInit {
     this.accountService.getAppointmentByVet(this.val.getUserId()).subscribe(
       (response: Appointment[]) => {
       this.app = response['data'];      
-      this.app.forEach(appoitment => this.eventstest.push({start:appoitment.date,title:"Consulta",allday:false,id:appoitment.AnimalID})); // precisar de passar a endDate depois
+      this.app.forEach(appoitment => this.eventstest.push({start:appoitment.date,title:"Consulta",allday:false,extendedProps: {appointment:appoitment}})); // precisar de passar a endDate depois
       this.calendarOptions = {
       initialView: 'dayGridMonth',
       height: '850px',
@@ -58,6 +60,7 @@ export class VetComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;  
     dialogConfig.width = "35%"
+    console.log(info.event)
     dialogConfig.data = info.event;
     this.dialog.open(ManageAppointmentComponent,dialogConfig);
   }

@@ -4,7 +4,12 @@
       <div class="user_menu">
         <mat-nav-list>
           <a mat-list-item routerLink = "/userprofile" routerLinkActive = "active">
-            <img class="jim" src="https://a57.foxnews.com/media2.foxnews.com/BrightCove/694940094001/2018/06/21/931/524/694940094001_5800293009001_5800284148001-vs.jpg?ve=1&tl=1" alt="">
+            <div *ngIf = "userH.profilePicture; else defaultProfile">
+            <img class="jim" src="{{userH.profilePicture}}" alt="{{userH.name}} profile picture">
+          </div>
+          <ng-template #defaultProfile>
+            <img class="jim" src="../../../assets/img/default-user-image.png" alt="default profile picture">
+          </ng-template>
             <span [@animateText]="linkText ? 'show' : 'hide'"> </span>
           </a>
         </mat-nav-list>

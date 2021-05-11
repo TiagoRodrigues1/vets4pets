@@ -33,7 +33,8 @@ export class PetsComponent implements OnInit {
       this.Pet = response['data'];
     },
     (error: HttpErrorResponse) => {
-      alert(error.message);
+      //alert(error.message);
+      this.alertService.error(error.message)
     });
   }
 
@@ -54,6 +55,7 @@ export class PetsComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;  
     dialogConfig.width = "35%"
+    dialogConfig.height = "50%"
     this.dialog.open(AddPetComponent,dialogConfig);
   }
 

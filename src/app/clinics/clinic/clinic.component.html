@@ -8,7 +8,11 @@
       <div style="padding: 20px;display:flex; flex-direction: row;flex-wrap: wrap;">
         <mat-card class="example-card" *ngFor = "let clinic of Clinic" style ="padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;cursor: pointer;" (click) = "goProfile(clinic.ID,clinic)" >
           <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
+            <div mat-card-avatar class="example-header-image" *ngIf = "clinic.profilePicture; else defaultProfile"  class="example-header-image" [ngStyle] = "{'background-image': 'url(' + clinic?.profilePicture + ')'}" ></div>
+         <ng-template #defaultProfile>
+          <div mat-card-avatar class="example-header-image" class="example-header-image" style = "background-image: url('../../../assets/img/default_pet.jpg')" ></div>
+         </ng-template> 
+     
             <mat-card-title>{{clinic?.name}}</mat-card-title>
             <mat-card-subtitle>{{clinic?.address}}</mat-card-subtitle>
           </mat-card-header>

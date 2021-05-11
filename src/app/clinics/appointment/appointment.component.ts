@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -20,7 +21,9 @@ export class AppointmentComponent implements OnInit {
   currentMonth:number = new Date().getMonth();
   d:Date;
   d1:Date;
+  error:string;
   app: Appointment;
+  suc:string;
   public date:Date = new Date();
   public minDate:Date = new Date(this.currentYear,this.currentMonth,this.currentDay);
   public maxDate:Date = new Date(this.currentYear + 2,this.currentMonth,this.currentDay); //só deixa marcar para 2 anos á frente
@@ -39,11 +42,12 @@ export class AppointmentComponent implements OnInit {
   }
 
   onSubmit() {
+    this.error = '';
     this.alertService.clear();
     if(this.form.invalid) {
-
       return;
     }
+
     this.d = this.form.get('date').value; //atribuir o valo á data
     this.d1 = this.form.get('hour').value;
     
@@ -52,32 +56,26 @@ export class AppointmentComponent implements OnInit {
     this.app = new Appointment(this.data[1],this.data[2],this.d);
     this.accountService.createAppointment(this.app).pipe(first()).subscribe({
       next:() => {
-        this.router.navigate([`../clinic/${this.data[0]}`],{relativeTo: this.route});
-        this.displaySuccess("Appointment Created, Check your appointments on yor profile");
+        //this.router.navigate([`../clinic/${this.data[0]}`],{relativeTo: this.route});
+        this.suc = 'Your Appointment was created, check your profile to see all of your appointments';
+        
+        this.onNoClick();
+      }, error: error => {
+        this.error = error;
       }
     });
     //console.log(this.app); // 0 - Id da Clinica % 1 - Id do Pet % 2 - Id do Veterinario
-    this.onClose();
+     /*  if(this.error == '') {
+      this.onNoClick();
+    } */
   }
   onClose() {
     this.form.reset();
-    this.dialogRef.close();
   }
 
   onNoClick() {
-    this.dialogRef.close();
+    setTimeout(() => {
+      this.dialogRef.close();
+    },1000);
   }
-
-  private displayError(message: string) {
-    this.alertService.error(message,
-      { autoClose: true }
-    );
-  }
-
-  private displaySuccess(message:string) {
-    this.alertService.success(message,
-      { autoClose: false }
-    );
-  }
-
 }

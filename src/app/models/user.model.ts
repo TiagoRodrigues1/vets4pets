@@ -9,4 +9,5 @@ export class User {
     contact: string;
     userType: Roles;
     token: string;
+    profilePicture:string;
 }

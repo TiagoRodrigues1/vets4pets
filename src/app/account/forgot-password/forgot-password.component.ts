@@ -14,7 +14,7 @@ export class ForgotPasswordComponent implements OnInit {
   loading = false;
   submitted = false;
   emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
-
+  error:string;
   constructor(private formBuilder: FormBuilder, private accountService: AccountService, private alertService: AlertService) { }
 
   ngOnInit(): void {
@@ -34,7 +34,7 @@ export class ForgotPasswordComponent implements OnInit {
     this.loading = true,
     this.accountService.forgotPassword(this.f.email.value).pipe(first()).pipe(finalize(() => this.loading = false)).subscribe(
       {next: () => this.alertService.success('Please check your email for instructions'),
-      error: error => this.alertService.error(error)
+      error: error => {this.alertService.error(error); this.error = error; }
     });
   }
 }

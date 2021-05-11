@@ -11,6 +11,8 @@
          <mat-error *ngIf = "form.controls.date.hasError('required') && form.controls.date.touched" style="color:red;font-size: small;">Date is <strong>required</strong> </mat-error> 
                <ejs-timepicker id = "timepicker" [min]='minHour' [max]='maxHour' formControlName = "hour" ></ejs-timepicker>
          <mat-error *ngIf = "form.controls.hour.hasError('required') && form.controls.hour.touched" style="color:red;font-size: small;">Hour is <strong>required</strong> </mat-error>
+         <div *ngIf = "error" style ="color:red;font-size: small;">{{error}}</div>
+         <div *ngIf = "suc" style ="color:green;font-size:small">{{suc}}</div>
             <div mat-dialog-actions>
                <button mat-button type="submit" style ="color: #ffff;background-color: #52b788;top: 10px;">SUBMIT</button>
                <button class="close" mat-button (click) ="onNoClick()" style ="top:10px;" >CLOSE</button>

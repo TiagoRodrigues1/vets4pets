@@ -14,7 +14,26 @@ html *{
     margin-top: 10px;
     margin-bottom: 10px;
 }
-
+.circular {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+  }
+  .circular img {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
 .navbar {
     border: 0;
     border-radius: 3px;
@@ -315,11 +334,16 @@ img.rounded {
     border-radius: .25rem;
     transition: transform .3s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
 }
-
+.image-upload>input {
+    display: none;
+  }
 .dropdown-menu.show{
     transition: transform .3s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
 }
 
+.md\:min-w-full {
+        min-width: 100%;
+}
 
 .dropdown-menu .dropdown-item:focus, .dropdown-menu .dropdown-item:hover, .dropdown-menu a:active, .dropdown-menu a:focus, .dropdown-menu a:hover {
     box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(156,39,176,.4);

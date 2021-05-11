@@ -3,10 +3,12 @@
   <mat-sidenav #leftSidenav mode="side" opened>
     <app-left-menu></app-left-menu>
   </mat-sidenav>
-  <mat-sidenav-content >
+  <mat-sidenav-content>
+   <!-- <div class = "alert-section">
+      <app-alert></app-alert>
+    </div>
+    -->
     <div class="main_content">
-         
-
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
@@ -37,12 +39,29 @@
 	                <div class="col-md-6 ml-auto mr-auto">
         	           <div class="profile">
 	                        <div class="avatar">
-	                            <img src="https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cg_face%2Cq_auto:good%2Cw_300/MTU0NjQzOTk4OTQ4OTkyMzQy/ansel-elgort-poses-for-a-portrait-during-the-baby-driver-premiere-2017-sxsw-conference-and-festivals-on-march-11-2017-in-austin-texas-photo-by-matt-winkelmeyer_getty-imagesfor-sxsw-square.jpg" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+                            <div *ngIf = "userH.profilePicture;else defaultProfile">
+	                            <img src="{{userH.profilePicture}}" alt="Circle Image" class="circular">
+                              <div class="image-upload" style ="position: relative;bottom:100px;left:45px">  
+                                <label for="file-input">
+                                  <mat-icon>camera_alt</mat-icon>
+                                </label>
+                                <input id="file-input" type="file" (change)="fileChangeEvent($event)" />
+                              </div>
 	                        </div>
+                        <ng-template #defaultProfile>
+                          <img src="../../../assets/img/default-user-image.png" alt="Circle Image" class="circular">
+                              <div class="image-upload" style ="position: relative;bottom:100px;left:45px">  
+                                <label for="file-input">
+                                  <mat-icon>camera_alt</mat-icon>
+                                </label>
+                                <input id="file-input" type="file" (change)="fileChangeEvent($event)" />
+                              </div>
+	                        
+                        </ng-template>
+                      </div>
 	                        <div class="name">
 	                            <h3 class="title">{{userH.name}}</h3>
 								<h6>{{userH.username}}</h6>
-								
 	                        </div>
 	                    </div>
     	            </div>

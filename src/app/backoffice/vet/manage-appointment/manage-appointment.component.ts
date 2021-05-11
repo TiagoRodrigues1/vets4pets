@@ -1,10 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Appointment } from 'src/app/models/appointment.model';
 import { Pet } from 'src/app/models/pet.model';
 import { AccountService } from 'src/app/services/account.service';
-import { CustomValidatorService } from 'src/app/services/custom-validator.service';
 import { VetComponent } from '../vet.component';
 
+interface Showed {
+  viewValue:string,
+  value: boolean,
+}
 @Component({
   selector: 'app-manage-appointment',
   templateUrl: './manage-appointment.component.html',
@@ -18,12 +23,28 @@ export class ManageAppointmentComponent implements OnInit {
   month:number;
   hour:number;
   minutes:number;
-  constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<VetComponent>,private accountService:AccountService, private val: CustomValidatorService) { }
+  app:Appointment;
+  form:FormGroup;
+  public showed:Showed[] = [
+    {viewValue: 'Yes',value: true},
+    {viewValue: 'No', value: false}
+  ]
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<VetComponent>,private accountService:AccountService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    this.app = this.data.extendedProps.appointment;
     this.getPet();
+    this.form = this.formBuilder.group({
+      showedUp: [],
+    });
   }
 
+  onSubmit() {
+    this.app.showedUp = this.form.get('showedUp').value;
+    this.accountService.editAppointment(this.app.ID,this.app).subscribe();
+      
+  }
   onNoClick() {
     this.dialogRef.close();
   }
@@ -31,7 +52,7 @@ export class ManageAppointmentComponent implements OnInit {
     return this.data;
   }
   getPet() {
-    this.accountService.getPet(this.data.id,this.val.getUserId()).subscribe(
+    this.accountService.getPetVet(this.app.AnimalID).subscribe(
       (response: Pet) => {
         this.pet = response['data'];
       });

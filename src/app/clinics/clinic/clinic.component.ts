@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Clinic } from 'src/app/models/clinic.model';
 import { AccountService } from 'src/app/services/account.service';
-import { ClinicService } from 'src/app/services/clinic.service';
 
 @Component({
   selector: 'app-clinic',

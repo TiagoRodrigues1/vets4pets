@@ -5,5 +5,5 @@ export class Clinic {
     email: string;
     address: string;
     UserID: number; //manager da clinica
-
+    profilePicture:string;
 }

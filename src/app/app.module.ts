@@ -63,6 +63,9 @@ import { PetProfileComponent } from './pets/pet-profile/pet-profile.component';
 import { ShowVaccinesComponent } from './pets/show-vaccines/show-vaccines.component';
 import { PipeVaccinePipe } from './pets/show-vaccines/pipe-vaccine.pipe';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AddVetClinicComponent } from './backoffice/admin/add-vet-clinic/add-vet-clinic.component';
+import { RemoveVetClinicComponent } from './backoffice/admin/remove-vet-clinic/remove-vet-clinic.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -96,7 +99,9 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     PetProfileComponent,
     ShowVaccinesComponent,
     PipeVaccinePipe,
-    NotFoundComponent
+    NotFoundComponent,
+    AddVetClinicComponent,
+    RemoveVetClinicComponent
   ],
   imports: [
     BrowserModule,
@@ -133,7 +138,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     TimePickerModule,
     DatePickerModule,
     NgbModule,
-    FullCalendarModule
+    FullCalendarModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

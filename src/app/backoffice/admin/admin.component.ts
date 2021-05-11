@@ -8,7 +8,9 @@ import { User } from 'src/app/models/user.model';
 import { AccountService } from 'src/app/services/account.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { AddClinicComponent } from './add-clinic/add-clinic.component';
+import { AddVetClinicComponent } from './add-vet-clinic/add-vet-clinic.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { RemoveVetClinicComponent } from './remove-vet-clinic/remove-vet-clinic.component';
 
 
 @Component({
@@ -22,7 +24,7 @@ export class AdminComponent implements OnInit {
   status: string;
 
   ELEMENT_DATA: Clinic[] = [];
-  displayedColumns:string[] = ['name','contact','email','address','delete/edit'];
+  displayedColumns:string[] = ['name','contact','email','address','addVet','removeVet','delete/edit'];
   dataSource = new MatTableDataSource<Clinic>(this.ELEMENT_DATA);
 
 
@@ -36,6 +38,7 @@ export class AdminComponent implements OnInit {
     this.getClinics();
     this.getUsers();
   }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator.toArray()[0];
     this.dataSource.sort = this.sort.toArray()[0];
@@ -74,9 +77,7 @@ export class AdminComponent implements OnInit {
 
   getUsers() {
     let resp = this.accountService.getUsers();
-    resp.subscribe(report => this.dataSourceUser.data = report ['data'] as User[]);
-    console.log(this.dataSourceUser.data);
-    
+    resp.subscribe(report => this.dataSourceUser.data = report ['data'] as User[]);    
   }
  
   editUser(user:User) {
@@ -87,5 +88,22 @@ export class AdminComponent implements OnInit {
     dialogConfig.width = "35%"
     dialogConfig.data = user;
     this.dialog.open(EditUserComponent,dialogConfig);
+  }
+
+  addVet(idClinic:number) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;  
+    dialogConfig.disableClose = true;
+    dialogConfig.width = "50%"
+    dialogConfig.data = idClinic;
+    this.dialog.open(AddVetClinicComponent,dialogConfig);
+  }
+  removeVet(idClinic:number) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;  
+    dialogConfig.disableClose = true;
+    dialogConfig.width = "50%"
+    dialogConfig.data = idClinic;
+    this.dialog.open(RemoveVetClinicComponent,dialogConfig);
   }
 }
