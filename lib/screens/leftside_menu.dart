@@ -4,6 +4,7 @@ import 'package:hello_world/screens/adoptions.dart';
 import 'package:hello_world/screens/myadoptions.dart';
 import 'package:hello_world/screens/clinics.dart';
 import 'forum.dart';
+import 'login_screen.dart';
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -112,17 +113,59 @@ class NavDrawer extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
+               SizedBox(height: 270.0),
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text('Logout'),
                 onTap: () {
-                  Navigator.pop(context);
+                 showDialog(
+                        context: context,
+                        builder: (BuildContext context) => _showDialog(context),
+                      );
                 },
               ),
             ],
           ),
         ),
       ),
+    );
+
+
+
+
+    
+  }
+
+
+
+  Widget _showDialog(context) {
+    return AlertDialog(
+      title: new Text("Logout",textAlign: TextAlign.center,),
+      content: new Text("Are you sure that you want to terminate session?",textAlign: TextAlign.center),
+      actions: <Widget>[
+        new TextButton(
+          child: new Text("No"),
+          onPressed: () {
+             Navigator.of(context).pop();
+          },
+        ),
+        Padding(
+          padding:const EdgeInsets.only(left:178),
+          child: TextButton(
+             style: TextButton.styleFrom(
+                      primary: Colors.red,
+                    ),
+            child: new Text("Yes"),
+            onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => LoginPage()),
+                (Route<dynamic> route) => false); 
+            },
+          ),
+        ),
+      ],
     );
   }
 }

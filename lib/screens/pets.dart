@@ -1,4 +1,6 @@
+import 'dart:io' as Io;
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:hello_world/models/animaltypes.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:http/http.dart' as http;
 import '../main.dart';
 import 'dart:convert' as convert;
 import '../jwt.dart';
+import 'addpet.dart';
 import 'leftside_menu.dart';
 
 class PetsPage extends StatefulWidget {
@@ -55,24 +58,7 @@ class _IndexPageState extends State<PetsPage> {
     }
   }
 
-  addPet(String name, String animaltype, String race, BuildContext context) async {
-    var jwt = await storage.read(key: "jwt");
-    var results = parseJwtPayLoad(jwt);
-    int id = results["UserID"];
-    var response = await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
-      body: convert.jsonEncode(
-        <String, dynamic>{
-          "name": name,
-          "userID": id,
-          "race": race,
-          "animaltype": animaltype,
-        },
-      ),
-      headers: {HttpHeaders.authorizationHeader: jwt},
-    );
-    print(response.body);
-  }
+ 
 
   deletePet(int id) async {
     var jwt = await storage.read(key: "jwt");
@@ -98,16 +84,16 @@ class _IndexPageState extends State<PetsPage> {
                 (Route<dynamic> route) => false);
           },
         ),
-        title: Text("Pets List"),
+        title: Text("My Pets List"),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'New Pet',
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => _buildAddpet(),
-              );
+              Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddPetPage()),
+                  );
             },
           ),
         ],
@@ -131,8 +117,12 @@ class _IndexPageState extends State<PetsPage> {
     var id = item['ID'];
     var name = item['name'];
     var animaltype = item['animaltype'];
-    var profileUrl =
-        'https://cdn.discordapp.com/attachments/537753005953384448/838351477395292210/f_00001b.png';
+    String profileUrl = item['profilePicture'];
+    
+    Uint8List bytes = base64.decode(profileUrl);
+
+    
+      
     return Card(
         elevation: 1.5,
         child: new InkWell(
@@ -154,7 +144,10 @@ class _IndexPageState extends State<PetsPage> {
                         borderRadius: BorderRadius.circular(60 / 2),
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(profileUrl))),
+                            image: MemoryImage(bytes),
+                           
+                            )
+                            ),
                   ),
                   SizedBox(
                     width: 20,
@@ -306,7 +299,6 @@ class _IndexPageState extends State<PetsPage> {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
-                      addPet(name, animaltype, race, context);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                               builder: (BuildContext context) => PetsPage()),

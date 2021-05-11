@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class ClinicDetailPage extends StatelessWidget {
  
   final String _status = "CLINICA VETERINARIA";
   final String _bio = "DESCRIÇAODESCRIÇAODESCRIÇAODESCRIÇAODESCRIÇAO";
+
+
+ 
+
 
   Widget _buildCoverImage(Size screenSize) {
     return Container(
@@ -17,7 +22,7 @@ class ClinicDetailPage extends StatelessWidget {
       ),
     );
   }
-
+ 
   Widget _buildProfileImage() {
     return Center(
       
@@ -127,9 +132,14 @@ class ClinicDetailPage extends StatelessWidget {
         "Telemovel\n",
         style: TextStyle( fontSize: 16.0,fontWeight: FontWeight.bold),
       ),
-               Text(
-        "838383838\n",
+       new InkWell(
+               child:Text(
+        "910720177\n",
         style: TextStyle( fontSize: 16.0,color: Color(0xFF799497),),
+               ),
+        onTap: () {
+       _makingPhoneCall(context);
+      },
       ),
        Text(
         "Email\n",
@@ -143,6 +153,15 @@ class ClinicDetailPage extends StatelessWidget {
       ),
     );
   }
+
+_makingPhoneCall(urlx) async {
+  const url = '910720177';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
   Widget _buildButtons() {
     return Padding(
@@ -211,4 +230,7 @@ class ClinicDetailPage extends StatelessWidget {
       ),
     );
   }
+
+
+ 
 }
