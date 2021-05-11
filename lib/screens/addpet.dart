@@ -254,10 +254,10 @@ class _AddPetPageState extends State<AddPetPage> {
                     print(base64img);
                       addPet(name, animaltype, race,base64img, context);
                                   Navigator.of(context).pop();
-                                   Navigator.of(context).pushAndRemoveUntil(
+                                    Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                     builder: (BuildContext context) => PetsPage()),
-                (Route<dynamic> route) => false); 
+                ); 
 
                     },
                     child: Container(

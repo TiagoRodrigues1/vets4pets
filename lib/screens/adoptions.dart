@@ -121,7 +121,7 @@ class _IndexPageState extends State<AdoptionsPage> {
                       SizedBox(
                           width: MediaQuery.of(context).size.width - 190,
                           child: Text(
-                            name,
+                            name.toString(),
                             style: TextStyle(fontSize: 15),
                           )),
                       SizedBox(

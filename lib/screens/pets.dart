@@ -112,7 +112,6 @@ class _IndexPageState extends State<PetsPage> {
           return getCard(pets[index]);
         });
   }
-
   Widget getCard(item) {
     var id = item['ID'];
     var name = item['name'];
@@ -189,6 +188,7 @@ class _IndexPageState extends State<PetsPage> {
 
 
 
+
   Widget buildShowPet(item) {
       return Dialog(
       shape: RoundedRectangleBorder(
@@ -259,60 +259,7 @@ class _IndexPageState extends State<PetsPage> {
     );
   }
 
-  Widget _buildAddpet() {
-    return new AlertDialog(
-      content: Stack(
-        children: <Widget>[
-          Form(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Pet Name"),
-                    controller: _nameController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: SelectFormField(
-                    decoration: InputDecoration(labelText: "Animal Type"),
-                    type: SelectFormFieldType.dropdown,
-                     items: petsType,
-                    controller: _animaltypeController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Race"),
-                    controller: _raceController,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextButton(
-                    child: Text("Submit"),
-                    style: TextButton.styleFrom(primary: Colors.green[300]),
-                    onPressed: () {
-                      var name = _nameController.text;
-                      var animaltype = _animaltypeController.text;
-                      var race = _raceController.text;
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => PetsPage()),
-                          (Route<dynamic> route) => false);
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  
 
  Widget _showDialog(int id) {
     return AlertDialog(
@@ -325,8 +272,9 @@ class _IndexPageState extends State<PetsPage> {
              Navigator.of(context).pop();
           },
         ),
-        Padding(
-          padding:const EdgeInsets.only(left:178),
+        Container(
+         margin:      const EdgeInsets.only(left: 16.0, ),
+
           child: TextButton(
              style: TextButton.styleFrom(
                       primary: Colors.red,
@@ -335,10 +283,10 @@ class _IndexPageState extends State<PetsPage> {
             onPressed: () {
               deletePet(id);
             Navigator.of(context).pop();
-            Navigator.of(context).pushAndRemoveUntil(
+            Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                     builder: (BuildContext context) => PetsPage()),
-                (Route<dynamic> route) => false); 
+                ); 
             },
           ),
         ),

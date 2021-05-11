@@ -42,7 +42,10 @@ class NavDrawer extends StatelessWidget {
                 leading: Icon(Icons.pets),
                 title: Text('Pets'),
                 onTap: () {
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => PetsPage()), (Route<dynamic> route) => false);
+                       Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PetsPage()),
+                  );
                 },
               ),
               ExpansionTile(
@@ -113,7 +116,7 @@ class NavDrawer extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-               SizedBox(height: 270.0),
+               SizedBox(height: 230.0),
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text('Logout'),
