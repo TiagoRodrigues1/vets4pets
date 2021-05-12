@@ -39,6 +39,7 @@ class _IndexPageState extends State<PetsPage> {
   getPets() async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
+    print(results);
     int id = results["UserID"];
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),

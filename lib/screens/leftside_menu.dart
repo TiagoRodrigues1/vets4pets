@@ -3,6 +3,7 @@ import 'package:hello_world/screens/pets.dart';
 import 'package:hello_world/screens/adoptions.dart';
 import 'package:hello_world/screens/myadoptions.dart';
 import 'package:hello_world/screens/clinics.dart';
+import '../main.dart';
 import 'forum.dart';
 import 'login_screen.dart';
 
@@ -159,7 +160,9 @@ class NavDrawer extends StatelessWidget {
                       primary: Colors.red,
                     ),
             child: new Text("Yes"),
-            onPressed: () {
+            onPressed: () async {
+                      storage.delete(key: 'jwt');
+
             Navigator.of(context).pop();
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
