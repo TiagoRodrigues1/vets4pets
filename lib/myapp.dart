@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert' show json, base64, ascii;
 import 'screens/login_screen.dart';
+import 'screens/leftside_menu.dart';
 import 'main.dart';
 
 Map<int, Color> color =
@@ -23,13 +24,13 @@ MaterialColor colorCustom = MaterialColor(0xFF52B788, color);
 class MyApp extends StatelessWidget {
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
-    
     if(jwt == null) return "";
     return jwt;
   }
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Projeto LPI',
@@ -42,8 +43,16 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder(
         future: jwtOrEmpty,            
         builder: (context, snapshot) {
-          return LoginPage();
-        }
+          if(snapshot.connectionState == ConnectionState.done){
+            if(snapshot.data == ""){
+              return LoginPage();
+            }
+            else{
+              return NavDrawer();
+            }
+          }
+          return CircularProgressIndicator();
+        },
       ),
     );
   }

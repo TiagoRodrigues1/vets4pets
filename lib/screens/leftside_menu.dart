@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hello_world/main.dart';
 import 'package:hello_world/screens/pets.dart';
 import 'package:hello_world/screens/adoptions.dart';
 import 'package:hello_world/screens/myadoptions.dart';
@@ -121,7 +122,7 @@ class NavDrawer extends StatelessWidget {
                 leading: Icon(Icons.logout),
                 title: Text('Logout'),
                 onTap: () {
-                 showDialog(
+                  showDialog(
                         context: context,
                         builder: (BuildContext context) => _showDialog(context),
                       );
@@ -160,6 +161,7 @@ class NavDrawer extends StatelessWidget {
                     ),
             child: new Text("Yes"),
             onPressed: () {
+            storage.delete(key: "jwt");
             Navigator.of(context).pop();
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
