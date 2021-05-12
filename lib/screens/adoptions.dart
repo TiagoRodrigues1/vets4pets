@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:hello_world/models/animaltypes.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hello_world/screens/addadoption.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 import 'adoptiondetails.dart';
@@ -61,7 +62,7 @@ class _IndexPageState extends State<AdoptionsPage> {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (BuildContext context) => _buildAddAdoption(),
+                builder: (BuildContext context) => AddAdoptionPage(),
               );
             },
           ),

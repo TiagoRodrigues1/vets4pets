@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hello_world/screens/leftside_menu.dart';
 import 'dart:convert' show json, base64, ascii;
 import 'screens/login_screen.dart';
 import 'screens/leftside_menu.dart';
@@ -30,7 +31,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Projeto LPI',
