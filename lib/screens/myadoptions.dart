@@ -29,8 +29,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
 
   getAdoptions() async {
     var jwt = await storage.read(key: "jwt");
-    var results = parseJwtPayLoad(jwt);
-    int id = results["UserID"];
+    
 
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/adoption/1'),
@@ -38,12 +37,12 @@ class _IndexPageState extends State<MyAdoptionsPage> {
     );
     print(response.body);
     if (response.statusCode == 200) {
-      var items = json.decode(response.body)['data'];
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         adoptions = items;
         isLoading = false;
       });
-      print(json.decode(response.body)['data']);
+    
     } else {
       adoptions = [];
       isLoading = false;

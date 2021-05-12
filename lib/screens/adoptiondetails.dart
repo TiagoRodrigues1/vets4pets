@@ -1,25 +1,44 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class AdoptionDetailsPage extends StatelessWidget {
   final Map<String, dynamic> animal;
 
   AdoptionDetailsPage({Key key, this.animal}) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {
-    print(animal);
-   
+    
+
     final topContent = Stack(
       children: <Widget>[
         Container(
-            padding: EdgeInsets.only(left: 10.0),
-            height: MediaQuery.of(context).size.height * 0.5,
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new AssetImage("assets/images/husky.jpg"),
-                fit: BoxFit.cover,
-              ),
+            
+            height: 400,
+            child: CarouselSlider(
+              options: CarouselOptions(height: 400.0),
+              items: [
+                "assets/images/husky.jpg",
+                "assets/images/husky.jpg",
+                "assets/images/husky.jpg",
+                "assets/images/husky.jpg",
+                "assets/images/husky.jpg"
+              ].map((i) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                        width: 400,
+                        margin: EdgeInsets.symmetric(horizontal: 1.0),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(i),
+                               fit: BoxFit.cover,
+                            ),
+                            color: Colors.amber),
+                        );
+                  },
+                );
+              }).toList(),
             )),
         Positioned(
           left: 8.0,
@@ -33,7 +52,6 @@ class AdoptionDetailsPage extends StatelessWidget {
         )
       ],
     );
-
 
     final bottomContentText = Container(
       child: Center(
@@ -109,16 +127,20 @@ class AdoptionDetailsPage extends StatelessWidget {
                         new TextSpan(
                           children: [
                             TextSpan(
-                              text:animal['adopted']==true?'Adopted':'Not Adopted '
-                            ),
+                                text: animal['adopted'] == true
+                                    ? 'Adopted'
+                                    : 'Not Adopted '),
                             WidgetSpan(
-                              child: animal['adopted']==true?const Icon(Icons.check_circle,color:Colors.green) : const Icon(Icons.cancel ,color:Colors.red)
-                            ),
+                                child: animal['adopted'] == true
+                                    ? const Icon(Icons.check_circle,
+                                        color: Colors.green)
+                                    : const Icon(Icons.cancel,
+                                        color: Colors.red)),
                           ],
                         ),
-                         new TextSpan(
-                            text: '\n\n',
-                            ),
+                        new TextSpan(
+                          text: '\n\n',
+                        ),
                       ],
                     ),
                   )

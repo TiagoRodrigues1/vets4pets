@@ -37,12 +37,12 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     );
     print(response.body);
     if (response.statusCode == 200) {
-      var items = json.decode(response.body)['data'];
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         answers = items;
         isLoading = false;
       });
-      print(json.decode(response.body)['data']);
+    
     } else {
       answers = [];
       isLoading = false;

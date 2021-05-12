@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:hello_world/models/animaltypes.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -22,32 +23,33 @@ class Constants {
 }
 
 class _ClinicPageState extends State<ClinicPage> {
-  List pets = [];
+  //List pets = [];
+  List clinics= [];
   List<Map<String, dynamic>> petsType = animalTypes;
   bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    this.getPets();
+    this.getClinics();
   }
 
-  getPets() async {
+   getClinics() async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
+      Uri.parse('http://52.47.179.213:8081/api/v1/clinic'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-
+    
     if (response.statusCode == 200) {
-      var items = json.decode(response.body)['data'];
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
-        pets = items;
+       clinics = items;
         isLoading = false;
       });
     } else {
-      pets = [];
+      clinics = [];
       isLoading = false;
     }
   }
@@ -62,13 +64,13 @@ class _ClinicPageState extends State<ClinicPage> {
   }
 
   Widget getBody() {
-    if (pets.contains(null) || pets.length < 0 || isLoading) {
+    if (clinics.contains(null) || clinics.length == 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
-        itemCount: pets.length,
+        itemCount: clinics.length,
         itemBuilder: (context, index) {
-          return getCard(pets[index]);
+          return getCard(clinics[index]);
         });
   }
 
@@ -77,7 +79,7 @@ class _ClinicPageState extends State<ClinicPage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ClinicDetailPage()),
+          MaterialPageRoute(builder: (context) => ClinicDetailPage(clinic: item)),
         );
       },
       child: new Container(
@@ -85,15 +87,21 @@ class _ClinicPageState extends State<ClinicPage> {
         margin: const EdgeInsets.only(top: 16.0, bottom: 8.0),
         child: Stack(
           children: <Widget>[
-            planetCard,
-            planetThumbnail,
+            _buildCard(item),
+           _buildphoto(item),
           ],
         ),
       ),
     );
   }
 
-  final planetThumbnail = new Container(
+Widget _buildphoto(item){
+   String profileUrl = item['profilePicture'];
+  
+    profileUrl = profileUrl.substring(23, profileUrl.length);
+    Uint8List bytes = base64.decode(profileUrl);
+return new Container(
+    
     alignment: new FractionalOffset(0.0, 0.5),
     margin: const EdgeInsets.only(left: 13.0),
     child: new Container(
@@ -103,16 +111,18 @@ class _ClinicPageState extends State<ClinicPage> {
         child: ClipRRect(
             borderRadius:
                 BorderRadius.all(Radius.circular(Constants.avatarRadius)),
-            child: Image.network(
-              "https://breed.pt/wp-content/uploads/2019/07/IMG_6297.jpg",
+            child: Image.memory(
+             bytes,
               fit: BoxFit.fill,
               width: 100,
             )),
       ),
     ),
   );
-
-  final planetCard = new Container(
+}
+   
+Widget _buildCard(item){
+return new Container(
     margin: const EdgeInsets.only(left: 62.0, right: 34.0),
     decoration: new BoxDecoration(
       border: Border.all(
@@ -135,10 +145,10 @@ class _ClinicPageState extends State<ClinicPage> {
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text("Nome, "),
-            new Text("Rua"),
+            new Text(item['name']),
+            new Text(item['address']),
             new Container(
-                color: const Color(0xFF00C6FF),
+                color: Colors.green[300],
                 width: 24.0,
                 height: 1.0,
                 margin: const EdgeInsets.symmetric(vertical: 8.0)),
@@ -146,7 +156,7 @@ class _ClinicPageState extends State<ClinicPage> {
               children: <Widget>[
                 new Icon(Icons.location_on,
                     size: 14.0, color: Colors.green[300]),
-                new Text("Location"),
+                new Text("Porto"),
                 new Container(width: 24.0),
                 new Icon(Icons.access_time,
                     size: 14.0, color: Colors.green[300]),
@@ -159,6 +169,8 @@ class _ClinicPageState extends State<ClinicPage> {
     ),
   );
 
+}
+  
   Widget _showDialog(int id) {
     return AlertDialog(
       title: new Text(

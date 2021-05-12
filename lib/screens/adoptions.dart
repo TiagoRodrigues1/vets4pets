@@ -32,7 +32,7 @@ class _IndexPageState extends State<AdoptionsPage> {
     );
   
     if (response.statusCode == 200) {
-      var items = json.decode(response.body)['data'];
+      var items =json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         adoptions = items;
         isLoading = false;

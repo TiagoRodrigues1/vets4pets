@@ -9,22 +9,26 @@ import 'package:http/http.dart' as http;
 import '../main.dart';
 import '../jwt.dart';
 
-
 class ClinicDetailPage extends StatefulWidget {
+
+    final Map<String, dynamic> clinic;
+
+     ClinicDetailPage({Key key, this.clinic}) : super(key: key);
+
+
   _ClinicDetailPageState createState() => _ClinicDetailPageState();
 }
 
 class _ClinicDetailPageState extends State<ClinicDetailPage> {
+  
   List pets = [];
   bool isLoading = false;
-  final String _status = "CLINICA VETERINARIA";
-  final String _bio = "DESCRIÇAODESCRIÇAODESCRIÇAODESCRIÇAODESCRIÇAO";
+  
 
-   void initState() {
+  void initState() {
     super.initState();
     this.getPets();
   }
-
 
   getPets() async {
     var jwt = await storage.read(key: "jwt");
@@ -34,9 +38,9 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    
+
     if (response.statusCode == 200) {
-      var items = json.decode(response.body)['data'];
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
 
       pets = items;
       isLoading = false;
@@ -47,6 +51,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
   }
 
   Widget _buildCoverImage(Size screenSize) {
+
     return Container(
       height: screenSize.height / 2.6,
       decoration: BoxDecoration(
@@ -59,14 +64,20 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
   }
 
   Widget _buildProfileImage() {
+
+String profileUrl = widget.clinic['profilePicture'];
+  
+    profileUrl = profileUrl.substring(23, profileUrl.length);
+    Uint8List bytes = base64.decode(profileUrl);
+
     return Center(
       child: Container(
         width: 140.0,
         height: 140.0,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(
-                'https://breed.pt/wp-content/uploads/2019/07/IMG_6297.jpg'),
+            image: MemoryImage(
+                bytes),
             fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(80.0),
@@ -80,6 +91,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
   }
 
   Widget _buildStatus(BuildContext context) {
+    final String _status = widget.clinic['name'].toString();
     return new Padding(
       padding: EdgeInsets.only(top: 20),
       child: Container(
@@ -103,6 +115,9 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
   }
 
   Widget _buildBio(BuildContext context) {
+            final String _bio =widget.clinic['description'].toString() + "                                                                                                \n" ;
+
+
     TextStyle bioTextStyle = TextStyle(
       fontFamily: 'Spectral',
       fontWeight: FontWeight.w400, //try changing weight to w500 if not thin
@@ -151,7 +166,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           Text(
-            "Value Morada\n",
+           widget.clinic['address'] +"\n" ,
             style: TextStyle(
               fontSize: 16.0,
               color: Color(0xFF799497),
@@ -163,7 +178,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
           ),
           new InkWell(
             child: Text(
-              "910720177\n",
+             widget.clinic['contact'] +"\n"  ,
               style: TextStyle(
                 fontSize: 16.0,
                 color: Color(0xFF799497),
@@ -178,7 +193,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           Text(
-            "xd@gmail.com\n",
+           widget.clinic['email'] +"\n"  ,
             style: TextStyle(
               fontSize: 16.0,
               color: Color(0xFF799497),
@@ -199,7 +214,6 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
   }
 
   Widget _buildButtons(context) {
-   
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Row(
@@ -223,11 +237,10 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
                 ),
               ),
               onTap: () {
-                getPets();
                 showDialog(
                   context: context,
                   builder: (BuildContext context) =>
-                      _buildCreateAppointmentStep1(context),
+                      _buildCreateAppointmentStep1(context, 1),
                 );
               },
             ),
@@ -270,170 +283,93 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
     );
   }
 
-  Widget _buildCreateAppointmentStep1(context) {
-     
+  Widget _buildCreateAppointmentStep1(context, step) {
+    String stringStep;
+    double percentage;
+    if (step == 1) {
+      stringStep = "Choose your pet";
+      percentage=0.0;
+    } else if (step == 2) {
+      stringStep = "Choose your vet";
+      percentage=0.33;
+    } else if (step == 3) {
+      stringStep = "Choose your date";
+      percentage=0.66;
+    } else {
+      stringStep = "Nice maite";
+      percentage=1.0;
+    }
     return SimpleDialog(
-      title: Text("Choose a Pet",   textAlign: TextAlign.center,),
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(40.0),
-            child: new LinearPercentIndicator(
-              width: 250,
-              animation: true,
-              lineHeight: 20.0,
-              animationDuration: 2000,
-              percent: 0.0,
-    
-              linearStrokeCap: LinearStrokeCap.roundAll,
-              progressColor: Colors.greenAccent,
-            ),
+      title: Text(
+        stringStep,
+        textAlign: TextAlign.center,
+      ),
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(40.0),
+          child: new LinearPercentIndicator(
+            width: 250,
+            animation: true,
+            animateFromLastPercent: true,
+            lineHeight: 20.0,
+            animationDuration: 1000,
+            percent: percentage,
+          
+            linearStrokeCap: LinearStrokeCap.roundAll,
+            progressColor: Colors.greenAccent,
           ),
-          Container(
-            width: 400,
-            height: 400,
-            child: ListView.builder(
-               shrinkWrap: true,
-                itemCount: pets.length,
-                itemBuilder: (context, index) {
-                  return getCard(pets[index],1);
-                }),
-          ),
-        ],
-     
-    );
-  }
-  Widget _buildCreateAppointmentStep2(context) {
-     
-    return SimpleDialog(
-      title: Text("Choose a Vet",   textAlign: TextAlign.center),
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(40.0),
-            child: new LinearPercentIndicator(
-              width: 250,
-              animation: true,
-              lineHeight: 20.0,
-              animationDuration: 1000,
-              percent: 0.33,
-    
-              linearStrokeCap: LinearStrokeCap.roundAll,
-              progressColor: Colors.greenAccent,
-            ),
-          ),
-          Container(
-            width: 400,
-            height: 400,
-            child: ListView.builder(
-               shrinkWrap: true,
-                itemCount: pets.length,
-                itemBuilder: (context, index) {
-                  return getCard(pets[index],2);
-                }),
-          ),
-        ],
-     
-    );
-  }
-  Widget _buildCreateAppointmentStep3(context) {
-     
-    return SimpleDialog(
-      title: Text("Choose a date",   textAlign: TextAlign.center,),
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(40.0),
- child: new LinearPercentIndicator(
-              width: 250,
-              animation: true,
-              lineHeight: 20.0,
-              animationDuration: 1000,
+        ),
+        Container(
+          width: 400,
+          height: 400,
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: pets.length,
+              itemBuilder: (context, index) {
+                if(step==1){
+              return getCardPet(pets[index], 1);
+                }
               
-              percent: 0.66,
-    
-              linearStrokeCap: LinearStrokeCap.roundAll,
-              progressColor: Colors.greenAccent,
-            ),
-          ),
-          Container(
-            width: 400,
-            height: 400,
-            child: ListView.builder(
-               shrinkWrap: true,
-                itemCount: pets.length,
-                itemBuilder: (context, index) {
-                  return getCard(pets[index],3);
-                }),
-          ),
-        ],
-     
+              }),
+        ),
+      ],
     );
   }
 
-   Widget _buildCreateAppointmentStep4(context) {
-     
-    return SimpleDialog(
-      title: Text("Appointement was marked",   textAlign: TextAlign.center,),
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(40.0),
-            //alignment: Alignment.center,
-            child: new LinearPercentIndicator(
-              width: 250,
-              animation: true,
-              lineHeight: 20.0,
-              animationDuration: 1000,
-              percent: 1,
-              linearStrokeCap: LinearStrokeCap.roundAll,
-              progressColor: Colors.greenAccent,
-            ),
-          ),
-          Container(
-            child: Text("Nice maite",   textAlign: TextAlign.center,),
-            width: 400,
-            height: 400,
-          )
 
-         
-        ],
-     
-    );
-  }
-
-  Widget getCard(item,flag) {
+  Widget getCardPet(item, flag) {
     var name = item['name'];
     var animaltype = item['animaltype'];
     String profileUrl = item['profilePicture'];
+        profileUrl = profileUrl.substring(23, profileUrl.length);
+
     Uint8List bytes = base64.decode(profileUrl);
     return Card(
         elevation: 1.5,
         child: new InkWell(
           onTap: () {
-
-            if (flag==1){
-               Navigator.of(context).pop();
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _buildCreateAppointmentStep2(context),
-                      
-                );
-                
-            }else if(flag==2){
-               Navigator.of(context).pop();
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _buildCreateAppointmentStep3(context),
-                );
-            }
-            else{
+            if (flag == 1) {
               Navigator.of(context).pop();
               showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _buildCreateAppointmentStep4(context),
-                );
+                context: context,
+                builder: (BuildContext context) =>
+                    _buildCreateAppointmentStep1(context,2),
+              );
+            } else if (flag == 2) {
+              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _buildCreateAppointmentStep1(context,3),
+              );
+            } else {
+              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                   _buildCreateAppointmentStep1(context,4),
+              );
             }
-            
           },
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -457,7 +393,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
-                          width: MediaQuery.of(context).size.width -220,
+                          width: MediaQuery.of(context).size.width - 220,
                           child: Text(
                             name,
                             style: TextStyle(fontSize: 17),

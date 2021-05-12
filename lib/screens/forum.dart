@@ -41,7 +41,7 @@ class _ForumPageState extends State<ForumPage> {
     );
     //print(response.body);
     if (response.statusCode == 200) {
-      var items = json.decode(response.body)['data'];
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         questions = items;
         isLoading = false;

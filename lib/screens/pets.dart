@@ -44,9 +44,9 @@ class _IndexPageState extends State<PetsPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-
+  
     if (response.statusCode == 200) {
-      var items = json.decode(response.body)['data'];
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         pets = items;
         isLoading = false;
@@ -66,7 +66,7 @@ class _IndexPageState extends State<PetsPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+  
     if (response.statusCode == 200) {
       print("Pet $id was deleted");
     }
@@ -103,7 +103,8 @@ class _IndexPageState extends State<PetsPage> {
   }
 
   Widget getBody() {
-    if (pets.contains(null) || pets.length < 0 || isLoading) {
+    
+    if (pets.contains(null) || pets.length == 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
@@ -114,10 +115,11 @@ class _IndexPageState extends State<PetsPage> {
   }
   Widget getCard(item) {
     var id = item['ID'];
-    var name = item['name'];
-    var animaltype = item['animaltype'];
-    String profileUrl = item['profilePicture'];
-    
+   String name = item['name'].toString();
+   String animaltype = item['animaltype'];
+    String profileUrl = item['picture'];
+ 
+    profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
 
     
@@ -202,9 +204,15 @@ class _IndexPageState extends State<PetsPage> {
 
 
  contentBox(context,item){
+
    var name=item['name'];
    var animaltype=item['animaltype'];
    var race=item['race'];
+
+    String profileUrl = item['picture'];
+ 
+    profileUrl = profileUrl.substring(23, profileUrl.length);
+    Uint8List bytes = base64.decode(profileUrl);
     return Stack(
       children: <Widget>[
         Container(
@@ -251,7 +259,7 @@ class _IndexPageState extends State<PetsPage> {
               radius: Constants.avatarRadius,
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(Constants.avatarRadius)),
-                  child: Image.network("https://cdn.discordapp.com/attachments/537753005953384448/838351477395292210/f_00001b.png")
+                  child: Image.memory(bytes, fit:BoxFit.cover)
               ),
             ),
         ),

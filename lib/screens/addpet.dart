@@ -1,17 +1,12 @@
 import 'dart:io';
-import 'package:hello_world/screens/pets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show ascii, base64, base64Encode, json;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../main.dart';
 import 'dart:convert' as convert;
 import '../jwt.dart';
-import '../jwt.dart';
-import '../main.dart';
+
 
 class AddPetPage extends StatefulWidget {
   @override
@@ -251,14 +246,15 @@ class _AddPetPageState extends State<AddPetPage> {
                       var race = _raceController.text;
                         List<int> imgBytes = await _image.readAsBytes();
                     String base64img = base64Encode(imgBytes);
-                    print(base64img);
+                    String prefix="data:image/jpeg;base64,";
+                    base64img=prefix+base64img;
                       addPet(name, animaltype, race,base64img, context);
                                   Navigator.of(context).pop();
-                                    Navigator.of(context).pushReplacement(
+                                  /*  Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                     builder: (BuildContext context) => PetsPage()),
                 ); 
-
+*/
                     },
                     child: Container(
                       height: 45,
