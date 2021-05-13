@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +12,21 @@ class AdoptionDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
+ String profileUrl = animal['attachement1'];
+    profileUrl = profileUrl.substring(23, profileUrl.length);
+    Uint8List bytes = base64.decode(profileUrl);
+
+ String profileUrl2 = animal['attachement2'];
+    profileUrl2 = profileUrl2.substring(23, profileUrl2.length);
+    Uint8List bytes2 = base64.decode(profileUrl2);
+
+     String profileUrl3 = animal['attachement3'];
+    profileUrl3 = profileUrl3.substring(23, profileUrl3.length);
+    Uint8List bytes3 = base64.decode(profileUrl3);
+
+     String profileUrl4 = animal['attachement4'];
+    profileUrl4 = profileUrl4.substring(23, profileUrl4.length);
+    Uint8List bytes4 = base64.decode(profileUrl4);
 
     final topContent = Stack(
       children: <Widget>[
@@ -18,11 +36,10 @@ class AdoptionDetailsPage extends StatelessWidget {
             child: CarouselSlider(
               options: CarouselOptions(height: 400.0),
               items: [
-                "assets/images/husky.jpg",
-                "assets/images/husky.jpg",
-                "assets/images/husky.jpg",
-                "assets/images/husky.jpg",
-                "assets/images/husky.jpg"
+               bytes,
+              bytes2,
+              bytes3,
+             bytes4
               ].map((i) {
                 return Builder(
                   builder: (BuildContext context) {
@@ -31,7 +48,7 @@ class AdoptionDetailsPage extends StatelessWidget {
                         margin: EdgeInsets.symmetric(horizontal: 1.0),
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(i),
+                              image: MemoryImage(i),
                                fit: BoxFit.cover,
                             ),
                             color: Colors.amber),

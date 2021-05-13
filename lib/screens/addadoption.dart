@@ -16,6 +16,9 @@ class AddAdoptionPage extends StatefulWidget {
 
 class _AddAdoptionPageState extends State<AddAdoptionPage> {
   File _image = null;
+  File _image2 = null;
+  File _image3 = null;
+  File _image4 = null;
   final picker = ImagePicker();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animaltypeController = TextEditingController();
@@ -36,21 +39,40 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
 
     setState(() {
       if (pickedFile != null) {
+        if(number==1)
         _image = File(pickedFile.path);
-
-        print(_image.path);
+         if(number==2)
+        _image2 = File(pickedFile.path);
+         if(number==3)
+        _image3 = File(pickedFile.path);
+         if(number==4)
+        _image4 = File(pickedFile.path);
+        
+        
       } else {
         print('No image selected.');
       }
     });
   }
 
-  addAdoption(String name,String city,String text,String email,String phonenumber,String birth,String animaltype,String race,String picture1,String picture2,String picture3,String picture4,BuildContext context) async {
-
+  addAdoption(
+      String name,
+      String city,
+      String text,
+      String email,
+      String phonenumber,
+      String birth,
+      String animaltype,
+      String race,
+      String picture1,
+      String picture2,
+      String picture3,
+      String picture4,
+      BuildContext context) async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-    String username=results["username"];
+    String username = results["username"];
     var response = await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/adoption/'),
       body: convert.jsonEncode(
@@ -62,7 +84,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
           "text": text,
           "adopted": false,
           "city": city,
-          "birth":birth,
+          "birth": birth,
           "phonenumber": phonenumber,
           "email": email,
           "username": username,
@@ -115,8 +137,67 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                         borderRadius: BorderRadius.circular(16.0),
                       ),
                     ),
-              Row(children: [
-                        Align(
+                    Container(
+                        margin: EdgeInsets.only(left: 10, right: 5),
+                        child: Row(
+                          children: [
+                            Align(
+                                  alignment: Alignment.topCenter,
+                                  child: SizedBox(
+                                    child: CircleAvatar(
+                                        backgroundColor: Colors.green[200],
+                                        radius: 45.0,
+                                        child: InkWell(
+                                          onTap: () {
+                                            getImage(1);
+                                          },
+                                          child: _image == null
+                                              ? CircleAvatar(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.bottomRight,
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      radius: 12.0,
+                                                      child: Icon(
+                                                        Icons.camera_alt,
+                                                        size: 15.0,
+                                                        color:
+                                                            Color(0xFF404040),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  radius: 40.0,
+                                                  backgroundImage: AssetImage(
+                                                      "assets/images/petdefault.png"),
+                                                )
+                                              : CircleAvatar(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.bottomRight,
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      radius: 12.0,
+                                                      child: Icon(
+                                                        Icons.camera_alt,
+                                                        size: 15.0,
+                                                        color:
+                                                            Color(0xFF404040),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  radius: 40.0,
+                                                  backgroundImage: FileImage(
+                                                      File(_image.path)),
+                                                ),
+                                        )),
+                                  )),
+                                  Padding(
+                          padding: EdgeInsets.only(left:10),
+                          child:     Align(
+                        
                         alignment: Alignment.topCenter,
                         child: SizedBox(
                           child: CircleAvatar(
@@ -124,9 +205,9 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                               radius: 45.0,
                               child: InkWell(
                                 onTap: () {
-                                  getImage(1);
+                                  getImage(2);
                                 },
-                                child: _image == null
+                                child: _image2 == null
                                     ? CircleAvatar(
                                         child: Align(
                                           alignment: Alignment.bottomRight,
@@ -157,17 +238,115 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                             ),
                                           ),
                                         ),
-                                        radius: 20.0,
+                                        radius: 40.0,
                                         backgroundImage:
-                                            FileImage(File(_image.path)),
+                                            FileImage(File(_image2.path)),
                                       ),
                               )),
+                        )),),
+                        Padding(
+                          padding: EdgeInsets.only(left:10),
+                          child:     Align(
+                        
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.green[200],
+                              radius: 45.0,
+                              child: InkWell(
+                                onTap: () {
+                                  getImage(3);
+                                },
+                                child: _image3 == null
+                                    ? CircleAvatar(
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            radius: 12.0,
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              size: 15.0,
+                                              color: Color(0xFF404040),
+                                            ),
+                                          ),
+                                        ),
+                                        radius: 40.0,
+                                        backgroundImage: AssetImage(
+                                            "assets/images/petdefault.png"),
+                                      )
+                                    : CircleAvatar(
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            radius: 12.0,
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              size: 15.0,
+                                              color: Color(0xFF404040),
+                                            ),
+                                          ),
+                                        ),
+                                        radius: 40.0,
+                                        backgroundImage:
+                                            FileImage(File(_image3.path)),
+                                      ),
+                              )),
+                        )),),
+                        Padding(
+                          padding: EdgeInsets.only(left:10),
+                          child:     Align(
+                        
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.green[200],
+                              radius: 45.0,
+                              child: InkWell(
+                                onTap: () {
+                                  getImage(4);
+                                },
+                                child: _image4 == null
+                                    ? CircleAvatar(
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            radius: 12.0,
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              size: 15.0,
+                                              color: Color(0xFF404040),
+                                            ),
+                                          ),
+                                        ),
+                                        radius: 40.0,
+                                        backgroundImage: AssetImage(
+                                            "assets/images/petdefault.png"),
+                                      )
+                                    : CircleAvatar(
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            radius: 12.0,
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              size: 15.0,
+                                              color: Color(0xFF404040),
+                                            ),
+                                          ),
+                                        ),
+                                        radius: 40.0,
+                                        backgroundImage:
+                                            FileImage(File(_image4.path)),
+                                      ),
+                              )),
+                        )),),
+                          
+                          ],
                         )),
-                        
-                        
-
-
-              ],)
                   ])),
                   Spacer(),
                   Align(
@@ -266,11 +445,25 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
+
                       List<int> imgBytes = await _image.readAsBytes();
                       String base64img = base64Encode(imgBytes);
                       String prefix = "data:image/jpeg;base64,";
                       base64img = prefix + base64img;
-                      // AddAdoption(name, animaltype, race,base64img, context);
+
+                      List<int> imgBytes2 = await _image2.readAsBytes();
+                      String base64img2 = base64Encode(imgBytes2);
+                      base64img2 = prefix + base64img2;
+
+                      List<int> imgBytes3 = await _image3.readAsBytes();
+                      String base64img3 = base64Encode(imgBytes3);
+                      base64img3 = prefix + base64img3;
+
+                      List<int> imgBytes4 = await _image4.readAsBytes();
+                      String base64img4 = base64Encode(imgBytes4);
+                      base64img4 = prefix + base64img4;
+
+                       addAdoption("name", "xd","animaltype", "race","base64img","2021","kkkkk""XD","xddd",base64img,base64img2,base64img3,base64img4,context);
                       Navigator.of(context).pop();
                       /*  Navigator.of(context).pushReplacement(
                 MaterialPageRoute(

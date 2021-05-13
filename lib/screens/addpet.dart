@@ -7,7 +7,6 @@ import '../main.dart';
 import 'dart:convert' as convert;
 import '../jwt.dart';
 
-
 class AddPetPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -21,7 +20,8 @@ class _AddPetPageState extends State<AddPetPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animaltypeController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
-
+  String animalTypeValue;
+  List animalTypeList = ["Dog", "Cat", "Turtle", "Horse"];
   @override
   void initState() {
     super.initState();
@@ -40,12 +40,14 @@ class _AddPetPageState extends State<AddPetPage> {
       }
     });
   }
- addPet(String name, String animaltype, String race, String picture,BuildContext context) async {
-   //print(picture);
+
+  addPet(String name, String animaltype, String race, String picture,
+      BuildContext context) async {
+    //print(picture);
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-    
+
     var response = await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
       body: convert.jsonEncode(
@@ -54,14 +56,15 @@ class _AddPetPageState extends State<AddPetPage> {
           "userID": id,
           "race": race,
           "animaltype": animaltype,
-           "profilePicture":  picture,
-            "picture":  picture,
+          "profilePicture": picture,
+          "picture": picture,
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     print(response.body);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,7 +182,7 @@ class _AddPetPageState extends State<AddPetPage> {
                           BoxShadow(color: Colors.black12, blurRadius: 5)
                         ]),
                     child: TextField(
-                       controller: _nameController,
+                      controller: _nameController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         icon: Icon(
@@ -191,29 +194,51 @@ class _AddPetPageState extends State<AddPetPage> {
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
-                    margin: EdgeInsets.only(top: 32),
-                    padding:
-                        EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 5)
-                        ]),
-                    child: TextField(
-                      controller: _animaltypeController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        icon: Icon(
-                          Icons.pets,
-                          color: Color(0xFF52B788),
-                        ),
-                        hintText: 'Pet Type',
-                      ),
-                    ),
-                  ),
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      height: 45,
+                      margin: EdgeInsets.only(top: 32),
+                      padding: EdgeInsets.only(
+                          top: 4, left: 16, right: 16, bottom: 4),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black12, blurRadius: 5)
+                          ]),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Container(
+                             
+                             
+                              child: Icon(
+                                Icons.pets,
+                                color: Color(0xFF52B788),
+                                size: 25.0,
+                              )),
+                          Expanded(child:Padding(
+                            padding: EdgeInsets.only(left:15),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                isExpanded: true,
+                            focusColor: Colors.green,
+                            hint: Text("Animal Type"),
+                            value: animalTypeValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                animalTypeValue = newValue;
+                              });
+                            },
+                            items: animalTypeList.map((valueType) {
+                              return DropdownMenuItem(
+                                value: valueType,
+                                child: Text(valueType),
+                              );
+                            }).toList(),
+                          ))) ,)
+                         
+                        ],
+                      )),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
                     height: 45,
@@ -227,7 +252,7 @@ class _AddPetPageState extends State<AddPetPage> {
                           BoxShadow(color: Colors.black12, blurRadius: 5)
                         ]),
                     child: TextField(
-                     controller: _raceController,
+                      controller: _raceController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         icon: Icon(
@@ -244,13 +269,13 @@ class _AddPetPageState extends State<AddPetPage> {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
-                        List<int> imgBytes = await _image.readAsBytes();
-                    String base64img = base64Encode(imgBytes);
-                    String prefix="data:image/jpeg;base64,";
-                    base64img=prefix+base64img;
-                      addPet(name, animaltype, race,base64img, context);
-                                  Navigator.of(context).pop();
-                                  /*  Navigator.of(context).pushReplacement(
+                      List<int> imgBytes = await _image.readAsBytes();
+                      String base64img = base64Encode(imgBytes);
+                      String prefix = "data:image/jpeg;base64,";
+                      base64img = prefix + base64img;
+                      addPet(name, animaltype, race, base64img, context);
+                      Navigator.of(context).pop();
+                      /*  Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                     builder: (BuildContext context) => PetsPage()),
                 ); 
