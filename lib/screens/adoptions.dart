@@ -73,7 +73,7 @@ class _IndexPageState extends State<AdoptionsPage> {
   }
 
   Widget getBody() {
-    if (adoptions.contains(null) || adoptions.length < 0 || isLoading) {
+    if (adoptions.contains(null) || adoptions.length == 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
@@ -147,59 +147,5 @@ class _IndexPageState extends State<AdoptionsPage> {
 
 
 
-  Widget _buildAddAdoption() {
-     return new AlertDialog(
-      content: Stack(
-        children: <Widget>[
-        
-          Form(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Title"),
-                    controller: _nameController,
-                  ),
-                ),
-                /*Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: SelectFormField(
-                    decoration: InputDecoration(labelText: "Animal Type"),
-                    type: SelectFormFieldType.dropdown,
-                    items: typeoptions,
-                    controller: _animaltypeController,
-                  ),
-                ),*/
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Race"),
-                    controller: _raceController,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextButton(
-                    child: Text("Submit"),
-                    style: TextButton.styleFrom(
-                      primary: Colors.green[300],
-                    ),
-                    onPressed: () {
-                      var name = _nameController.text;
-                      var animaltype = _animaltypeController.text;
-                      var race = _raceController.text;
-                      addAdoption(race, animaltype, name, context);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 }

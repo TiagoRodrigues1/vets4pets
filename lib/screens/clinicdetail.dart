@@ -31,6 +31,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
   }
 
   getPets() async {
+    print("lol");
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
@@ -306,14 +307,18 @@ String profileUrl = widget.clinic['profilePicture'];
       ),
       children: <Widget>[
         Container(
-          margin: EdgeInsets.all(40.0),
+           width:  MediaQuery.of(context).size.width -50,
+          margin: EdgeInsets.only(left:30.0,right: 30),
           child: new LinearPercentIndicator(
-            width: 250,
+            
             animation: true,
-            animateFromLastPercent: true,
+           
             lineHeight: 20.0,
             animationDuration: 1000,
+            animateFromLastPercent: true,
             percent: percentage,
+                         
+
           
             linearStrokeCap: LinearStrokeCap.roundAll,
             progressColor: Colors.greenAccent,
@@ -322,15 +327,28 @@ String profileUrl = widget.clinic['profilePicture'];
         Container(
           width: 400,
           height: 400,
-          child: ListView.builder(
+          
+          child: pets.length!=0
+          
+          ?ListView.builder(
               shrinkWrap: true,
               itemCount: pets.length,
               itemBuilder: (context, index) {
                 if(step==1){
               return getCardPet(pets[index], 1);
                 }
+                 if(step==2){
+              return getCardPet(pets[index], 2);
+                }
+                  if(step==3){
+              return getCardPet(pets[index], 3);
+                }
               
-              }),
+              })
+              :
+              
+       Center(child: CircularProgressIndicator()),
+    
         ),
       ],
     );

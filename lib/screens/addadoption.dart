@@ -128,7 +128,8 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Spacer(),
-                  Align(
+                  Container(
+                   width:MediaQuery.of(context).size.width ,
                       child: Stack(children: [
                     Container(
                       margin: EdgeInsets.only(top: 48),
@@ -138,7 +139,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                       ),
                     ),
                     Container(
-                        margin: EdgeInsets.only(left: 10, right: 5),
+                        margin: EdgeInsets.only(left: 2),
                         child: Row(
                           children: [
                             Align(
@@ -151,7 +152,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                           onTap: () {
                                             getImage(1);
                                           },
-                                          child: _image == null
+                                    child: _image == null
                                               ? CircleAvatar(
                                                   child: Align(
                                                     alignment:

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hello_world/screens/forumdetail.dart';
+import '../jwt.dart';
 import 'colors.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 import 'dart:convert' as convert;
-import 'adoptiondetails.dart';
-import '../jwt.dart';
-import 'leftside_menu.dart';
+
 
 
 class ForumPage extends StatefulWidget {
@@ -22,6 +20,11 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
+
+
+  final TextEditingController _questiontitleController = TextEditingController();
+  final TextEditingController _questionController = TextEditingController();
+
   List questions = [];
   bool isLoading = false;
 
@@ -32,14 +35,10 @@ class _ForumPageState extends State<ForumPage> {
 
     getQuestions() async {
     var jwt = await storage.read(key: "jwt");
-    //var results = parseJwtPayLoad(jwt);
-    
-
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/questions'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    //print(response.body);
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
@@ -52,6 +51,30 @@ class _ForumPageState extends State<ForumPage> {
     }
   }
 
+  addQuestion(String title, String question, String attachament) async {
+   
+    var jwt = await storage.read(key: "jwt");
+    var results = parseJwtPayLoad(jwt);
+    int id = results["UserID"];
+
+    var response = await http.post(
+      Uri.parse('http://52.47.179.213:8081/api/v1/question/'),
+      body: convert.jsonEncode(
+        <String, dynamic>{
+          "question": question,
+      "userID": id,
+      "attachement": attachament,
+      "closed": false,
+      "answers": 0,
+      "questiontitle": title
+        },
+      ),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+   print(response.body);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +86,17 @@ class _ForumPageState extends State<ForumPage> {
           textScaleFactor: 1.3,
         ),
         actions: <Widget>[
+                IconButton(
+            icon: const Icon(Icons.add_alarm),
+            color: Colors.white,
+            tooltip: 'Answer this question',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => _buildQuestion(),
+              );
+            },
+          ),
           new IconButton(
             icon: new Icon(Icons.search),
             onPressed: _onSearchPressed,
@@ -70,11 +104,66 @@ class _ForumPageState extends State<ForumPage> {
         ],
       ),
       body: getBody(),
-       
-
     );
   }
 
+
+
+
+   Widget _buildQuestion() {
+     return new AlertDialog(
+      content: Stack(
+        children: <Widget>[
+        
+          Form(
+             child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                    Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                 
+                    decoration: InputDecoration(labelText: "Title"),
+                    controller: _questiontitleController,
+                  ),
+                ),
+               
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    maxLines: null,
+    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(labelText: "Question"),
+                    controller: _questionController,
+                  ),
+                ),
+               
+               
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextButton(
+                    child: Text("Submit"),
+                    style: TextButton.styleFrom(
+                      primary: Colors.green[300],
+                    ),
+                    onPressed: () {
+                      var title=_questiontitleController.text;
+                      var question = _questionController.text;
+                   
+                      addQuestion(title,question,"");
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                )
+              ],
+            ),
+             ),
+          ),
+        ],
+      ),
+    );
+  }
 
  Widget getBody() {
     if (questions.contains(null) || questions.length < 0 || isLoading) {
@@ -98,8 +187,7 @@ Widget entryItem (context ,item) {
   var answers=item['answers'];
   var question=item['question'];
   var closed=item['closed'];
-  var id=item['ID'];
-  var username=item['UserID'];
+ 
 
     if (question.length > 20) {
      question = question.substring(0, 23);

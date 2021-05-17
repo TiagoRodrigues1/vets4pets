@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.0"
+  auto_size_text:
+    dependency: "direct main"
+    description:
+      name: auto_size_text
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -184,6 +191,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  progress_timeline:
+    dependency: "direct main"
+    description:
+      name: progress_timeline
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   rxdart:
     dependency: "direct main"
     description:
@@ -191,6 +205,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.26.0"
+  scrollable_positioned_list:
+    dependency: transitive
+    description:
+      name: scrollable_positioned_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.10"
   select_form_field:
     dependency: "direct main"
     description:
@@ -217,6 +238,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  status_change:
+    dependency: "direct main"
+    description:
+      name: status_change
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   step_progress_indicator:
     dependency: "direct main"
     description:

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 import 'dart:convert' as convert;
+import 'addadoption.dart';
 import 'adoptiondetails.dart';
 import '../jwt.dart';
 import 'leftside_menu.dart';
@@ -35,7 +36,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/adoption/1'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+   
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
@@ -100,9 +101,9 @@ class _IndexPageState extends State<MyAdoptionsPage> {
             icon: const Icon(Icons.add),
             tooltip: 'New Adoption',
             onPressed: () {
-              showDialog(
+               showDialog(
                 context: context,
-                builder: (BuildContext context) => _buildAddAdoption(),
+                builder: (BuildContext context) => AddAdoptionPage(),
               );
             },
           ),
@@ -113,7 +114,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
   }
 
   Widget getBody() {
-    if (adoptions.contains(null) || adoptions.length < 0 || isLoading) {
+    if (adoptions.contains(null) || adoptions.length == 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
@@ -177,9 +178,8 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                     ],
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
                     onPressed: () {
-                      //deleteAdoption(id);
                       showDialog(
                         context: context,
                         builder: (BuildContext context) => _showDialog(id),
@@ -193,61 +193,6 @@ class _IndexPageState extends State<MyAdoptionsPage> {
         ));
   }
 
-  Widget _buildAddAdoption() {
-    return new AlertDialog(
-      content: Stack(
-        children: <Widget>[
-          Form(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Title"),
-                    controller: _nameController,
-                  ),
-                ),
-                /*Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: SelectFormField(
-                    decoration: InputDecoration(labelText: "Animal Type"),
-                    type: SelectFormFieldType.dropdown,
-                    items: typeoptions,
-                    controller: _animaltypeController,
-                  ),
-                ),*/
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Race"),
-                    controller: _raceController,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextButton(
-                    child: Text("Submit"),
-                    style: TextButton.styleFrom(
-                      primary: Colors.green,
-                    ),
-                    onPressed: () {
-                      var name = _nameController.text;
-                      var animaltype = _animaltypeController.text;
-                      var race = _raceController.text;
-                      print(race + " " + animaltype + " " + name);
-                      addAdoption(race, animaltype, name, context);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _showDialog(int id) {
     return AlertDialog(

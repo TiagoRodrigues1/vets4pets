@@ -62,7 +62,7 @@ class _AddPetPageState extends State<AddPetPage> {
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+   
   }
 
   @override
