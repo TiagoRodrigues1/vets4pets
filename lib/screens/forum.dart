@@ -87,7 +87,7 @@ class _ForumPageState extends State<ForumPage> {
         ),
         actions: <Widget>[
                 IconButton(
-            icon: const Icon(Icons.add_alarm),
+            icon: const Icon(Icons.add),
             color: Colors.white,
             tooltip: 'Answer this question',
             onPressed: () {

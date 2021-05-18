@@ -8,8 +8,6 @@ import '../main.dart';
 import 'dart:convert' show ascii, base64, base64Encode, json;
 import 'dart:convert' as convert;
 
-
-
 class ForumDetailPage extends StatefulWidget {
   final Map<String, dynamic> question;
 
@@ -20,11 +18,8 @@ class ForumDetailPage extends StatefulWidget {
 }
 
 class _ForumDetailPageState extends State<ForumDetailPage> {
-
-
   final TextEditingController _answerController = TextEditingController();
- 
- 
+
   int id_user;
   List answers = [];
   bool isLoading = false;
@@ -35,8 +30,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     this.getid();
   }
 
- addAnswer(String answer, int questionid, String attachament) async {
-    print(questionid);
+  addAnswer(String answer, int questionid, String attachament) async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
@@ -45,20 +39,17 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/answer/'),
       body: convert.jsonEncode(
         <String, dynamic>{
-           "answer": answer,
-            "userID": id,
-            "questionID": questionid,
+          "answer": answer,
+          "userID": id,
+          "questionID": questionid,
           "attachement": "string"
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-   print(response.body);
   }
 
-
   getAnswers(int id) async {
-    
     var jwt = await storage.read(key: "jwt");
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/answer/$id'),
@@ -132,7 +123,6 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
         }
 
         Navigator.of(context).pop();
-        Navigator.of(context).pop();
       },
     );
 
@@ -164,14 +154,11 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   }
 
   Widget build(BuildContext context) {
-    //print(widget.question);
-
     var date = widget.question['CreatedAt'];
     DateTime parseDate = new DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
     var inputDate = DateTime.parse(parseDate.toString());
     var outputFormat = DateFormat('dd/MM/yyyy HH:mm:ss ');
     var outputDate = outputFormat.format(inputDate);
-    //print(outputDate);
 
     var questionSection = new Container(
       margin: const EdgeInsets.all(5.0),
@@ -206,8 +193,18 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 Container(
                   child: id_user == widget.question['UserID']
                       ? Row(children: <Widget>[
-                          Text(outputDate),
                           IconButton(
+                              tooltip: 'Edit this question',
+                              icon: const Icon(Icons.edit, color: Colors.white),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      _editQuestion(context),
+                                );
+                              }),
+                          IconButton(
+                              tooltip: 'Delete this question',
                               icon: const Icon(Icons.delete_outline,
                                   color: Colors.red),
                               onPressed: () {
@@ -219,7 +216,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                 );
                               }),
                         ])
-                      : Text(outputDate),
+                      : Text(""),
                 ),
               ],
             ),
@@ -233,7 +230,30 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 borderRadius: const BorderRadius.only(
                     bottomLeft: const Radius.circular(20.0),
                     bottomRight: const Radius.circular(20.0))),
-            child: Text(widget.question['question']),
+            child: Container(
+                child: Column(children: <Widget>[
+              Text(widget.question['question']),
+              Row(children: <Widget>[
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Text("Posted on: " + outputDate),
+                ),
+                Spacer(),
+                Container(
+                  child: IconButton(
+                    icon: const Icon(Icons.question_answer_outlined),
+                    color: Colors.green[300],
+                    tooltip: 'Answer this question',
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => _buildAnswer(),
+                      );
+                    },
+                  ),
+                ),
+              ])
+            ])),
           ),
         ],
       ),
@@ -242,8 +262,8 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     return Scaffold(
       appBar: new AppBar(
         title: new Text("Forum Detail"),
-           actions: <Widget>[
-              IconButton(
+        actions: <Widget>[
+          IconButton(
             icon: const Icon(Icons.question_answer_outlined),
             color: Colors.white,
             tooltip: 'Answer this question',
@@ -348,47 +368,96 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     );
   }
 
-
-
-   Widget _buildAnswer() {
-     return new AlertDialog(
+  Widget _buildAnswer() {
+    return new AlertDialog(
       content: Stack(
         children: <Widget>[
-        
           Form(
-             child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    maxLines: null,
-    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(labelText: "Answer"),
-                    controller: _answerController,
-                  ),
-                ),
-               
-               
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextButton(
-                    child: Text("Submit"),
-                    style: TextButton.styleFrom(
-                      primary: Colors.green[300],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(labelText: "Answer"),
+                      controller: _answerController,
                     ),
-                    onPressed: () {
-                      var answer = _answerController.text;
-                   
-                      addAnswer(answer,widget.question['ID'],"");
-                      Navigator.of(context).pop();
-                    },
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextButton(
+                      child: Text("Submit"),
+                      style: TextButton.styleFrom(
+                        primary: Colors.green[300],
+                      ),
+                      onPressed: () {
+                        var answer = _answerController.text;
+
+                        addAnswer(answer, widget.question['ID'], "");
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
-             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _editQuestion(context) {
+    final TextEditingController _questiontitleController =
+        TextEditingController(text: widget.question['questiontitle']);
+    final TextEditingController _questionController =
+        TextEditingController(text: widget.question['question']);
+    return new AlertDialog(
+      content: Stack(
+        children: <Widget>[
+          Form(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(labelText: "Title"),
+                      controller: _questiontitleController,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(labelText: "Question"),
+                      controller: _questionController,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextButton(
+                      child: Text("Submit"),
+                      style: TextButton.styleFrom(
+                        primary: Colors.green[300],
+                      ),
+                      onPressed: () {
+                        var title = _questiontitleController.text;
+                        var question = _questionController.text;
+
+                        // editQuestion(title,question,"");
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ],
       ),
