@@ -1,10 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs/operators';
 import { Clinic } from 'src/app/models/clinic.model';
-import { AlertService } from 'src/app/services/alert.service';
-import { AppointmentComponent } from '../appointment/appointment.component';
 import { ChoosePetComponent } from '../choose-pet/choose-pet.component';
 
 @Component({
@@ -19,7 +16,7 @@ export class ClinicProfileComponent implements OnInit,OnDestroy {
   id: number;
   private sub: any;
 
-  constructor(private dialog: MatDialog,private route: ActivatedRoute, private alertService: AlertService) { 
+  constructor(private dialog: MatDialog,private route: ActivatedRoute) { 
   
   }
 
@@ -38,7 +35,7 @@ export class ClinicProfileComponent implements OnInit,OnDestroy {
 
   makeAppointment() {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
+    dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;  
     dialogConfig.width = "60%";
     dialogConfig.data = this.id;
@@ -49,16 +46,4 @@ export class ClinicProfileComponent implements OnInit,OnDestroy {
     this.sub.unsubscribe();
   }
 
-  private displayError(message: string) {
-    this.alertService.error(message,
-      { autoClose: true }
-    );
-  }
-
-  private displaySuccess(message:string) {
-    console.log(message)
-    this.alertService.success(message,
-      { autoClose: false }
-    );
-  }
 }

@@ -87,6 +87,22 @@ html *{
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
   }
+  
+  .company-header-avatar{
+    width: 60px;
+    height: 60px;
+    -webkit-border-radius: 60px;
+    -webkit-background-clip: padding-box;
+    -moz-border-radius: 60px;
+    -moz-background-clip: padding;
+    border-radius: 60px;
+    background-clip: padding-box;
+    margin: 7px 0 0 5px;
+    float: left;
+    background-size: cover;
+    background-position: center center;
+}
+
   .jim {
     width: 30px;
     height: 30px;
@@ -440,4 +456,7 @@ p {
 
 .red {
     background-color: white;
+
 }
+
+.mat-dialog { transition: none; }

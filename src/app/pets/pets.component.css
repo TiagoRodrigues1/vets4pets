@@ -9,7 +9,7 @@ p {
   }
 
   .example-card {
-    max-width: 400px;
+    max-width: 320px;
   }
   
   .example-header-image {
@@ -53,3 +53,8 @@ p {
     border-radius: 5px !important;
     border: #000 !important;
    }
+
+::ng-deep.mat-spinner circle {
+    text-align: center;
+    stroke: #52b788;
+  }

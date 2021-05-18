@@ -1,5 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { CalendarOptions, EventClickArg } from '@fullcalendar/angular'; 
 import { Appointment } from 'src/app/models/appointment.model';
@@ -12,7 +11,7 @@ import { AppointmentDetailsComponent } from '../appointment-details/appointment-
   templateUrl: './display-appointment.component.html',
   styleUrls: ['./display-appointment.component.css']
 })
-export class DisplayAppointmentComponent implements OnInit {
+export class DisplayAppointmentComponent implements OnInit,AfterViewInit {
   calendarOptions: CalendarOptions;
   error:string;
   eventstest = [{
@@ -22,10 +21,19 @@ export class DisplayAppointmentComponent implements OnInit {
     allday:false,
   }];
   app: Appointment[];
+  loading:boolean = true;
+  isDisabled = true;
   constructor(private accountService: AccountService, private val: CustomValidatorService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
+    
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
     this.getAppointments();
+    this.loading = false;
+    }, 1000);
   }
 
   getAppointments() {
@@ -36,8 +44,19 @@ export class DisplayAppointmentComponent implements OnInit {
       this.calendarOptions = {
       initialView: 'dayGridMonth',
       height: '850px',
+      dayMaxEventRows:true,
       events: this.eventstest,
       eventColor:'#52b788',
+      headerToolbar: {
+        left : 'prev,next today',
+        center :'title',
+        right: 'dayGridMonth, dayGridWeek, dayGridDay,listWeek'
+      },
+      views: {
+        timeGrid:{
+          dayMaxEventRows:6
+        }
+      },
       eventClick:this.eventClick.bind(this),
       eventTimeFormat: {
         hour: '2-digit',
@@ -50,10 +69,11 @@ export class DisplayAppointmentComponent implements OnInit {
       this.error = "You don't have any appointments";
     });
   }
+
   eventClick(info:EventClickArg) {
     console.log(info.event.id);
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
+    dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;  
     dialogConfig.width = "35%"
     dialogConfig.data = info.event;

@@ -8,10 +8,10 @@
       <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "form" (ngSubmit) = "onSubmit()">
             <mat-label style = "font-size:18px">Title</mat-label>
             <p>{{displayData.title}}</p>
-            <tr>
+            <tr> 
             <div style = "display: inline-block;vertical-align: top;float:right;position:relative;left:65%;bottom:50px">
-            <div *ngIf = "pet?.profilePicture; else default">
-              <img src = "{{pet.profilePicture}}">
+              <div *ngIf = "pet?.profilePicture; else default">
+              <img src = "{{pet.profilePicture}}" style="width:160px;height:140px;border:2px solid #52b788;">
             </div>
             <ng-template #default>
               <img src = "../../../../assets/img/default.png" style="width:160px;height:140px;border:2px solid #52b788;" >
@@ -26,7 +26,6 @@
             <p>{{pet?.animaltype}}</p>
             <mat-label style = "font-size:18px">Pet Race</mat-label>
             <p>{{pet?.race}}</p>
-           
               <mat-form-field>
                 <mat-label>Showed Up</mat-label>
                 <mat-select formControlName = "showedUp">
@@ -38,6 +37,7 @@
                 </mat-select>
               </mat-form-field>
           </div> 
+          <p *ngIf = "error" style ="color:red;font-size:medium;">{{error}}</p>
         <div mat-dialog-actions>
           <button mat-button type="submit" >SUBMIT</button>
           <button mat-button class="close" (click) ="onNoClick()">CLOSE</button>   

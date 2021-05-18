@@ -108,9 +108,7 @@ export class AddPetComponent implements OnInit {
 
   constructor(private accountService: AccountService,private router: Router,private route: ActivatedRoute,private dialogRef: MatDialogRef<PetsComponent>,private petService: PetService, private val : CustomValidatorService) { }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void { }
 
 onSubmit() {
   if(!this.service.form.get('ID').value) {
@@ -190,7 +188,6 @@ onClose() {
 }
 
 populateForm() {
-    console.log(this.petService);
     this.petService.form.setValue(this.petService);
   }
 

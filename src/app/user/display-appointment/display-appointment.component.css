@@ -8,3 +8,10 @@
 ::ng-deep.fc-event-title {
     cursor:pointer;
 }
+.mat-dialog { transition: none; }
+
+::ng-deep.mat-spinner circle {
+    text-align: center;
+    stroke: #52b788;
+    
+  }

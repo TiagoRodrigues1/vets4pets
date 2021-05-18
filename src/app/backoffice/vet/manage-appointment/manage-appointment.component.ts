@@ -23,6 +23,7 @@ export class ManageAppointmentComponent implements OnInit {
   month:number;
   hour:number;
   minutes:number;
+  error:string;
   app:Appointment;
   form:FormGroup;
   public showed:Showed[] = [
@@ -52,10 +53,12 @@ export class ManageAppointmentComponent implements OnInit {
     return this.data;
   }
   getPet() {
+    this.error = '';
     this.accountService.getPetVet(this.app.AnimalID).subscribe(
       (response: Pet) => {
         this.pet = response['data'];
-      });
+        
+      },error => this.error = error);
       this.year = this.data.start.getFullYear();
       this.month = this.data.start.getMonth();
       this.day = this.data.start.getDate();

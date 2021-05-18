@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { HomeComponent } from './home/home.component';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule} from '@angular/material/form-field';
 import { MenuModule } from '@syncfusion/ej2-angular-navigations';
 import { SidebarModule } from '@syncfusion/ej2-angular-navigations';
@@ -33,7 +33,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { ClinicComponent } from './clinics/clinic/clinic.component';
 import { ClinicProfileComponent } from './clinics/clinic-profile/clinic-profile.component';
-import { AppointmentComponent } from './clinics/appointment/appointment.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DatePickerModule, DateTimePickerModule, TimePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
@@ -42,7 +41,6 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableModule } from "@angular/material/table";
-import { ChooseVetComponent } from './clinics/choose-vet/choose-vet.component';
 import { VetComponent } from './backoffice/vet/vet.component';
 import { ManagerComponent } from './backoffice/manager/manager.component';
 import { AdminComponent } from './backoffice/admin/admin.component';
@@ -66,7 +64,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { AddVetClinicComponent } from './backoffice/admin/add-vet-clinic/add-vet-clinic.component';
 import { RemoveVetClinicComponent } from './backoffice/admin/remove-vet-clinic/remove-vet-clinic.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
-
+import {MatStepperModule} from '@angular/material/stepper';
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
   interactionPlugin
@@ -81,9 +79,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     AddPetComponent,
     ClinicComponent,
     ClinicProfileComponent,
-    AppointmentComponent,
     ChoosePetComponent,
-    ChooseVetComponent,
     AdminComponent,
     VetComponent,
     ManagerComponent,
@@ -119,7 +115,6 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     MatDividerModule,
     MatListModule,
     MatButtonModule,
-    NoopAnimationsModule,
     RouterModule,
     MatCardModule,    
     MatInputModule,
@@ -139,7 +134,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     DatePickerModule,
     NgbModule,
     FullCalendarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatStepperModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

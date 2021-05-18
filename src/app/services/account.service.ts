@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Appointment } from '../models/appointment.model';
 import { Clinic } from '../models/clinic.model';
@@ -66,7 +66,7 @@ validateResetToken(token:string) {
   return this.http.post(`${environment.apiUrl}/auth/validate_reset_token`,{token})
 }
 
-forgotPassword(email:string) { //ToDo---------------
+forgotPassword(email:string) { 
   return this.http.post(`${environment.apiUrl}/auth/forgot_password`,{email});
 }
 
@@ -116,6 +116,10 @@ deleteClinic(id:number) {
 
 getAppointmentByVet(id:number): Observable<Appointment[]> {
   return this.http.get<Appointment[]>(`${environment.apiUrl}/appointment/vet/${id}`)
+}
+
+ getAppointmentByVet2(id:number):Observable<Appointment[]> {
+  return this.http.get<Appointment[]>(`${environment.apiUrl}/appointment/vet/${id}`).pipe(delay(1000));
 }
 
 getAppointment(id:number): Observable<Appointment> {

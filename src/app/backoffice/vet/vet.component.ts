@@ -60,7 +60,6 @@ export class VetComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;  
     dialogConfig.width = "35%"
-    console.log(info.event)
     dialogConfig.data = info.event;
     this.dialog.open(ManageAppointmentComponent,dialogConfig);
   }

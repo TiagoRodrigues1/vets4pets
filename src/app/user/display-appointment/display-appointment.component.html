@@ -1,5 +1,9 @@
-
-    <div class="main_content">
+<div [@.disabled]="true">
+      <div *ngIf = "loading;else default" style ="padding-left: 45%;padding-top: 40%;"> 
+        <mat-spinner></mat-spinner>
+      </div>
+      <ng-template #default>
       <p style = "color:red;font-size: small;">{{error}}</p>
-      <full-calendar [options]="calendarOptions" ></full-calendar>
-    </div>
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </ng-template>
+</div>

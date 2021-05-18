@@ -10,4 +10,5 @@ export class Appointment {
         this.vetID = vetID;
         this.date = date;
     }
+    
 }

@@ -21,6 +21,7 @@ export class PetsComponent implements OnInit {
   payload;
   Pet : Pet[];
   status: string;
+  loading:boolean = true;
   constructor(private accountService: AccountService, private dialog: MatDialog, private petService: PetService,private alertService: AlertService,private router: Router) {}
 
   ngOnInit(): void {
@@ -31,6 +32,7 @@ export class PetsComponent implements OnInit {
     this.accountService.getPets(this.getUserId()).subscribe(
       (response: Pet[]) => {
       this.Pet = response['data'];
+      this.loading = false;
     },
     (error: HttpErrorResponse) => {
       //alert(error.message);

@@ -18,22 +18,27 @@ export class AppointmentDetailsComponent implements OnInit {
   month:number;
   hour:number;
   minutes:number;
-  constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<DisplayAppointmentComponent>,private accountService: AccountService, private val: CustomValidatorService) { }
+  error:string;
+  constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<DisplayAppointmentComponent>, private accountService: AccountService, private val: CustomValidatorService) { }
 
   ngOnInit(): void {
     this.getPet();
   }
+
   onNoClick() {
     this.dialogRef.close();
   }
+
   get displayData() {
     return this.data;
   }
+
   getPet() {
     this.accountService.getPet(this.data.id,this.val.getUserId()).subscribe(
       (response: Pet) => {
         this.pet = response['data'];
-      });
+      },
+      error => this.error = error);
       this.year = this.data.start.getFullYear();
       this.month = this.data.start.getMonth();
       this.day = this.data.start.getDate();

@@ -60,9 +60,11 @@ export class UserProfileComponent implements OnInit {
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
     dialogConfig.width = "60%"
+    dialogConfig.height = "100%"
     this.dialog.open(DisplayAppointmentComponent,dialogConfig);
   }
 
+ 
   fileChangeEvent(fileInput) {
     this.imageError = null;
           if (fileInput.target.files && fileInput.target.files[0]) {
