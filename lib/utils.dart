@@ -3,16 +3,15 @@
 
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 /// Example event class.
 class Event {
   final String title;
+  Event({@required this.title});
 
-  const Event(this.title);
-
-  @override
-  String toString() => title;
+  String toString() => this.title;
 }
 
 

@@ -13,7 +13,7 @@ class NavDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vets2Pets'),
+        title: Text('Vets4Pets'),
       ),
       body: Center(child: Text('HomePage')),
       drawer: Container(

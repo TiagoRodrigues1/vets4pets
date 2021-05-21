@@ -1,4 +1,3 @@
-
 import 'dart:collection';
 
 import '../utils.dart';
@@ -10,32 +9,10 @@ import 'package:http/http.dart' as http;
 import '../main.dart';
 import 'dart:typed_data';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
-
+Map<DateTime, List<Event>> appointments_aux;
 List appointments = [];
-
-final _kEventSource = Map.fromIterable(List.generate(appointments.length, (index) => appointments[1]),
-    key: (item) => DateTime.utc(appointments[1]),
-    value: (item) => List.generate(
-        item % 4 + 1, (index) => Event('Event $item | ${index + 1}')))
-  ..addAll({
-
-    DateTime.now(): [
-      /*Event('Today\'s Event 1'),
-      Event('Today\'s Event 2'),*/
-    ],
-  });
-
-int getHashCode(DateTime key) {
-  return key.day * 1000000 + key.month * 10000 + key.year;
-}
-
-final kEvents = LinkedHashMap<DateTime, List<Event>>(
-  equals: isSameDay,
-  hashCode: getHashCode,
-)..addAll(_kEventSource);
-
-
 
 /// Returns a list of [DateTime] objects from [first] to [last], inclusive.
 List<DateTime> daysInRange(DateTime first, DateTime last) {
@@ -45,14 +22,6 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
     (index) => DateTime.utc(first.year, first.month, first.day + index),
   );
 }
-
-
-
-
-
-
-
-
 
 class AppointmentPage extends StatefulWidget {
   final Map<String, dynamic> clinic;
@@ -67,26 +36,15 @@ class AppointmentPage extends StatefulWidget {
 
 class _AppointmentPageState extends State<AppointmentPage> {
   int _currentStep = 0;
-  
-
-
   StepperType stepperType = StepperType.horizontal;
 
+  Map<DateTime, List<Event>> selectedEvents;
+  CalendarFormat format = CalendarFormat.month;
+  DateTime selectedDay = DateTime.now();
 
-  ValueNotifier<List<Event>> _selectedEvents;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
-      .toggledOff; // Can be toggled on/off by longpressing a date
-  DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay;
-  DateTime _rangeStart;
-  DateTime _rangeEnd;
+  DateTime focusedDay = DateTime.now();
 
-
-
-
-
-
+  TextEditingController _eventController = TextEditingController();
 
   tapped(int step) {
     setState(() => _currentStep = step);
@@ -102,7 +60,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   List pets = [];
   List vets = [];
-  
 
   Map<String, dynamic> selectedPet = null;
   Map<String, dynamic> selectedVet = null;
@@ -113,9 +70,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
     super.initState();
     this.getPets();
     this.getVets();
-     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
-    
+    selectedEvents = {};
+
+    //
+  }
+
+  @override
+  void dispose() {
+    _eventController.dispose();
+    super.dispose();
   }
 
   getPets() async {
@@ -141,27 +104,34 @@ class _AppointmentPageState extends State<AppointmentPage> {
   }
 
   getAppointements(int id) async {
-    print("Xd)");
     var jwt = await storage.read(key: "jwt");
 
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/appointment/vet/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    // print(response.body);
+    sleep(Duration(seconds: 1));
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
 
       setState(() {
         appointments = items;
-       
-        appointments.forEach((element) {
-          print(element['date']);
-        final dateTime = DateTime.parse(element['date']);
-          //_events.addEntries(element['date']);
-        });
 
-     
+        appointments.forEach((element) {
+          DateTime parseDated = new DateFormat("yyyy-MM-dd")
+              .parse(element['date'].toString()); //Sacar o dia
+          parseDated = parseDated.add(Duration(hours: 1));
+          DateTime parseDate = parseDated.toUtc();
+          print(parseDate);
+          if (selectedEvents[parseDate] != null) {
+            selectedEvents[parseDate].add(
+              Event(title: "Evento"),
+            );
+          } else {
+            selectedEvents[parseDate] = [Event(title: "Evento")];
+          }
+        });
+        print(selectedEvents);
       });
     } else {
       appointments = [];
@@ -332,7 +302,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 SizedBox(height: 20),
                 SizedBox(
                   child: _buildStepBar(),
-                  height: height+200,
+                  height: height + 200,
                 ),
               ],
             ),
@@ -370,126 +340,118 @@ class _AppointmentPageState extends State<AppointmentPage> {
     }
   }
 
-
-
-
- @override
-  void dispose() {
-    _selectedEvents.dispose();
-    super.dispose();
+  List<Event> _getEventsfromDay(DateTime date) {
+    return selectedEvents[date] ?? [];
   }
-
-  List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
-  }
-
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    // Implementation example
-    final days = daysInRange(start, end);
-
-    return [
-      for (final d in days) ..._getEventsForDay(d),
-    ];
-  }
-
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-        _rangeStart = null; // Important to clean those
-        _rangeEnd = null;
-        _rangeSelectionMode = RangeSelectionMode.toggledOff;
-      });
-
-      _selectedEvents.value = _getEventsForDay(selectedDay);
-    }
-  }
-
-  void _onRangeSelected(DateTime start, DateTime end, DateTime focusedDay) {
-    setState(() {
-      _selectedDay = null;
-      _focusedDay = focusedDay;
-      _rangeStart = start;
-      _rangeEnd = end;
-      _rangeSelectionMode = RangeSelectionMode.toggledOn;
-    });
-
-    // `start` or `end` could be null
-    if (start != null && end != null) {
-      _selectedEvents.value = _getEventsForRange(start, end);
-    } else if (start != null) {
-      _selectedEvents.value = _getEventsForDay(start);
-    } else if (end != null) {
-      _selectedEvents.value = _getEventsForDay(end);
-    }
-  }
-
-
 
   Widget getCalender() {
+    // _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
+
     var now_date = DateTime.now();
 
-        return Column(
-        children: [
-          TableCalendar<Event>(
-           firstDay: DateTime.now(),
-            lastDay: DateTime.utc(now_date.year + 2, now_date.month, now_date.day),           
-             focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            rangeStartDay: _rangeStart,
-            rangeEndDay: _rangeEnd,
-            calendarFormat: _calendarFormat,
-            rangeSelectionMode: _rangeSelectionMode,
-            eventLoader: _getEventsForDay,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-           calendarStyle: CalendarStyle(
-             
-        isTodayHighlighted: true,
-        todayDecoration: BoxDecoration(
-            color: Color.fromRGBO(82, 183, 136, 0.7), shape: BoxShape.circle),
-        selectedDecoration: BoxDecoration(
-            color: Color.fromRGBO(82, 183, 136, 1), shape: BoxShape.circle),
-      ),
-            onDaySelected: _onDaySelected,
-            onRangeSelected: _onRangeSelected,
-          
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-          ),
-          const SizedBox(height: 8.0),
-    Container(
-      height:300,
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
-                      ),
-                    );
-                  },
-                );
-              },
+    return Column(
+      children: [
+        TableCalendar(
+          focusedDay: selectedDay,
+          firstDay: DateTime.now(),
+          lastDay: DateTime(2050),
+          calendarFormat: format,
+          onFormatChanged: (CalendarFormat _format) {
+            setState(() {
+              format = _format;
+            });
+          },
+          startingDayOfWeek: StartingDayOfWeek.sunday,
+          daysOfWeekVisible: true,
+
+          //Day Changed
+          onDaySelected: (DateTime selectDay, DateTime focusDay) {
+            setState(() {
+              selectedDay = selectDay;
+              focusedDay = focusDay;
+            });
+            print(focusedDay);
+          },
+          selectedDayPredicate: (DateTime date) {
+            return isSameDay(selectedDay, date);
+          },
+
+          eventLoader: _getEventsfromDay,
+
+          //To style the Calendar
+          calendarStyle: CalendarStyle(
+            isTodayHighlighted: true,
+            selectedDecoration: BoxDecoration(
+              color: Color.fromRGBO(82, 183, 136, 1),
+              shape: BoxShape.circle,
+            ),
+            todayDecoration: BoxDecoration(
+              color: Color.fromRGBO(82, 183, 136, 0.7),
+              shape: BoxShape.circle,
             ),
           ),
-        ],
-      );
-  
+          headerStyle: HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true,
+            formatButtonShowsNext: false,
+            formatButtonDecoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            formatButtonTextStyle: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+        ..._getEventsfromDay(selectedDay).map(
+          (Event event) => ListTile(
+            title: Text(
+              event.title,
+            ),
+          ),
+        ),
+        FloatingActionButton.extended(
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text("Add Event"),
+              content: TextFormField(
+                controller: _eventController,
+              ),
+              actions: [
+                TextButton(
+                  child: Text("Cancel"),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                TextButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    if (_eventController.text.isEmpty) {
+                    } else {
+                      if (selectedEvents[selectedDay] != null) {
+                        selectedEvents[selectedDay].add(
+                          Event(title: _eventController.text),
+                        );
+                      } else {
+                        selectedEvents[selectedDay] = [
+                          Event(title: _eventController.text)
+                        ];
+                      }
+                    }
+                    Navigator.pop(context);
+                    _eventController.clear();
+                    setState(() {});
+                    return;
+                  },
+                ),
+              ],
+            ),
+          ),
+          label: Text("Add Event"),
+          icon: Icon(Icons.add),
+        )
+      ],
+    );
   }
 
   Widget _buildStepBar() {
