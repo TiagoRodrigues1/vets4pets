@@ -8,30 +8,30 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 import '../jwt.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+import 'appointment.dart';
 
 class ClinicDetailPage extends StatefulWidget {
+  final Map<String, dynamic> clinic;
 
-    final Map<String, dynamic> clinic;
-
-     ClinicDetailPage({Key key, this.clinic}) : super(key: key);
-
+  ClinicDetailPage({Key key, this.clinic}) : super(key: key);
 
   _ClinicDetailPageState createState() => _ClinicDetailPageState();
 }
 
 class _ClinicDetailPageState extends State<ClinicDetailPage> {
-  
   List pets = [];
+  List vets = [];
   bool isLoading = false;
-  
 
   void initState() {
     super.initState();
     this.getPets();
+    this.getVets();
   }
 
   getPets() async {
-    print("lol");
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
@@ -51,8 +51,26 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
     }
   }
 
-  Widget _buildCoverImage(Size screenSize) {
+  getVets() async {
+    var jwt = await storage.read(key: "jwt");
+    int id = widget.clinic['ID'];
+    var response = await http.get(
+      Uri.parse('http://52.47.179.213:8081/api/v1/vetsClinic/$id'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
 
+    if (response.statusCode == 200) {
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
+
+      vets = items;
+      isLoading = false;
+    } else {
+      vets = [];
+      isLoading = false;
+    }
+  }
+
+  Widget _buildCoverImage(Size screenSize) {
     return Container(
       height: screenSize.height / 2.6,
       decoration: BoxDecoration(
@@ -65,9 +83,8 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
   }
 
   Widget _buildProfileImage() {
+    String profileUrl = widget.clinic['profilePicture'];
 
-String profileUrl = widget.clinic['profilePicture'];
-  
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
 
@@ -77,8 +94,7 @@ String profileUrl = widget.clinic['profilePicture'];
         height: 140.0,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: MemoryImage(
-                bytes),
+            image: MemoryImage(bytes),
             fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(80.0),
@@ -116,8 +132,8 @@ String profileUrl = widget.clinic['profilePicture'];
   }
 
   Widget _buildBio(BuildContext context) {
-            final String _bio =widget.clinic['description'].toString() + "                                                                                                \n" ;
-
+    final String _bio = widget.clinic['description'].toString() +
+        "                                                                                                \n";
 
     TextStyle bioTextStyle = TextStyle(
       fontFamily: 'Spectral',
@@ -167,7 +183,7 @@ String profileUrl = widget.clinic['profilePicture'];
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           Text(
-           widget.clinic['address'] +"\n" ,
+            widget.clinic['address'] + "\n",
             style: TextStyle(
               fontSize: 16.0,
               color: Color(0xFF799497),
@@ -179,7 +195,7 @@ String profileUrl = widget.clinic['profilePicture'];
           ),
           new InkWell(
             child: Text(
-             widget.clinic['contact'] +"\n"  ,
+              widget.clinic['contact'] + "\n",
               style: TextStyle(
                 fontSize: 16.0,
                 color: Color(0xFF799497),
@@ -194,7 +210,7 @@ String profileUrl = widget.clinic['profilePicture'];
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           Text(
-           widget.clinic['email'] +"\n"  ,
+            widget.clinic['email'] + "\n",
             style: TextStyle(
               fontSize: 16.0,
               color: Color(0xFF799497),
@@ -238,11 +254,16 @@ String profileUrl = widget.clinic['profilePicture'];
                 ),
               ),
               onTap: () {
-                showDialog(
+
+                     Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AppointmentPage(clinic: widget.clinic)),
+                  );
+                /* showDialog(
                   context: context,
                   builder: (BuildContext context) =>
                       _buildCreateAppointmentStep1(context, 1),
-                );
+                );*/
               },
             ),
           ),
@@ -289,16 +310,16 @@ String profileUrl = widget.clinic['profilePicture'];
     double percentage;
     if (step == 1) {
       stringStep = "Choose your pet";
-      percentage=0.0;
+      percentage = 0.0;
     } else if (step == 2) {
       stringStep = "Choose your vet";
-      percentage=0.33;
+      percentage = 0.33;
     } else if (step == 3) {
       stringStep = "Choose your date";
-      percentage=0.66;
+      percentage = 0.66;
     } else {
       stringStep = "Nice maite";
-      percentage=1.0;
+      percentage = 1.0;
     }
     return SimpleDialog(
       title: Text(
@@ -307,59 +328,29 @@ String profileUrl = widget.clinic['profilePicture'];
       ),
       children: <Widget>[
         Container(
-           width:  MediaQuery.of(context).size.width -50,
-          margin: EdgeInsets.only(left:30.0,right: 30),
+          width: MediaQuery.of(context).size.width - 50,
+          margin: EdgeInsets.only(left: 30.0, right: 30),
           child: new LinearPercentIndicator(
-            
             animation: true,
-           
             lineHeight: 20.0,
             animationDuration: 1000,
             animateFromLastPercent: true,
             percent: percentage,
-                         
-
-          
             linearStrokeCap: LinearStrokeCap.roundAll,
             progressColor: Colors.greenAccent,
           ),
         ),
-        Container(
-          width: 400,
-          height: 400,
-          
-          child: pets.length!=0
-          
-          ?ListView.builder(
-              shrinkWrap: true,
-              itemCount: pets.length,
-              itemBuilder: (context, index) {
-                if(step==1){
-              return getCardPet(pets[index], 1);
-                }
-                 if(step==2){
-              return getCardPet(pets[index], 2);
-                }
-                  if(step==3){
-              return getCardPet(pets[index], 3);
-                }
-              
-              })
-              :
-              
-       Center(child: CircularProgressIndicator()),
-    
-        ),
+        
       ],
     );
   }
 
-
+ 
   Widget getCardPet(item, flag) {
     var name = item['name'];
     var animaltype = item['animaltype'];
     String profileUrl = item['profilePicture'];
-        profileUrl = profileUrl.substring(23, profileUrl.length);
+    profileUrl = profileUrl.substring(23, profileUrl.length);
 
     Uint8List bytes = base64.decode(profileUrl);
     return Card(
@@ -371,21 +362,99 @@ String profileUrl = widget.clinic['profilePicture'];
               showDialog(
                 context: context,
                 builder: (BuildContext context) =>
-                    _buildCreateAppointmentStep1(context,2),
+                    _buildCreateAppointmentStep1(context, 2),
               );
             } else if (flag == 2) {
               Navigator.of(context).pop();
               showDialog(
                 context: context,
                 builder: (BuildContext context) =>
-                    _buildCreateAppointmentStep1(context,3),
+                    _buildCreateAppointmentStep1(context, 3),
               );
             } else {
               Navigator.of(context).pop();
               showDialog(
                 context: context,
                 builder: (BuildContext context) =>
-                   _buildCreateAppointmentStep1(context,4),
+                    _buildCreateAppointmentStep1(context, 4),
+              );
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ListTile(
+              title: Row(
+                children: <Widget>[
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(60 / 2),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: MemoryImage(bytes),
+                        )),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width - 220,
+                          child: Text(
+                            name,
+                            style: TextStyle(fontSize: 17),
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        animaltype.toString(),
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+
+  Widget getCardVet(item, flag) {
+    var name = item['name'];
+    var animaltype = item['contact'];
+    String profileUrl = item['profilePicture'];
+
+    profileUrl = profileUrl.substring(23, profileUrl.length);
+
+    Uint8List bytes = base64.decode(profileUrl);
+    return Card(
+        elevation: 1.5,
+        child: new InkWell(
+          onTap: () {
+            if (flag == 1) {
+              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _buildCreateAppointmentStep1(context, 2),
+              );
+            } else if (flag == 2) {
+              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _buildCreateAppointmentStep1(context, 3),
+              );
+            } else {
+              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _buildCreateAppointmentStep1(context, 4),
               );
             }
           },

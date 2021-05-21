@@ -24,6 +24,7 @@ class _ForumPageState extends State<ForumPage> {
 
   final TextEditingController _questiontitleController = TextEditingController();
   final TextEditingController _questionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   List questions = [];
   bool isLoading = false;
@@ -90,11 +91,14 @@ class _ForumPageState extends State<ForumPage> {
             icon: const Icon(Icons.add),
             color: Colors.white,
             tooltip: 'Answer this question',
-            onPressed: () {
+            onPressed: () async {
               showDialog(
                 context: context,
                 builder: (BuildContext context) => _buildQuestion(),
+                
               );
+
+      
             },
           ),
           new IconButton(
@@ -116,6 +120,8 @@ class _ForumPageState extends State<ForumPage> {
         children: <Widget>[
         
           Form(
+                  key: _formKey,
+
              child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -123,9 +129,15 @@ class _ForumPageState extends State<ForumPage> {
                     Padding(
                   padding: EdgeInsets.all(8.0),
                   child: TextFormField(
-                 
+   
                     decoration: InputDecoration(labelText: "Title"),
                     controller: _questiontitleController,
+                                   validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter some text';
+    }
+    return null;
+  },
                   ),
                 ),
                
@@ -147,12 +159,33 @@ class _ForumPageState extends State<ForumPage> {
                     style: TextButton.styleFrom(
                       primary: Colors.green[300],
                     ),
-                    onPressed: () {
-                      var title=_questiontitleController.text;
+                    onPressed: () async {
+
+      if (_formKey.currentState.validate()) {
+                  // If the form is valid, display a snackbar. In the real world,
+                  // you'd often call a server or save the information in a database.
+                
+                           var title=_questiontitleController.text;
                       var question = _questionController.text;
                    
                       addQuestion(title,question,"");
                       Navigator.of(context).pop();
+                       final result = await Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => ForumPage()),
+    );
+    if (result) {
+      setState(() {});
+    } 
+                }
+ 
+                
+
+
+
+                
+                      
+      
                     },
                   ),
                 )
@@ -185,16 +218,17 @@ Widget entryItem (context ,item) {
   print(item);
   var title=item['questiontitle'];
   var answers=item['answers'];
-  var question=item['question'];
+  String question=item['question'];
   var closed=item['closed'];
  
 
     if (question.length > 20) {
      question = question.substring(0, 23);
      question = question + " ...";
-    } else {
-    question = question.description;
+    }else{
+      question=question;
     }
+    
     return Container(
         padding: const EdgeInsets.all(3.0),
         margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),

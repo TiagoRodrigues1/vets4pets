@@ -8,6 +8,8 @@ import '../main.dart';
 import 'dart:convert' show ascii, base64, base64Encode, json;
 import 'dart:convert' as convert;
 
+import 'forum.dart';
+
 class ForumDetailPage extends StatefulWidget {
   final Map<String, dynamic> question;
 
@@ -20,6 +22,8 @@ class ForumDetailPage extends StatefulWidget {
 class _ForumDetailPageState extends State<ForumDetailPage> {
   final TextEditingController _answerController = TextEditingController();
 
+
+final _formKey = GlobalKey<FormState>();
   int id_user;
   List answers = [];
   bool isLoading = false;
@@ -74,6 +78,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/question/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
+
     print(response.body);
     if (response.statusCode == 200) {
       print("Question $id was deleted");
@@ -115,14 +120,26 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
         "Yes",
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      onPressed: () {
+      onPressed: () async {
         if (flag == 1) {
           deleteQuestion(id);
+          Navigator.pop(context);
+          Navigator.pop(context);
+         
         } else {
           deleteAnswer(id);
+          Navigator.of(context).pop();
+          final result = await Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ForumDetailPage(
+                      question: widget.question,
+                    )),
+          );
+          if (result) {
+            setState(() {});
+          }
         }
-
-        Navigator.of(context).pop();
       },
     );
 
@@ -373,6 +390,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       content: Stack(
         children: <Widget>[
           Form(
+             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -380,6 +398,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: TextFormField(
+                      validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter some text';
+    }},
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(labelText: "Answer"),
@@ -393,11 +415,28 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                       style: TextButton.styleFrom(
                         primary: Colors.green[300],
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+
+     
                         var answer = _answerController.text;
 
                         addAnswer(answer, widget.question['ID'], "");
                         Navigator.of(context).pop();
+                        final result = await Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForumDetailPage(
+                                    question: widget.question,
+                                  )),
+                        );
+
+                        //below you can get your result and update the view with setState
+                        //changing the value if you want, i just wanted know if i have to
+                        //update, and if is true, reload state
+
+                        if (result) {
+                          setState(() {});
+                        }
                       },
                     ),
                   )
