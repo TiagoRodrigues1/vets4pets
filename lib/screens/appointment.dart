@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:equatable/equatable.dart';
 
 import '../utils.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import '../main.dart';
 import 'dart:typed_data';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
 
 Map<DateTime, List<Event>> appointments_aux;
 List appointments = [];
@@ -37,10 +39,29 @@ class AppointmentPage extends StatefulWidget {
 class _AppointmentPageState extends State<AppointmentPage> {
   int _currentStep = 0;
   StepperType stepperType = StepperType.horizontal;
-
-  Map<DateTime, List<Event>> selectedEvents;
+  Duration initialtimer = new Duration(hours: 8, minutes: 00);
+ 
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
+  
+  Map<DateTime, List<Event>> selectedDayAppointment; //Horarios daquele dia
+  Map<DateTime, List<Event>> selectedSlots; //Array que vai conter todas os slots diponiveis
+  
+  
+  List<Event> horas = [
+    Event(title: "08:00"),
+  
+    Event(title: "08:30"),
+    Event(title: "09:00"),
+    Event(title: "09:30"),
+    Event(title: "10:00"),
+  
+  ];
+  
+
+
+
+  Map<DateTime, List<Event>> schedule; //Horario estatico completo
 
   DateTime focusedDay = DateTime.now();
 
@@ -58,11 +79,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
   }
 
+
+
+
   List pets = [];
   List vets = [];
 
   Map<String, dynamic> selectedPet = null;
   Map<String, dynamic> selectedVet = null;
+  Event selectedHour = null;
 
   bool isLoading = false;
   bool isLoading2 = false;
@@ -70,9 +95,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
     super.initState();
     this.getPets();
     this.getVets();
-    selectedEvents = {};
-
-    //
+    selectedSlots = {};
+    selectedDayAppointment= {};
+   
   }
 
   @override
@@ -113,25 +138,29 @@ class _AppointmentPageState extends State<AppointmentPage> {
     sleep(Duration(seconds: 1));
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
-
+      selectedDayAppointment.clear();
       setState(() {
         appointments = items;
 
         appointments.forEach((element) {
-          DateTime parseDated = new DateFormat("yyyy-MM-dd")
-              .parse(element['date'].toString()); //Sacar o dia
+        DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(element['date']); //AS horas
+        DateTime parseDated = new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
+        String formattedTime = DateFormat.Hm().format(parseDated_);
+          print(formattedTime);
           parseDated = parseDated.add(Duration(hours: 1));
           DateTime parseDate = parseDated.toUtc();
           print(parseDate);
-          if (selectedEvents[parseDate] != null) {
-            selectedEvents[parseDate].add(
-              Event(title: "Evento"),
+          if (selectedDayAppointment[parseDate] != null) {
+            selectedDayAppointment[parseDate].add(
+              Event(title: formattedTime),
             );
           } else {
-            selectedEvents[parseDate] = [Event(title: "Evento")];
+            selectedDayAppointment[parseDate] = [Event(title:formattedTime)];
           }
-        });
-        print(selectedEvents);
+        }
+        );
+
+        print(selectedDayAppointment);
       });
     } else {
       appointments = [];
@@ -341,20 +370,51 @@ class _AppointmentPageState extends State<AppointmentPage> {
   }
 
   List<Event> _getEventsfromDay(DateTime date) {
-    return selectedEvents[date] ?? [];
+    return selectedSlots[date] ?? [];
+  }
+
+
+  getSlots(DateTime date){
+
+    if(selectedDayAppointment[date]!=null){
+
+ selectedSlots[date]=null;
+ List<Event> day_app=selectedDayAppointment[date];
+ List<Event> day_all=horas;
+
+ print(day_app);
+ print(day_all);
+ List<Event> slots=[];
+
+ 
+ day_all.forEach((element) {
+    if(!day_app.contains(element)){
+      print(element.toString() ) ;
+    slots.add(element);
+}
+});
+print(slots);
+selectedSlots[date]=slots;
+    }else{
+      selectedSlots[date]=horas;
+      
+    }
   }
 
   Widget getCalender() {
-    // _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
 
     var now_date = DateTime.now();
 
     return Column(
       children: [
+        Text(
+          "Select a day for your appointment",
+          textAlign: TextAlign.center,
+        ),
         TableCalendar(
           focusedDay: selectedDay,
           firstDay: DateTime.now(),
-          lastDay: DateTime(2050),
+          lastDay: DateTime(now_date.year+2,now_date.month,now_date.day),
           calendarFormat: format,
           onFormatChanged: (CalendarFormat _format) {
             setState(() {
@@ -368,6 +428,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
           onDaySelected: (DateTime selectDay, DateTime focusDay) {
             setState(() {
               selectedDay = selectDay;
+               getSlots(selectDay);
+              
               focusedDay = focusDay;
             });
             print(focusedDay);
@@ -376,7 +438,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
             return isSameDay(selectedDay, date);
           },
 
-          eventLoader: _getEventsfromDay,
+          // eventLoader: _getEventsfromDay,
 
           //To style the Calendar
           calendarStyle: CalendarStyle(
@@ -403,14 +465,51 @@ class _AppointmentPageState extends State<AppointmentPage> {
             ),
           ),
         ),
+        Text(
+          "Select a hour for your appointment",
+          textAlign: TextAlign.center,
+        ),
+       
+        
         ..._getEventsfromDay(selectedDay).map(
-          (Event event) => ListTile(
-            title: Text(
-              event.title,
+
+          (Event slots) => ListTile(
+            title:Card(
+              color: slots == selectedHour ? Colors.green[100] : Colors.white,
+              child:
+              new InkWell(
+          onTap: () {
+            setState(() {
+              selectedHour = slots;
+            });
+          },
+              child:Container(   
+                height: 50,
+               child: Center(
+        child: Text(
+          slots.title,
+          textAlign: TextAlign.center,
+        ),
+      ),),
+              ),
+          
             ),
           ),
         ),
-        FloatingActionButton.extended(
+        
+        /*CupertinoTimerPicker(
+          
+                    mode: CupertinoTimerPickerMode.hm,
+                    minuteInterval: 30,
+                    initialTimerDuration: initialtimer,
+                    onTimerDurationChanged: (Duration changedtimer) {
+                      
+                      setState(() {
+                        initialtimer = changedtimer;
+                      });
+                    },
+                  ),*/
+        /*FloatingActionButton.extended(
           onPressed: () => showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -428,12 +527,12 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   onPressed: () {
                     if (_eventController.text.isEmpty) {
                     } else {
-                      if (selectedEvents[selectedDay] != null) {
-                        selectedEvents[selectedDay].add(
+                      if (selectedSlots[selectedDay] != null) {
+                        selectedSlots[selectedDay].add(
                           Event(title: _eventController.text),
                         );
                       } else {
-                        selectedEvents[selectedDay] = [
+                        selectedSlots[selectedDay] = [
                           Event(title: _eventController.text)
                         ];
                       }
@@ -449,7 +548,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           ),
           label: Text("Add Event"),
           icon: Icon(Icons.add),
-        )
+        )*/
       ],
     );
   }

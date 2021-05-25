@@ -12,6 +12,7 @@ import '../jwt.dart';
 import 'addpet.dart';
 import 'leftside_menu.dart';
 
+
 class PetsPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
@@ -173,7 +174,7 @@ class _IndexPageState extends State<PetsPage> {
                     ],
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
                     onPressed: () {
                      
                      showDialog(

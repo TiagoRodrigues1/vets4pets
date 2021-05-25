@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:hello_world/models/animaltypes.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -88,8 +89,10 @@ class _IndexPageState extends State<AdoptionsPage> {
     var animaltype = item['animaltype'];
     var race = item['race'];
     var status= item['adopted'];  
-    var profileUrl =
-        'https://cdn.discordapp.com/attachments/537753005953384448/838351477395292210/f_00001b.png';
+     String profileUrl = item['attachement1'];
+    profileUrl = profileUrl.substring(23, profileUrl.length);
+    Uint8List bytes = base64.decode(profileUrl);
+    
     return Card(
         elevation: 1.5,
         child: new InkWell(
@@ -111,7 +114,7 @@ class _IndexPageState extends State<AdoptionsPage> {
                         borderRadius: BorderRadius.circular(60 / 2),
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(profileUrl))),
+                           image: MemoryImage(bytes),)),
                   ),
                   SizedBox(
                     width: 20,
