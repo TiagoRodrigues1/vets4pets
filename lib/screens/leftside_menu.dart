@@ -4,6 +4,7 @@ import 'package:hello_world/screens/pets.dart';
 import 'package:hello_world/screens/adoptions.dart';
 import 'package:hello_world/screens/myadoptions.dart';
 import 'package:hello_world/screens/clinics.dart';
+import 'package:hello_world/screens/userappointments.dart';
 import '../main.dart';
 import 'forum.dart';
 import 'login_screen.dart';
@@ -118,12 +119,23 @@ class NavDrawer extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-               SizedBox(height: 230.0),
+               SizedBox(height: 200.0),
+                ListTile(
+                leading: Icon(Icons.person),
+                title: Text('Perfil'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserAppointments()),
+                  );
+                  
+                },
+              ),
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text('Logout'),
                 onTap: () {
-                  showDialog(
+                 showDialog(
                         context: context,
                         builder: (BuildContext context) => _showDialog(context),
                       );

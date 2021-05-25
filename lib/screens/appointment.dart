@@ -40,26 +40,35 @@ class _AppointmentPageState extends State<AppointmentPage> {
   int _currentStep = 0;
   StepperType stepperType = StepperType.horizontal;
   Duration initialtimer = new Duration(hours: 8, minutes: 00);
- 
+
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
-  
+
   Map<DateTime, List<Event>> selectedDayAppointment; //Horarios daquele dia
   Map<DateTime, List<Event>> selectedSlots; //Array que vai conter todas os slots diponiveis
-  
-  
+
   List<Event> horas = [
     Event(title: "08:00"),
-  
     Event(title: "08:30"),
     Event(title: "09:00"),
     Event(title: "09:30"),
     Event(title: "10:00"),
-  
+    Event(title: "10:30"),
+    Event(title: "11:00"),
+    Event(title: "11:30"),
+    Event(title: "12:00"),
+    Event(title: "12:30"),
+    Event(title: "14:00"),
+    Event(title: "14:30"),
+    Event(title: "15:30"),
+    Event(title: "16:00"),
+    Event(title: "16:30"),
+    Event(title: "17:00"),
+    Event(title: "17:30"),
+    Event(title: "18:00"),
+    Event(title: "18:30"),
+    Event(title: "19:00"),
   ];
-  
-
-
 
   Map<DateTime, List<Event>> schedule; //Horario estatico completo
 
@@ -79,9 +88,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
     _currentStep > 0 ? setState(() => _currentStep -= 1) : null;
   }
 
-
-
-
   List pets = [];
   List vets = [];
 
@@ -96,8 +102,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     this.getPets();
     this.getVets();
     selectedSlots = {};
-    selectedDayAppointment= {};
-   
+    selectedDayAppointment = {};
   }
 
   @override
@@ -143,9 +148,10 @@ class _AppointmentPageState extends State<AppointmentPage> {
         appointments = items;
 
         appointments.forEach((element) {
-        DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(element['date']); //AS horas
-        DateTime parseDated = new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
-        String formattedTime = DateFormat.Hm().format(parseDated_);
+          DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss")
+              .parse(element['date']); //AS horas
+          DateTime parseDated =new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
+          String formattedTime = DateFormat.Hm().format(parseDated_);
           print(formattedTime);
           parseDated = parseDated.add(Duration(hours: 1));
           DateTime parseDate = parseDated.toUtc();
@@ -155,10 +161,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
               Event(title: formattedTime),
             );
           } else {
-            selectedDayAppointment[parseDate] = [Event(title:formattedTime)];
+            selectedDayAppointment[parseDate] = [Event(title: formattedTime)];
           }
-        }
-        );
+        });
 
         print(selectedDayAppointment);
       });
@@ -308,6 +313,28 @@ class _AppointmentPageState extends State<AppointmentPage> {
         ));
   }
 
+  Widget getCardHour(slots) {
+    return Card(
+      color: slots == selectedHour ? Colors.green[100] : Colors.white,
+      child: new InkWell(
+        onTap: () {
+          setState(() {
+            selectedHour = slots;
+          });
+        },
+        child: Container(
+          height: 50,
+          child: Center(
+            child: Text(
+              slots.title,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -331,7 +358,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 SizedBox(height: 20),
                 SizedBox(
                   child: _buildStepBar(),
-                  height: height + 200,
+                  height: height +100,
                 ),
               ],
             ),
@@ -355,6 +382,21 @@ class _AppointmentPageState extends State<AppointmentPage> {
     }
   }
 
+  Widget _buildSlots() {
+    if (selectedSlots[selectedDay] == null ||
+        selectedSlots[selectedDay].length == 0) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: selectedSlots[selectedDay].length,
+          itemBuilder: (context, index) {
+            return getCardHour(selectedSlots[selectedDay][index]);
+          });
+    }
+  }
+
   Widget _buildContent2() {
     if (vets.contains(null) || vets.length == 0 || isLoading2) {
       return Center(child: CircularProgressIndicator());
@@ -373,36 +415,30 @@ class _AppointmentPageState extends State<AppointmentPage> {
     return selectedSlots[date] ?? [];
   }
 
+  getSlots(DateTime date) {
 
-  getSlots(DateTime date){
+    if (selectedDayAppointment[date] != null) {
+      selectedSlots[date] = null;
+      List<Event> day_app = selectedDayAppointment[date];
+      List<Event> day_all = horas;
 
-    if(selectedDayAppointment[date]!=null){
+      print(day_app);
+      print(day_all);
+      List<Event> slots = [];
 
- selectedSlots[date]=null;
- List<Event> day_app=selectedDayAppointment[date];
- List<Event> day_all=horas;
-
- print(day_app);
- print(day_all);
- List<Event> slots=[];
-
- 
- day_all.forEach((element) {
-    if(!day_app.contains(element)){
-      print(element.toString() ) ;
-    slots.add(element);
-}
-});
-print(slots);
-selectedSlots[date]=slots;
-    }else{
-      selectedSlots[date]=horas;
-      
+      day_all.forEach((element) {
+        if (!day_app.contains(element)) {
+          slots.add(element);
+        }
+      });
+      print(slots);
+      selectedSlots[date] = slots;
+    } else {
+      selectedSlots[date] = horas;
     }
   }
 
   Widget getCalender() {
-
     var now_date = DateTime.now();
 
     return Column(
@@ -411,11 +447,12 @@ selectedSlots[date]=slots;
           "Select a day for your appointment",
           textAlign: TextAlign.center,
         ),
-        TableCalendar(
+        Container(child: 
+            TableCalendar(
           focusedDay: selectedDay,
           firstDay: DateTime.now(),
-          lastDay: DateTime(now_date.year+2,now_date.month,now_date.day),
-          calendarFormat: format,
+          lastDay: DateTime(now_date.year + 2, now_date.month, now_date.day),
+         // calendarFormat: format,
           onFormatChanged: (CalendarFormat _format) {
             setState(() {
               format = _format;
@@ -428,8 +465,9 @@ selectedSlots[date]=slots;
           onDaySelected: (DateTime selectDay, DateTime focusDay) {
             setState(() {
               selectedDay = selectDay;
-               getSlots(selectDay);
-              
+              getSlots(selectDay);
+              selectedHour=null;
+              _getEventsfromDay(selectedDay);
               focusedDay = focusDay;
             });
             print(focusedDay);
@@ -465,90 +503,18 @@ selectedSlots[date]=slots;
             ),
           ),
         ),
+        ),
+    
         Text(
           "Select a hour for your appointment",
           textAlign: TextAlign.center,
         ),
-       
-        
-        ..._getEventsfromDay(selectedDay).map(
-
-          (Event slots) => ListTile(
-            title:Card(
-              color: slots == selectedHour ? Colors.green[100] : Colors.white,
-              child:
-              new InkWell(
-          onTap: () {
-            setState(() {
-              selectedHour = slots;
-            });
-          },
-              child:Container(   
-                height: 50,
-               child: Center(
-        child: Text(
-          slots.title,
-          textAlign: TextAlign.center,
-        ),
-      ),),
-              ),
-          
-            ),
-          ),
-        ),
-        
-        /*CupertinoTimerPicker(
-          
-                    mode: CupertinoTimerPickerMode.hm,
-                    minuteInterval: 30,
-                    initialTimerDuration: initialtimer,
-                    onTimerDurationChanged: (Duration changedtimer) {
-                      
-                      setState(() {
-                        initialtimer = changedtimer;
-                      });
-                    },
-                  ),*/
-        /*FloatingActionButton.extended(
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text("Add Event"),
-              content: TextFormField(
-                controller: _eventController,
-              ),
-              actions: [
-                TextButton(
-                  child: Text("Cancel"),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                TextButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    if (_eventController.text.isEmpty) {
-                    } else {
-                      if (selectedSlots[selectedDay] != null) {
-                        selectedSlots[selectedDay].add(
-                          Event(title: _eventController.text),
-                        );
-                      } else {
-                        selectedSlots[selectedDay] = [
-                          Event(title: _eventController.text)
-                        ];
-                      }
-                    }
-                    Navigator.pop(context);
-                    _eventController.clear();
-                    setState(() {});
-                    return;
-                  },
-                ),
-              ],
-            ),
-          ),
-          label: Text("Add Event"),
-          icon: Icon(Icons.add),
-        )*/
+        SingleChildScrollView(
+          child: Container(
+            height: 300,
+          child: _buildSlots(),
+        )
+        )
       ],
     );
   }
@@ -583,7 +549,7 @@ selectedSlots[date]=slots;
                             primary: Colors.white,
                           ),
                           child: new Text(
-                            "Next",
+                            _currentStep==3?"Finish":"Next",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           onPressed: onStepContinue),
