@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 import './validation_mixin.dart';
 import 'package:rxdart/rxdart.dart';

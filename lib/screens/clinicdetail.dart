@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import '../main.dart';
-import '../jwt.dart';
-import 'package:table_calendar/table_calendar.dart';
-
 import 'appointment.dart';
 
 class ClinicDetailPage extends StatefulWidget {
@@ -27,47 +19,6 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
 
   void initState() {
     super.initState();
-    this.getPets();
-    this.getVets();
-  }
-
-  getPets() async {
-    var jwt = await storage.read(key: "jwt");
-    var results = parseJwtPayLoad(jwt);
-    int id = results["UserID"];
-    var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
-      headers: {HttpHeaders.authorizationHeader: jwt},
-    );
-
-    if (response.statusCode == 200) {
-      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
-
-      pets = items;
-      isLoading = false;
-    } else {
-      pets = [];
-      isLoading = false;
-    }
-  }
-
-  getVets() async {
-    var jwt = await storage.read(key: "jwt");
-    int id = widget.clinic['ID'];
-    var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/vetsClinic/$id'),
-      headers: {HttpHeaders.authorizationHeader: jwt},
-    );
-
-    if (response.statusCode == 200) {
-      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
-
-      vets = items;
-      isLoading = false;
-    } else {
-      vets = [];
-      isLoading = false;
-    }
   }
 
   Widget _buildCoverImage(Size screenSize) {
@@ -84,7 +35,6 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
 
   Widget _buildProfileImage() {
     String profileUrl = widget.clinic['profilePicture'];
-
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
 
@@ -259,11 +209,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
                     context,
                     MaterialPageRoute(builder: (context) => AppointmentPage(clinic: widget.clinic)),
                   );
-                /* showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _buildCreateAppointmentStep1(context, 1),
-                );*/
+               
               },
             ),
           ),
@@ -305,199 +251,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
     );
   }
 
-  Widget _buildCreateAppointmentStep1(context, step) {
-    String stringStep;
-    double percentage;
-    if (step == 1) {
-      stringStep = "Choose your pet";
-      percentage = 0.0;
-    } else if (step == 2) {
-      stringStep = "Choose your vet";
-      percentage = 0.33;
-    } else if (step == 3) {
-      stringStep = "Choose your date";
-      percentage = 0.66;
-    } else {
-      stringStep = "Nice maite";
-      percentage = 1.0;
-    }
-    return SimpleDialog(
-      title: Text(
-        stringStep,
-        textAlign: TextAlign.center,
-      ),
-      children: <Widget>[
-        Container(
-          width: MediaQuery.of(context).size.width - 50,
-          margin: EdgeInsets.only(left: 30.0, right: 30),
-          child: new LinearPercentIndicator(
-            animation: true,
-            lineHeight: 20.0,
-            animationDuration: 1000,
-            animateFromLastPercent: true,
-            percent: percentage,
-            linearStrokeCap: LinearStrokeCap.roundAll,
-            progressColor: Colors.greenAccent,
-          ),
-        ),
-        
-      ],
-    );
-  }
-
+  
  
-  Widget getCardPet(item, flag) {
-    var name = item['name'];
-    var animaltype = item['animaltype'];
-    String profileUrl = item['profilePicture'];
-    profileUrl = profileUrl.substring(23, profileUrl.length);
 
-    Uint8List bytes = base64.decode(profileUrl);
-    return Card(
-        elevation: 1.5,
-        child: new InkWell(
-          onTap: () {
-            if (flag == 1) {
-              Navigator.of(context).pop();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    _buildCreateAppointmentStep1(context, 2),
-              );
-            } else if (flag == 2) {
-              Navigator.of(context).pop();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    _buildCreateAppointmentStep1(context, 3),
-              );
-            } else {
-              Navigator.of(context).pop();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    _buildCreateAppointmentStep1(context, 4),
-              );
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ListTile(
-              title: Row(
-                children: <Widget>[
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(60 / 2),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: MemoryImage(bytes),
-                        )),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width - 220,
-                          child: Text(
-                            name,
-                            style: TextStyle(fontSize: 17),
-                          )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        animaltype.toString(),
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ));
-  }
-
-  Widget getCardVet(item, flag) {
-    var name = item['name'];
-    var animaltype = item['contact'];
-    String profileUrl = item['profilePicture'];
-
-    profileUrl = profileUrl.substring(23, profileUrl.length);
-
-    Uint8List bytes = base64.decode(profileUrl);
-    return Card(
-        elevation: 1.5,
-        child: new InkWell(
-          onTap: () {
-            if (flag == 1) {
-              Navigator.of(context).pop();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    _buildCreateAppointmentStep1(context, 2),
-              );
-            } else if (flag == 2) {
-              Navigator.of(context).pop();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    _buildCreateAppointmentStep1(context, 3),
-              );
-            } else {
-              Navigator.of(context).pop();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    _buildCreateAppointmentStep1(context, 4),
-              );
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ListTile(
-              title: Row(
-                children: <Widget>[
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(60 / 2),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: MemoryImage(bytes),
-                        )),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width - 220,
-                          child: Text(
-                            name,
-                            style: TextStyle(fontSize: 17),
-                          )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        animaltype.toString(),
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ));
-  }
 }

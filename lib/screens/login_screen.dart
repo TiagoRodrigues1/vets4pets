@@ -2,11 +2,10 @@ import 'dart:convert' as convert;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'leftside_menu.dart';
 import 'register_screen.dart';
 import '../main.dart';
-import '../jwt.dart';
+
 
 
 
@@ -31,7 +30,11 @@ class LoginPage extends StatelessWidget {
       if (jsonResponse != null) {
        
         var token=json.decode(response.body)['token'];
+       
+        var profilePicture=json.decode(response.body)['profilePicture'];
+
         await storage.write(key: 'jwt', value: token);
+        await storage.write(key: 'profilePicture', value: profilePicture);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavDrawer()),

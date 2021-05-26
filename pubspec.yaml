@@ -68,7 +68,8 @@ flutter:
     - assets/images/husky.jpg
     - assets/images/fundoclinic.png
     - assets/images/fundo.jpg
-    - assets/images/petdefault.png
+    - assets/images/petdefault.jpg
+    - assets/images/defaultuser.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -12,18 +12,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 
-
-
 List appointments = [];
 
-/// Returns a list of [DateTime] objects from [first] to [last], inclusive.
-List<DateTime> daysInRange(DateTime first, DateTime last) {
-  final dayCount = last.difference(first).inDays + 1;
-  return List.generate(
-    dayCount,
-    (index) => DateTime.utc(first.year, first.month, first.day + index),
-  );
-}
+
 
 class UserAppointments extends StatefulWidget {
   final Map<String, dynamic> clinic;
@@ -44,15 +35,11 @@ class _UserAppointmentsState extends State<UserAppointments> {
 
   TextEditingController _eventController = TextEditingController();
 
-
-
   void initState() {
     super.initState();
     this.getAppointements();
-   
+
     selectedEvents = {};
-
-
   }
 
   @override
@@ -61,12 +48,10 @@ class _UserAppointmentsState extends State<UserAppointments> {
     super.dispose();
   }
 
-  
-
   getAppointements() async {
     var jwt = await storage.read(key: "jwt");
-      var results = parseJwtPayLoad(jwt);
- 
+    var results = parseJwtPayLoad(jwt);
+
     int id = results["UserID"];
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/appointmentOfuser/$id'),
@@ -77,15 +62,19 @@ class _UserAppointmentsState extends State<UserAppointments> {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
 
       setState(() {
-           appointments = items;
+        appointments = items;
 
         appointments.forEach((element) {
           DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss")
               .parse(element['date']); //AS horas
-          DateTime parseDated =new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
+          DateTime now = DateTime.now();
+          var timezoneOffset1 = now.timeZoneOffset;
+          print(timezoneOffset1);
+          DateTime parseDated =
+              new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
           String formattedTime = DateFormat.Hm().format(parseDated_);
           print(formattedTime);
-          parseDated = parseDated.add(Duration(hours: 1));
+          parseDated = parseDated.add(timezoneOffset1);
           DateTime parseDate = parseDated.toUtc();
           print(parseDate);
           if (selectedEvents[parseDate] != null) {
@@ -104,18 +93,17 @@ class _UserAppointmentsState extends State<UserAppointments> {
     }
   }
 
-  
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-  
+
     var height = screenSize.height;
     return Scaffold(
       appBar: new AppBar(
         centerTitle: false,
         elevation: 0.0,
         title: new Text(
-          "New Appointment",
+          "My Appointments",
           textScaleFactor: 1.3,
         ),
       ),
@@ -138,9 +126,8 @@ class _UserAppointmentsState extends State<UserAppointments> {
     );
   }
 
-
   Widget _buildEvents() {
-    if (selectedEvents[selectedDay] != null ){
+    if (selectedEvents[selectedDay] != null) {
       return ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
@@ -151,13 +138,10 @@ class _UserAppointmentsState extends State<UserAppointments> {
     }
   }
 
-
-   Widget getCardHour(slots) {
+  Widget getCardHour(slots) {
     return Card(
       child: new InkWell(
-        onTap: () {
-          
-        },
+        onTap: () {},
         child: Container(
           height: 50,
           child: Center(
@@ -170,8 +154,6 @@ class _UserAppointmentsState extends State<UserAppointments> {
       ),
     );
   }
-
-
 
   List<Event> _getEventsfromDay(DateTime date) {
     return selectedEvents[date] ?? [];
@@ -186,7 +168,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
       children: [
         TableCalendar(
           focusedDay: selectedDay,
-          firstDay:DateTime(now_date.year - 2, now_date.month, now_date.day),
+          firstDay: DateTime(now_date.year - 2, now_date.month, now_date.day),
 
           lastDay: DateTime(now_date.year + 2, now_date.month, now_date.day),
           calendarFormat: format,
@@ -237,19 +219,12 @@ class _UserAppointmentsState extends State<UserAppointments> {
             ),
           ),
         ),
-       SingleChildScrollView(
-          child: Container(
-            height: 300,
+        SingleChildScrollView(
+            child: Container(
+          height: 300,
           child: _buildEvents(),
-        )
-        )
-     
-       
-      
+        ))
       ],
     );
   }
-
 }
-
-  

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show ascii, base64, base64Encode, json;
+import 'dart:convert' show  base64Encode;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../main.dart';
@@ -171,7 +171,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                                   ),
                                                   radius: 40.0,
                                                   backgroundImage: AssetImage(
-                                                      "assets/images/petdefault.png"),
+                                                      "assets/images/petdefault.jpg"),
                                                 )
                                               : CircleAvatar(
                                                   child: Align(
@@ -224,7 +224,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                         ),
                                         radius: 40.0,
                                         backgroundImage: AssetImage(
-                                            "assets/images/petdefault.png"),
+                                            "assets/images/petdefault.jpg"),
                                       )
                                     : CircleAvatar(
                                         child: Align(
@@ -274,7 +274,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                         ),
                                         radius: 40.0,
                                         backgroundImage: AssetImage(
-                                            "assets/images/petdefault.png"),
+                                            "assets/images/petdefault.jpg"),
                                       )
                                     : CircleAvatar(
                                         child: Align(
@@ -324,7 +324,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                         ),
                                         radius: 40.0,
                                         backgroundImage: AssetImage(
-                                            "assets/images/petdefault.png"),
+                                            "assets/images/petdefault.jpg"),
                                       )
                                     : CircleAvatar(
                                         child: Align(

@@ -1,6 +1,3 @@
-import 'dart:collection';
-import 'package:equatable/equatable.dart';
-
 import '../utils.dart';
 import 'package:flutter/material.dart';
 import '../jwt.dart';
@@ -46,7 +43,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   Map<DateTime, List<Event>> selectedDayAppointment; //Horarios daquele dia
   Map<DateTime, List<Event>> selectedSlots; //Array que vai conter todas os slots diponiveis
-
   List<Event> horas = [
     Event(title: "08:00"),
     Event(title: "08:30"),
@@ -102,6 +98,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
     this.getPets();
     this.getVets();
     selectedSlots = {};
+      //getSlots(selectedDay);
+
     selectedDayAppointment = {};
   }
 
@@ -150,12 +148,17 @@ class _AppointmentPageState extends State<AppointmentPage> {
         appointments.forEach((element) {
           DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss")
               .parse(element['date']); //AS horas
+         print(parseDated_);      
+          DateTime now= DateTime.now();
+              var timezoneOffset1=now.timeZoneOffset;
           DateTime parseDated =new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
+          
           String formattedTime = DateFormat.Hm().format(parseDated_);
           print(formattedTime);
-          parseDated = parseDated.add(Duration(hours: 1));
-          DateTime parseDate = parseDated.toUtc();
-          print(parseDate);
+             parseDated = parseDated.add(timezoneOffset1);
+          DateTime parseDate =parseDated.toUtc();
+          print(parseDated);
+         
           if (selectedDayAppointment[parseDate] != null) {
             selectedDayAppointment[parseDate].add(
               Event(title: formattedTime),
@@ -358,7 +361,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 SizedBox(height: 20),
                 SizedBox(
                   child: _buildStepBar(),
-                  height: height +100,
+                  height: height +200,
                 ),
               ],
             ),
@@ -384,7 +387,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   Widget _buildSlots() {
     if (selectedSlots[selectedDay] == null ||
-        selectedSlots[selectedDay].length == 0) {
+        selectedSlots[selectedDay].length == 0 ) {
       return Center(child: CircularProgressIndicator());
     } else {
       return ListView.builder(
@@ -416,7 +419,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   }
 
   getSlots(DateTime date) {
-
+print(selectedDayAppointment);
     if (selectedDayAppointment[date] != null) {
       selectedSlots[date] = null;
       List<Event> day_app = selectedDayAppointment[date];
@@ -434,6 +437,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
       print(slots);
       selectedSlots[date] = slots;
     } else {
+      print("dia vazio");
       selectedSlots[date] = horas;
     }
   }
@@ -598,7 +602,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 Step(
                     title: new Text('Date'),
                     content: Column(
-                      children: <Widget>[Text("FODA SE")],
+                      children: <Widget>[Text("NICERS")],
                     ),
                     isActive: _currentStep >= 3,
                     state: StepState.complete),

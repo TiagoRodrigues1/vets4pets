@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:hello_world/main.dart';
 import 'package:hello_world/screens/pets.dart';
@@ -5,13 +7,23 @@ import 'package:hello_world/screens/adoptions.dart';
 import 'package:hello_world/screens/myadoptions.dart';
 import 'package:hello_world/screens/clinics.dart';
 import 'package:hello_world/screens/userappointments.dart';
+import 'package:hello_world/screens/userprofile.dart';
+import '../jwt.dart';
 import '../main.dart';
 import 'forum.dart';
 import 'login_screen.dart';
 
 class NavDrawer extends StatelessWidget {
+
+    String picture, username, contact, email, name;
+  bool gender;
+
+   void initState() {
+   getData();
+  }
   @override
   Widget build(BuildContext context) {
+       getData();
     return Scaffold(
       appBar: AppBar(
         title: Text('Vets4Pets'),
@@ -124,9 +136,10 @@ class NavDrawer extends StatelessWidget {
                 leading: Icon(Icons.person),
                 title: Text('Perfil'),
                 onTap: () {
+                 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UserAppointments()),
+                    MaterialPageRoute(builder: (context) => UserProfilePage(username: username, gender: gender, picture: picture,name: name, email: email, contact: contact,)),
                   );
                   
                 },
@@ -153,6 +166,19 @@ class NavDrawer extends StatelessWidget {
     
   }
 
+
+  getData() async {
+    var jwt = await storage.read(key: "jwt");
+    picture = await storage.read(key: "profilePicture");
+    var results = parseJwtPayLoad(jwt);
+    username = results['username'];
+    email = results['email'];
+    name = results['name'];
+    contact = results['contact'];
+    gender = results['gender'];
+  
+    
+  }
 
 
   Widget _showDialog(context) {
