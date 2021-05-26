@@ -9,6 +9,7 @@ import 'dart:convert' show ascii, base64, base64Encode, json;
 import 'dart:convert' as convert;
 
 import 'forum.dart';
+import 'showpic.dart';
 
 class ForumDetailPage extends StatefulWidget {
   final Map<String, dynamic> question;
@@ -22,8 +23,7 @@ class ForumDetailPage extends StatefulWidget {
 class _ForumDetailPageState extends State<ForumDetailPage> {
   final TextEditingController _answerController = TextEditingController();
 
-
-final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   int id_user;
   List answers = [];
   bool isLoading = false;
@@ -46,7 +46,7 @@ final _formKey = GlobalKey<FormState>();
           "answer": answer,
           "userID": id,
           "questionID": questionid,
-          "attachement": "string"
+          "attachement": null
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
@@ -125,7 +125,6 @@ final _formKey = GlobalKey<FormState>();
           deleteQuestion(id);
           Navigator.pop(context);
           Navigator.pop(context);
-         
         } else {
           deleteAnswer(id);
           Navigator.of(context).pop();
@@ -247,9 +246,35 @@ final _formKey = GlobalKey<FormState>();
                 borderRadius: const BorderRadius.only(
                     bottomLeft: const Radius.circular(20.0),
                     bottomRight: const Radius.circular(20.0))),
-            child: Container(
+            child: Align(
+            alignment: Alignment.centerLeft,
+
+              child: Container(
                 child: Column(children: <Widget>[
               Text(widget.question['question']),
+              widget.question['attachement'] != ""
+                  ? Row(children: <Widget>[
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PhotoPage(
+                                    image: widget.question['attachement'])),
+                          );
+                        },
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Photo",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      )
+                    ])
+                  : Text(""),
               Row(children: <Widget>[
                 Container(
                   alignment: Alignment.centerRight,
@@ -271,6 +296,8 @@ final _formKey = GlobalKey<FormState>();
                 ),
               ])
             ])),
+            ),
+           
           ),
         ],
       ),
@@ -390,7 +417,7 @@ final _formKey = GlobalKey<FormState>();
       content: Stack(
         children: <Widget>[
           Form(
-             key: _formKey,
+            key: _formKey,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -399,9 +426,10 @@ final _formKey = GlobalKey<FormState>();
                     padding: EdgeInsets.all(8.0),
                     child: TextFormField(
                       validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter some text';
-    }},
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                      },
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(labelText: "Answer"),
@@ -416,8 +444,6 @@ final _formKey = GlobalKey<FormState>();
                         primary: Colors.green[300],
                       ),
                       onPressed: () async {
-
-     
                         var answer = _answerController.text;
 
                         addAnswer(answer, widget.question['ID'], "");

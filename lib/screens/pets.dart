@@ -10,6 +10,7 @@ import '../main.dart';
 import 'dart:convert' as convert;
 import '../jwt.dart';
 import 'addpet.dart';
+import 'editpet.dart';
 import 'leftside_menu.dart';
 
 
@@ -25,12 +26,11 @@ class Constants{
 }
 
 class _IndexPageState extends State<PetsPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _animaltypeController = TextEditingController();
-  final TextEditingController _raceController = TextEditingController();
+  List vaccines= [];
   List pets = [];
   List<Map<String, dynamic>> petsType = animalTypes;
   bool isLoading = false;
+  
   @override
   void initState() {
     super.initState();
@@ -59,8 +59,6 @@ class _IndexPageState extends State<PetsPage> {
       isLoading = false;
     }
   }
-
- 
 
   deletePet(int id) async {
     var jwt = await storage.read(key: "jwt");
@@ -120,12 +118,8 @@ class _IndexPageState extends State<PetsPage> {
    String name = item['name'].toString();
    String animaltype = item['animaltype'];
     String profileUrl = item['picture'];
- 
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
-
-    
-      
     return Card(
         elevation: 1.5,
         child: new InkWell(
@@ -159,7 +153,7 @@ class _IndexPageState extends State<PetsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
-                          width: MediaQuery.of(context).size.width - 190,
+                          width: MediaQuery.of(context).size.width - 250,
                           child: Text(
                             name,
                             style: TextStyle(fontSize: 17),
@@ -173,13 +167,21 @@ class _IndexPageState extends State<PetsPage> {
                       ),
                     ],
                   ),
+                      IconButton(
+                    icon: const Icon(Icons.edit_outlined, color: Colors.green),
+                    onPressed: () {
+                     Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EditPetPage(pet: item)),
+        );
+                    },
+                  ),
                   IconButton(
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
                     onPressed: () {
-                     
                      showDialog(
                         context: context,
-                        builder: (BuildContext context) => _showDialog(id),
+                        builder: (BuildContext context) => _showDialog(id,context),
                       );
                     },
                   ),
@@ -271,35 +273,44 @@ class _IndexPageState extends State<PetsPage> {
 
   
 
- Widget _showDialog(int id) {
-    return AlertDialog(
-      title: new Text("Delete pet",textAlign: TextAlign.center,),
-      content: new Text("Are you sure that you want to delete this pet?",textAlign: TextAlign.center),
-      actions: <Widget>[
-        new TextButton(
-          child: new Text("No"),
-          onPressed: () {
-             Navigator.of(context).pop();
-          },
-        ),
-        Container(
-         margin:      const EdgeInsets.only(left: 16.0, ),
+ Widget _showDialog(int id, context) {
 
-          child: TextButton(
-             style: TextButton.styleFrom(
-                      primary: Colors.red,
-                    ),
-            child: new Text("Yes"),
-            onPressed: () {
-              deletePet(id);
-            Navigator.of(context).pop();
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => PetsPage()),
-                ); 
-            },
-          ),
-        ),
+    Widget yesButton = ElevatedButton(
+      style: TextButton.styleFrom(
+          primary: Colors.white, backgroundColor: Colors.red[300]),
+      child: new Text(
+        "Yes",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onPressed: () async {
+          deletePet(id);
+          Navigator.pop(context);
+        }
+    );
+
+    Widget noButton = ElevatedButton(
+      style: TextButton.styleFrom(
+        primary: Colors.white,
+      ),
+      child: new Text(
+        "No",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    return AlertDialog(
+      title: new Text(
+        "Delete Pet",
+        textAlign: TextAlign.center,
+      ),
+      content: new Text("Are you sure that you want to delete this pet?", textAlign: TextAlign.center),
+      actions: <Widget>[
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[yesButton, noButton])
       ],
     );
   }

@@ -443,9 +443,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                   Spacer(),
                   InkWell(
                     onTap: () async {
-                      var name = _nameController.text;
-                      var animaltype = _animaltypeController.text;
-                      var race = _raceController.text;
+                      
 
                       List<int> imgBytes = await _image.readAsBytes();
                       String base64img = base64Encode(imgBytes);

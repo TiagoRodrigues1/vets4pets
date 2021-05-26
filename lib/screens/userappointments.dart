@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import '../utils.dart';
 import 'package:flutter/material.dart';
 import '../jwt.dart';
@@ -7,7 +5,6 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../main.dart';
-import 'dart:typed_data';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,9 +14,8 @@ List appointments = [];
 
 
 class UserAppointments extends StatefulWidget {
-  final Map<String, dynamic> clinic;
 
-  UserAppointments({Key key, this.clinic, this.title}) : super(key: key);
+  UserAppointments({Key key,  this.title}) : super(key: key);
 
   final String title;
 
@@ -49,6 +45,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
   }
 
   getAppointements() async {
+    print("Wtf");
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
 
@@ -57,7 +54,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
       Uri.parse('http://52.47.179.213:8081/api/v1/appointmentOfuser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-
+    print(response.body);
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
 

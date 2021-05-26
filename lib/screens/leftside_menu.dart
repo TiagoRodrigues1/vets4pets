@@ -131,7 +131,7 @@ class NavDrawer extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-               SizedBox(height: 200.0),
+               SizedBox(height: 170.0),
                 ListTile(
                 leading: Icon(Icons.person),
                 title: Text('Perfil'),
