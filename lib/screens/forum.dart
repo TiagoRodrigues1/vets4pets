@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hello_world/screens/forumdetail.dart';
+import 'package:Vets4Pets/screens/forumdetail.dart';
 import 'package:image_picker/image_picker.dart';
 import '../jwt.dart';
 import 'colors.dart';

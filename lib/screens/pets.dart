@@ -1,7 +1,7 @@
 import 'dart:io' as Io;
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:hello_world/models/animaltypes.dart';
+import 'package:Vets4Pets/models/animaltypes.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:select_form_field/select_form_field.dart';
@@ -13,24 +13,23 @@ import 'addpet.dart';
 import 'editpet.dart';
 import 'leftside_menu.dart';
 
-
 class PetsPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
 }
 
-class Constants{
+class Constants {
   Constants._();
-  static const double padding =20;
-  static const double avatarRadius =45;
+  static const double padding = 20;
+  static const double avatarRadius = 45;
 }
 
 class _IndexPageState extends State<PetsPage> {
-  List vaccines= [];
+  List vaccines = [];
   List pets = [];
   List<Map<String, dynamic>> petsType = animalTypes;
   bool isLoading = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -40,20 +39,19 @@ class _IndexPageState extends State<PetsPage> {
   getPets() async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
- 
+
     int id = results["UserID"];
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-  
+
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         pets = items;
         isLoading = false;
       });
-     
     } else {
       pets = [];
       isLoading = false;
@@ -66,7 +64,7 @@ class _IndexPageState extends State<PetsPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-  
+
     if (response.statusCode == 200) {
       print("Pet $id was deleted");
     }
@@ -91,9 +89,9 @@ class _IndexPageState extends State<PetsPage> {
             tooltip: 'New Pet',
             onPressed: () {
               Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddPetPage()),
-                  );
+                context,
+                MaterialPageRoute(builder: (context) => AddPetPage()),
+              );
             },
           ),
         ],
@@ -103,7 +101,6 @@ class _IndexPageState extends State<PetsPage> {
   }
 
   Widget getBody() {
-    
     if (pets.contains(null) || pets.length == 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
@@ -113,10 +110,11 @@ class _IndexPageState extends State<PetsPage> {
           return getCard(pets[index]);
         });
   }
+
   Widget getCard(item) {
     var id = item['ID'];
-   String name = item['name'].toString();
-   String animaltype = item['animaltype'];
+    String name = item['name'].toString();
+    String animaltype = item['animaltype'];
     String profileUrl = item['picture'];
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
@@ -140,11 +138,9 @@ class _IndexPageState extends State<PetsPage> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(60 / 2),
                         image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: MemoryImage(bytes),
-                           
-                            )
-                            ),
+                          fit: BoxFit.cover,
+                          image: MemoryImage(bytes),
+                        )),
                   ),
                   SizedBox(
                     width: 20,
@@ -167,21 +163,23 @@ class _IndexPageState extends State<PetsPage> {
                       ),
                     ],
                   ),
-                      IconButton(
+                  IconButton(
                     icon: const Icon(Icons.edit_outlined, color: Colors.green),
                     onPressed: () {
-                     Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => EditPetPage(pet: item)),
-        );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditPetPage(pet: item)),
+                      );
                     },
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
                     onPressed: () {
-                     showDialog(
+                      showDialog(
                         context: context,
-                        builder: (BuildContext context) => _showDialog(id,context),
+                        builder: (BuildContext context) =>
+                            _showDialog(id, context),
                       );
                     },
                   ),
@@ -192,101 +190,121 @@ class _IndexPageState extends State<PetsPage> {
         ));
   }
 
-
-
-
   Widget buildShowPet(item) {
-      return Dialog(
+    return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Constants.padding),
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
-      child: contentBox(context,item),
+      child: contentBox(context, item),
     );
   }
 
-
- contentBox(context,item){
-
-   var name=item['name'];
-   var animaltype=item['animaltype'];
-   var race=item['race'];
+  contentBox(context, item) {
+    var name = item['name'];
+    var animaltype = item['animaltype'];
+    var race = item['race'];
 
     String profileUrl = item['picture'];
- 
+
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
     return Stack(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(left: Constants.padding,top: Constants.avatarRadius
-              + Constants.padding, right: Constants.padding,bottom: Constants.padding
-          ),
+          padding: EdgeInsets.only(
+              left: Constants.padding,
+              top: Constants.avatarRadius + Constants.padding,
+              right: Constants.padding,
+              bottom: Constants.padding),
           margin: EdgeInsets.only(top: Constants.avatarRadius),
           decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(Constants.padding),
-            boxShadow: [
-              BoxShadow(color: Colors.black,offset: Offset(0,10),
-              blurRadius: 10
-              ),
-            ]
-          ),
+              shape: BoxShape.rectangle,
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(Constants.padding),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
+              ]),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(name,style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600),),
-              SizedBox(height: 15,),
-              Text(animaltype ,style: TextStyle(fontSize: 14),textAlign: TextAlign.center,),
-              SizedBox(height: 22,),
-              Text(race ,style: TextStyle(fontSize: 14),textAlign: TextAlign.center,),
-              SizedBox(height: 22,),
-              Align(
-                alignment: Alignment.bottomRight,
-                child:TextButton(                                    
-                  style: TextButton.styleFrom(primary: Colors.green[300]),
-                    onPressed: (){
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Close",style: TextStyle(fontSize: 18),)),
+              Text(
+                name,
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
               ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                animaltype,
+                style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 22,
+              ),
+              Text(
+                race,
+                style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 22,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //  alignment: Alignment.bottomRight,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.list_alt_outlined,
+                          color: Colors.blue),
+                      onPressed: () {},
+                    ),
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                      ),
+                      child: new Text(
+                        "Close",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ]),
             ],
           ),
         ),
         Positioned(
           left: Constants.padding,
-            right: Constants.padding,
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              radius: Constants.avatarRadius,
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(Constants.avatarRadius)),
-                  child: Image.memory(bytes, fit:BoxFit.cover)
-              ),
-            ),
+          right: Constants.padding,
+          child: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: Constants.avatarRadius,
+            child: ClipRRect(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(Constants.avatarRadius)),
+                child: Image.memory(bytes, fit: BoxFit.cover)),
+          ),
         ),
       ],
     );
   }
 
-  
-
- Widget _showDialog(int id, context) {
-
+  Widget _showDialog(int id, context) {
     Widget yesButton = ElevatedButton(
-      style: TextButton.styleFrom(
-          primary: Colors.white, backgroundColor: Colors.red[300]),
-      child: new Text(
-        "Yes",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      onPressed: () async {
+        style: TextButton.styleFrom(
+            primary: Colors.white, backgroundColor: Colors.red[300]),
+        child: new Text(
+          "Yes",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        onPressed: () async {
           deletePet(id);
           Navigator.pop(context);
-        }
-    );
+        });
 
     Widget noButton = ElevatedButton(
       style: TextButton.styleFrom(
@@ -306,7 +324,8 @@ class _IndexPageState extends State<PetsPage> {
         "Delete Pet",
         textAlign: TextAlign.center,
       ),
-      content: new Text("Are you sure that you want to delete this pet?", textAlign: TextAlign.center),
+      content: new Text("Are you sure that you want to delete this pet?",
+          textAlign: TextAlign.center),
       actions: <Widget>[
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -315,5 +334,3 @@ class _IndexPageState extends State<PetsPage> {
     );
   }
 }
-  
-

@@ -1,13 +1,13 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:hello_world/main.dart';
-import 'package:hello_world/screens/pets.dart';
-import 'package:hello_world/screens/adoptions.dart';
-import 'package:hello_world/screens/myadoptions.dart';
-import 'package:hello_world/screens/clinics.dart';
-import 'package:hello_world/screens/userappointments.dart';
-import 'package:hello_world/screens/userprofile.dart';
+import 'package:Vets4Pets/main.dart';
+import 'package:Vets4Pets/screens/pets.dart';
+import 'package:Vets4Pets/screens/adoptions.dart';
+import 'package:Vets4Pets/screens/myadoptions.dart';
+import 'package:Vets4Pets/screens/clinics.dart';
+import 'package:Vets4Pets/screens/userappointments.dart';
+import 'package:Vets4Pets/screens/userprofile.dart';
 import '../jwt.dart';
 import '../main.dart';
 import 'forum.dart';
