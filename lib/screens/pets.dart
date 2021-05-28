@@ -29,6 +29,7 @@ class _IndexPageState extends State<PetsPage> {
   List pets = [];
   List<Map<String, dynamic>> petsType = animalTypes;
   bool isLoading = false;
+  bool isLoading2 = false;
 
   @override
   void initState() {
@@ -57,6 +58,27 @@ class _IndexPageState extends State<PetsPage> {
       isLoading = false;
     }
   }
+
+  getVaccines(int id) async {
+    var jwt = await storage.read(key: "jwt");
+   
+    var response = await http.get(
+      Uri.parse('http://52.47.179.213:8081/api/v1/vaccine/$id'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+
+    if (response.statusCode == 200) {
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
+      setState(() {
+        vaccines = items;
+        isLoading2 = false;
+      });
+    } else {
+      vaccines = [];
+      isLoading2 = false;
+    }
+  }
+
 
   deletePet(int id) async {
     var jwt = await storage.read(key: "jwt");
@@ -112,6 +134,7 @@ class _IndexPageState extends State<PetsPage> {
   }
 
   Widget getCard(item) {
+    print(item);
     var id = item['ID'];
     String name = item['name'].toString();
     String animaltype = item['animaltype'];
@@ -254,7 +277,6 @@ class _IndexPageState extends State<PetsPage> {
                 height: 22,
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //  alignment: Alignment.bottomRight,
                   children: [
                     IconButton(
                       icon: const Icon(Icons.list_alt_outlined,
