@@ -1,13 +1,10 @@
-import 'dart:io' as Io;
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:Vets4Pets/models/animaltypes.dart';
 import 'dart:convert';
+import 'package:Vets4Pets/screens/petsinfo.dart';
 import 'package:flutter/material.dart';
-import 'package:select_form_field/select_form_field.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
-import 'dart:convert' as convert;
 import '../jwt.dart';
 import 'addpet.dart';
 import 'editpet.dart';
@@ -25,11 +22,15 @@ class Constants {
 }
 
 class _IndexPageState extends State<PetsPage> {
-  List vaccines = [];
+  //List vaccines = [];
   List pets = [];
-  List<Map<String, dynamic>> petsType = animalTypes;
   bool isLoading = false;
   bool isLoading2 = false;
+  var vaccines = <dynamic>[];
+  int sortColumnIndex;
+  bool isAscending = false;
+
+  
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _IndexPageState extends State<PetsPage> {
     this.getPets();
   }
 
+ 
   getPets() async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
@@ -61,12 +63,12 @@ class _IndexPageState extends State<PetsPage> {
 
   getVaccines(int id) async {
     var jwt = await storage.read(key: "jwt");
-   
+
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/vaccine/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-
+print(response.body);
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
@@ -78,7 +80,6 @@ class _IndexPageState extends State<PetsPage> {
       isLoading2 = false;
     }
   }
-
 
   deletePet(int id) async {
     var jwt = await storage.read(key: "jwt");
@@ -134,7 +135,6 @@ class _IndexPageState extends State<PetsPage> {
   }
 
   Widget getCard(item) {
-    print(item);
     var id = item['ID'];
     String name = item['name'].toString();
     String animaltype = item['animaltype'];
@@ -276,26 +276,30 @@ class _IndexPageState extends State<PetsPage> {
               SizedBox(
                 height: 22,
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.list_alt_outlined,
-                          color: Colors.blue),
-                      onPressed: () {},
-                    ),
-                    ElevatedButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                      ),
-                      child: new Text(
-                        "Close",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                IconButton(
+                   tooltip: 'Pet Informations',
+                  icon: const Icon(Icons.list_alt_outlined, color: Colors.blue),
+                  onPressed: () {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PetsInfoPage(animal: item,)),
+                  );
+                  },
+                ),
+                ElevatedButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                  ),
+                  child: new Text(
+                    "Close",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ]),
             ],
           ),
         ),
@@ -354,5 +358,22 @@ class _IndexPageState extends State<PetsPage> {
             children: <Widget>[yesButton, noButton])
       ],
     );
+  }
+
+  Widget _showDialogVaccines(context) {
+    Widget noButton = ElevatedButton(
+      style: TextButton.styleFrom(
+        primary: Colors.white,
+      ),
+      child: new Text(
+        "No",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+ 
   }
 }

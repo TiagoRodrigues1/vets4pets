@@ -9,11 +9,18 @@ import 'dart:typed_data';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'dart:convert' show base64Encode;
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import '../main.dart';
+import 'dart:convert' as convert;
+import '../jwt.dart';
+import 'package:jiffy/jiffy.dart';
 
-Map<DateTime, List<Event>> appointments_aux;
 List appointments = [];
 
-/// Returns a list of [DateTime] objects from [first] to [last], inclusive.
 List<DateTime> daysInRange(DateTime first, DateTime last) {
   final dayCount = last.difference(first).inDays + 1;
   return List.generate(
@@ -37,12 +44,14 @@ class _AppointmentPageState extends State<AppointmentPage> {
   int _currentStep = 0;
   StepperType stepperType = StepperType.horizontal;
   Duration initialtimer = new Duration(hours: 8, minutes: 00);
-
+  int finished = 0;
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
+  String date;
 
   Map<DateTime, List<Event>> selectedDayAppointment; //Horarios daquele dia
-  Map<DateTime, List<Event>> selectedSlots; //Array que vai conter todas os slots diponiveis
+  Map<DateTime, List<Event>>
+      selectedSlots; //Array que vai conter todas os slots diponiveis
   List<Event> horas = [
     Event(title: "08:00"),
     Event(title: "08:30"),
@@ -98,7 +107,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
     this.getPets();
     this.getVets();
     selectedSlots = {};
-      //getSlots(selectedDay);
 
     selectedDayAppointment = {};
   }
@@ -131,6 +139,29 @@ class _AppointmentPageState extends State<AppointmentPage> {
     }
   }
 
+  addAppointments(DateTime date, int animalid, int idvet) async {
+    var jwt = await storage.read(key: "jwt");
+    String dates = date.toString();
+    dates.replaceAll("T", " ");
+    print(dates);
+    //print(date.toString());
+    print(animalid);
+    print(idvet);
+    var result = await http.post(
+      Uri.parse('http://52.47.179.213:8081/api/v1/appointment/'),
+      body: convert.jsonEncode(
+        <String, dynamic>{
+          "date": date.toIso8601String(),
+          "showedUp": false,
+          "vetID": idvet,
+          "animalID": animalid
+        },
+      ),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+    print(result.body);
+  }
+
   getAppointements(int id) async {
     var jwt = await storage.read(key: "jwt");
 
@@ -148,17 +179,18 @@ class _AppointmentPageState extends State<AppointmentPage> {
         appointments.forEach((element) {
           DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss")
               .parse(element['date']); //AS horas
-         print(parseDated_);      
-          DateTime now= DateTime.now();
-              var timezoneOffset1=now.timeZoneOffset;
-          DateTime parseDated =new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
-          
+          print(parseDated_);
+          DateTime now = DateTime.now();
+          var timezoneOffset1 = now.timeZoneOffset;
+          DateTime parseDated =
+              new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
+
           String formattedTime = DateFormat.Hm().format(parseDated_);
           print(formattedTime);
-             parseDated = parseDated.add(timezoneOffset1);
-          DateTime parseDate =parseDated.toUtc();
+          parseDated = parseDated.add(timezoneOffset1);
+          DateTime parseDate = parseDated.toUtc();
           print(parseDated);
-         
+
           if (selectedDayAppointment[parseDate] != null) {
             selectedDayAppointment[parseDate].add(
               Event(title: formattedTime),
@@ -269,8 +301,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
           onTap: () {
             setState(() {
               getAppointements(item['ID']);
-
               selectedVet = item;
+              selectedHour = null;
+              date = null;
             });
           },
           child: Padding(
@@ -323,6 +356,18 @@ class _AppointmentPageState extends State<AppointmentPage> {
         onTap: () {
           setState(() {
             selectedHour = slots;
+            DateTime finalDay = selectedDay;
+            String day = selectedHour.toString();
+            List parts = day.split(':');
+            int hours = int.parse(parts[0]);
+            int minutes = int.parse(parts[1]);
+            finalDay = finalDay.add(Duration(hours: hours, minutes: minutes));
+            DateTime parseDate = new DateFormat("yyyy-MM-dd HH:mm:ss")
+                .parse(finalDay.toString());
+            var inputDate = DateTime.parse(parseDate.toString());
+            var outputFormat = DateFormat('dd/MM/yyyy HH:mm');
+            date = outputFormat.format(inputDate);
+            print(date);
           });
         },
         child: Container(
@@ -361,7 +406,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 SizedBox(height: 20),
                 SizedBox(
                   child: _buildStepBar(),
-                  height: height +200,
+                  height: height + 200,
                 ),
               ],
             ),
@@ -387,7 +432,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   Widget _buildSlots() {
     if (selectedSlots[selectedDay] == null ||
-        selectedSlots[selectedDay].length == 0 ) {
+        selectedSlots[selectedDay].length == 0) {
       return Center(child: CircularProgressIndicator());
     } else {
       return ListView.builder(
@@ -414,19 +459,168 @@ class _AppointmentPageState extends State<AppointmentPage> {
     }
   }
 
+  Widget _buildContent3() {
+    if (selectedPet != null && selectedVet != null && selectedHour != null) {
+      String profileUrl = selectedPet['picture'];
+      profileUrl = profileUrl.substring(23, profileUrl.length);
+      Uint8List bytes = base64.decode(profileUrl);
+      final TextEditingController _dateController =
+          TextEditingController(text: date);
+
+      String profileUrl2 = selectedVet['profilePicture'];
+      profileUrl2 = profileUrl2.substring(23, profileUrl2.length);
+      Uint8List bytes2 = base64.decode(profileUrl2);
+      return Container(
+          child: Column(
+        children: [
+          Center(
+            child: Container(
+              width: 100.0,
+              height: 100.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: MemoryImage(bytes),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(40.0),
+                border: Border.all(
+                  color: Color.fromRGBO(82, 183, 136, 1),
+                  width: 5.0,
+                ),
+              ),
+            ),
+          ),
+          Text("\nPet Informations:\n"),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Name: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  selectedPet['name'] + "\n",
+                )
+              ]),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Animal Type: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  selectedPet['animaltype'] + "\n",
+                )
+              ]),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Race: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  selectedPet['race'] + "\n",
+                )
+              ]),
+          Center(
+            child: Container(
+              width: 100.0,
+              height: 100.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: MemoryImage(bytes2),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(40.0),
+                border: Border.all(
+                  color: Color.fromRGBO(82, 183, 136, 1),
+                  width: 5.0,
+                ),
+              ),
+            ),
+          ),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "\nDr/Dra \n",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+                Text(
+                  "\n" + selectedVet['name'] + "\n",
+                )
+              ]),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Contact: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  selectedVet['contact'] + "\n",
+                )
+              ]),
+          Container(
+            width: MediaQuery.of(context).size.width / 1.5,
+            height: 45,
+            padding: EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+                color: Colors.white,
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)]),
+            child: TextField(
+              enabled: false,
+              controller: _dateController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                icon: Icon(
+                  Icons.date_range,
+                  color: Color(0xFF52B788),
+                ),
+                hintText: 'Pet name',
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          )
+        ],
+      ));
+    }
+    return Text(
+        "\n\nInformation is complete! Go back and select the correct items!\n\n ");
+  }
+
   List<Event> _getEventsfromDay(DateTime date) {
     return selectedSlots[date] ?? [];
   }
 
   getSlots(DateTime date) {
-print(selectedDayAppointment);
+    print(selectedDayAppointment);
     if (selectedDayAppointment[date] != null) {
       selectedSlots[date] = null;
       List<Event> day_app = selectedDayAppointment[date];
       List<Event> day_all = horas;
-
-      print(day_app);
-      print(day_all);
       List<Event> slots = [];
 
       day_all.forEach((element) {
@@ -451,74 +645,72 @@ print(selectedDayAppointment);
           "Select a day for your appointment",
           textAlign: TextAlign.center,
         ),
-        Container(child: 
-            TableCalendar(
-          focusedDay: selectedDay,
-          firstDay: DateTime.now(),
-          lastDay: DateTime(now_date.year + 2, now_date.month, now_date.day),
-         // calendarFormat: format,
-          onFormatChanged: (CalendarFormat _format) {
-            setState(() {
-              format = _format;
-            });
-          },
-          startingDayOfWeek: StartingDayOfWeek.sunday,
-          daysOfWeekVisible: true,
+        Container(
+          child: TableCalendar(
+            focusedDay: selectedDay,
+            firstDay: DateTime.now(),
+            lastDay: DateTime(now_date.year + 2, now_date.month, now_date.day),
+            // calendarFormat: format,
+            onFormatChanged: (CalendarFormat _format) {
+              setState(() {
+                format = _format;
+              });
+            },
+            startingDayOfWeek: StartingDayOfWeek.sunday,
+            daysOfWeekVisible: true,
 
-          //Day Changed
-          onDaySelected: (DateTime selectDay, DateTime focusDay) {
-            setState(() {
-              selectedDay = selectDay;
-              getSlots(selectDay);
-              selectedHour=null;
-              _getEventsfromDay(selectedDay);
-              focusedDay = focusDay;
-            });
-            print(focusedDay);
-          },
-          selectedDayPredicate: (DateTime date) {
-            return isSameDay(selectedDay, date);
-          },
+            //Day Changed
+            onDaySelected: (DateTime selectDay, DateTime focusDay) {
+              setState(() {
+                selectedDay = selectDay;
+                getSlots(selectDay);
+                selectedHour = null;
+                _getEventsfromDay(selectedDay);
+                focusedDay = focusDay;
+              });
+              print(focusedDay);
+            },
+            selectedDayPredicate: (DateTime date) {
+              return isSameDay(selectedDay, date);
+            },
 
-          // eventLoader: _getEventsfromDay,
+            // eventLoader: _getEventsfromDay,
 
-          //To style the Calendar
-          calendarStyle: CalendarStyle(
-            isTodayHighlighted: true,
-            selectedDecoration: BoxDecoration(
-              color: Color.fromRGBO(82, 183, 136, 1),
-              shape: BoxShape.circle,
+            //To style the Calendar
+            calendarStyle: CalendarStyle(
+              isTodayHighlighted: true,
+              selectedDecoration: BoxDecoration(
+                color: Color.fromRGBO(82, 183, 136, 1),
+                shape: BoxShape.circle,
+              ),
+              todayDecoration: BoxDecoration(
+                color: Color.fromRGBO(82, 183, 136, 0.7),
+                shape: BoxShape.circle,
+              ),
             ),
-            todayDecoration: BoxDecoration(
-              color: Color.fromRGBO(82, 183, 136, 0.7),
-              shape: BoxShape.circle,
-            ),
-          ),
-          headerStyle: HeaderStyle(
-            formatButtonVisible: false,
-            titleCentered: true,
-            formatButtonShowsNext: false,
-            formatButtonDecoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            formatButtonTextStyle: TextStyle(
-              color: Colors.white,
+            headerStyle: HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: true,
+              formatButtonShowsNext: false,
+              formatButtonDecoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              formatButtonTextStyle: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-        ),
-    
         Text(
           "Select a hour for your appointment",
           textAlign: TextAlign.center,
         ),
         SingleChildScrollView(
-          child: Container(
-            height: 300,
+            child: Container(
+          height: 300,
           child: _buildSlots(),
-        )
-        )
+        ))
       ],
     );
   }
@@ -549,14 +741,29 @@ print(selectedDayAppointment);
                         width: 40,
                       ),
                       ElevatedButton(
-                          style: TextButton.styleFrom(
-                            primary: Colors.white,
-                          ),
-                          child: new Text(
-                            _currentStep==3?"Finish":"Next",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          onPressed: onStepContinue),
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                        ),
+                        child: new Text(
+                          _currentStep == 3 ? "Finish" : "Next",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: _currentStep == 3
+                            ? () {
+                                DateTime finalDay = selectedDay;
+                                String day = selectedHour.toString();
+                                List parts = day.split(':');
+                                int hours = int.parse(parts[0]);
+                                int minutes = int.parse(parts[1]);
+                                finalDay = finalDay.add(
+                                    Duration(hours: hours, minutes: minutes));
+
+                                addAppointments(finalDay, selectedPet['ID'],
+                                    selectedVet['ID']);
+                                Navigator.of(context).pop();
+                              }
+                            : onStepContinue,
+                      ),
                     ],
                   ),
                 );
@@ -572,6 +779,10 @@ print(selectedDayAppointment);
                   title: new Text('Pet'),
                   content: Column(
                     children: <Widget>[
+                      Text(
+                        "Select a Pet\n",
+                        textAlign: TextAlign.center,
+                      ),
                       _buildContent(),
                     ],
                   ),
@@ -582,6 +793,10 @@ print(selectedDayAppointment);
                   title: new Text('Vet'),
                   content: Column(
                     children: <Widget>[
+                      Text(
+                        "Select a Vet\n",
+                        textAlign: TextAlign.center,
+                      ),
                       _buildContent2(),
                     ],
                   ),
@@ -602,7 +817,13 @@ print(selectedDayAppointment);
                 Step(
                     title: new Text('Date'),
                     content: Column(
-                      children: <Widget>[Text("NICERS")],
+                      children: <Widget>[
+                        Text(
+                          "Informations about your appointment\n",
+                          textAlign: TextAlign.center,
+                        ),
+                        _buildContent3()
+                      ],
                     ),
                     isActive: _currentStep >= 3,
                     state: StepState.complete),

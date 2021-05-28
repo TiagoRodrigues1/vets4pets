@@ -1,11 +1,6 @@
-// TODO Implement this library.// Copyright 2019 Aleksander Woźniak
-// SPDX-License-Identifier: Apache-2.0
-import 'package:equatable/equatable.dart';
-
-import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:table_calendar/table_calendar.dart';
+
 
 /// Example event class.
 class Event {
