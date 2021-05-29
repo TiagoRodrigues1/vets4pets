@@ -4,11 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
-
 import 'leftside_menu.dart';
-
 import 'package:intl/intl.dart';
-
 import 'dart:convert' show json;
 
 class PetsInfoPage extends StatefulWidget {

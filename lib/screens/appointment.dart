@@ -9,25 +9,11 @@ import 'dart:typed_data';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'dart:convert' show base64Encode;
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import '../main.dart';
 import 'dart:convert' as convert;
-import '../jwt.dart';
-import 'package:jiffy/jiffy.dart';
+
 
 List appointments = [];
 
-List<DateTime> daysInRange(DateTime first, DateTime last) {
-  final dayCount = last.difference(first).inDays + 1;
-  return List.generate(
-    dayCount,
-    (index) => DateTime.utc(first.year, first.month, first.day + index),
-  );
-}
 
 class AppointmentPage extends StatefulWidget {
   final Map<String, dynamic> clinic;
@@ -386,7 +372,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    var width = screenSize.width;
     var height = screenSize.height;
     return Scaffold(
       appBar: new AppBar(
@@ -628,15 +613,16 @@ class _AppointmentPageState extends State<AppointmentPage> {
           slots.add(element);
         }
       });
-      print(slots);
+    
       selectedSlots[date] = slots;
     } else {
-      print("dia vazio");
+     
       selectedSlots[date] = horas;
     }
   }
 
   Widget getCalender() {
+    // ignore: non_constant_identifier_names
     var now_date = DateTime.now();
 
     return Column(

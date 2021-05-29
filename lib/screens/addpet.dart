@@ -43,12 +43,11 @@ class _AddPetPageState extends State<AddPetPage> {
 
   addPet(String name, String animaltype, String race, String picture,
       BuildContext context) async {
-    //print(picture);
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
 
-    var response = await http.post(
+     await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
       body: convert.jsonEncode(
         <String, dynamic>{

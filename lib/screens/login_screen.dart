@@ -7,8 +7,6 @@ import 'leftside_menu.dart';
 import '../main.dart';
 
 
-
-
 class LoginPage extends StatelessWidget {
   int state=0;
   final TextEditingController _usernameController = TextEditingController();

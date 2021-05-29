@@ -1,81 +1,151 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../jwt.dart';
-import '../main.dart';
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'dart:convert' show base64Encode;
 import 'package:image_picker/image_picker.dart';
-
 import 'userappointments.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+import 'dart:convert' show base64, base64Encode;
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import '../main.dart';
+import 'dart:convert' as convert;
+import '../jwt.dart';
 
 class UserProfilePage extends StatefulWidget {
-
-   final String picture, username, contact, email, name;
+  final String picture, username, contact, email, name;
   final bool gender;
-  UserProfilePage({Key key,this.username,this.contact,this.gender,this.name,this.email,this.picture}) : super(key: key);
+  UserProfilePage(
+      {Key key,
+      this.username,
+      this.contact,
+      this.gender,
+      this.name,
+      this.email,
+      this.picture})
+      : super(key: key);
 
   _UserProfilePageState createState() => _UserProfilePageState();
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
   File _image = null;
- 
+  String picture = null;
+   String picture2 = null;
+   bool button=false;
+   
   final picker = ImagePicker();
 
-  
   @override
   void initState() {
     super.initState();
+    this.loadPicture();
   }
 
-@override
-  Widget build(BuildContext context) {
+  loadPicture() async {
 
-    Size screenSize = MediaQuery.of(context).size;
+
+    picture = await storage.read(key: 'profilePicture');
+    
+     setState(() {
+     
+      });
+    
+    print(picture);
+  }
+
+  editUserPicture(String profilePicture) async {
+    //print("xd");
+    var jwt = await storage.read(key: "jwt");
+    var results = parseJwtPayLoad(jwt);
+    int id = results["UserID"];
+    print(id);
+
+    var response = await http.put(
+      Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),
+      body: convert.jsonEncode(
+        <String, dynamic>{
+          "username": widget.username,
+          "name": widget.name,
+          "contact": widget.contact,
+          "email": widget.email,
+          "gender": true,
+          "profilePicture": profilePicture,
+        },
+      ),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+    if (response.statusCode == 200) {
+      await storage.write(key: 'profilePicture', value: profilePicture);
+      print(response.body);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("My profile"),
-             actions:_image!=null? <Widget>[
-          IconButton(
-            icon: const Icon(Icons.save),
-            color: Colors.white,
-            tooltip: 'Save changes',
-            onPressed: () {
-               
-            },
-          ),
-        ]:<Widget>[],
+        actions: button==true
+            ? <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.save),
+                  color: Colors.white,
+                  tooltip: 'Save changes',
+                  onPressed: () async {
+                    List<int> imgBytes = await _image.readAsBytes();
+                    String base64img = base64Encode(imgBytes);
+                    String prefix = "data:image/jpeg;base64,";
+                    base64img = prefix + base64img;
+                   await editUserPicture(base64img);
+                    
+     setState(() {
+     //_image=null;
+    button=false;
+      });
+                  },
+                ),
+              ]
+            : <Widget>[],
       ),
-      
-      body: Stack(
-        children: <Widget>[
-          _buildCoverImage(screenSize),
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: screenSize.height / 6.4),
-                  _buildProfileImage(),
-                 _buildStatus(context),
-                  _buildBio(context),
-                  SizedBox(height: 20.0),
-                  _buildSeparator(screenSize),
-                  SizedBox(height: 10.0),
-                  _buildGetInTouch(context),
-                  SizedBox(height: 10.0),
-                  _buildSeparator(screenSize),
-                  SizedBox(height: 8.0),
-                  _buildButtons(context),
-                ],
-              ),
+      body: getBody(),
+    );
+  }
+
+  Widget getBody() {
+    Size screenSize = MediaQuery.of(context).size;
+     // print("mano" + picture);
+    if ( picture == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+    
+    return Stack(
+      children: <Widget>[
+        _buildCoverImage(screenSize),
+        SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: screenSize.height / 6.4),
+                _buildProfileImage(),
+                _buildStatus(context),
+                _buildBio(context),
+                SizedBox(height: 20.0),
+                _buildSeparator(screenSize),
+                SizedBox(height: 10.0),
+                _buildGetInTouch(context),
+                SizedBox(height: 10.0),
+                _buildSeparator(screenSize),
+                SizedBox(height: 8.0),
+                _buildButtons(context),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -97,7 +167,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-
+        button=true;
         print(_image.path);
       } else {
         print('No image selected.');
@@ -106,14 +176,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   Widget _buildProfileImage() {
-
-    
     Uint8List bytes;
-    /*if (picture != null) {
+    print(picture);
+    if (picture != null) {
       String profileUrl = picture;
       profileUrl = profileUrl.substring(23, profileUrl.length);
       bytes = base64.decode(profileUrl);
-    }*/
+    }
 
     return Center(
       child: Container(
@@ -142,8 +211,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               ),
                             ),
                             radius: 50.0,
-                            backgroundImage:
-                                AssetImage("assets/images/defaultuser.jpg"),
+                            backgroundImage: picture != null
+                                ? MemoryImage(bytes)
+                                : AssetImage("assets/images/defaultuser.jpg"),
                           )
                         : CircleAvatar(
                             child: Align(
@@ -246,44 +316,34 @@ class _UserProfilePageState extends State<UserProfilePage> {
             "Contacts\n",
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
-
-
-         
-        Text(
-                "Email: ",
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                widget.email + "\n",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Color(0xFF799497),
-                ),
-              ),
-              Text(
-                "PhoneNumber: ",
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                widget.contact,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Color(0xFF799497),
-                ),
-              ),
+          Text(
+            "Email: ",
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            widget.email + "\n",
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Color(0xFF799497),
+            ),
+          ),
+          Text(
+            "PhoneNumber: ",
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            widget.contact,
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Color(0xFF799497),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  _makingPhoneCall(urlx) async {
-    const url = '910720177';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+
 
   Widget _buildButtons(context) {
     return Padding(
@@ -291,38 +351,35 @@ class _UserProfilePageState extends State<UserProfilePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-        Ink(
-          decoration:  BoxDecoration(
+          Ink(
+            decoration: BoxDecoration(
               color: Color.fromRGBO(82, 183, 136, 1),
               shape: BoxShape.circle,
             ),
-          child: IconButton(
-            icon: const Icon(Icons.edit),
-            color: Colors.white,
-            onPressed: () {},
+            child: IconButton(
+              icon: const Icon(Icons.edit),
+              color: Colors.white,
+              onPressed: () {},
+            ),
           ),
-        ),
-        Ink(
-          decoration:  BoxDecoration(
+          Ink(
+            decoration: BoxDecoration(
               color: Color.fromRGBO(82, 183, 136, 1),
               shape: BoxShape.circle,
             ),
-          child: IconButton(
-            icon: const Icon(Icons.date_range),
-            color: Colors.white,
-            onPressed: () {
-
-                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserAppointments()),
-                  );
-            },
+            child: IconButton(
+              icon: const Icon(Icons.date_range),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserAppointments()),
+                );
+              },
+            ),
           ),
-        ),
         ],
       ),
     );
   }
-
- 
 }

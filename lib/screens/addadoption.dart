@@ -23,11 +23,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animaltypeController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
-  final TextEditingController _textController = TextEditingController();
-  final TextEditingController _birthController = TextEditingController();
-  final TextEditingController _phoneumberController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
+ 
 
   @override
   void initState() {

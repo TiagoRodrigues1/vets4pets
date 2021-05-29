@@ -6,7 +6,6 @@ import 'package:Vets4Pets/screens/pets.dart';
 import 'package:Vets4Pets/screens/adoptions.dart';
 import 'package:Vets4Pets/screens/myadoptions.dart';
 import 'package:Vets4Pets/screens/clinics.dart';
-import 'package:Vets4Pets/screens/userappointments.dart';
 import 'package:Vets4Pets/screens/userprofile.dart';
 import '../jwt.dart';
 import '../main.dart';
@@ -139,7 +138,7 @@ class NavDrawer extends StatelessWidget {
                  
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UserProfilePage(username: username, gender: gender, picture: picture,name: name, email: email, contact: contact,)),
+                    MaterialPageRoute(builder: (context) => UserProfilePage(username: username, gender: gender,name: name, email: email, contact: contact,)),
                   );
                   
                 },
@@ -170,7 +169,9 @@ class NavDrawer extends StatelessWidget {
   getData() async {
     var jwt = await storage.read(key: "jwt");
     picture = await storage.read(key: "profilePicture");
+  
     var results = parseJwtPayLoad(jwt);
+    
     username = results['username'];
     email = results['email'];
     name = results['name'];

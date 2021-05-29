@@ -5,10 +5,8 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../main.dart';
-import 'dart:convert' show ascii, base64, base64Encode, json;
+import 'dart:convert' show  json;
 import 'dart:convert' as convert;
-
-import 'forum.dart';
 import 'showpic.dart';
 
 class ForumDetailPage extends StatefulWidget {
@@ -51,6 +49,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
+    print(response.body);
   }
 
   getAnswers(int id) async {
@@ -416,7 +415,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     return new AlertDialog(
       content: Stack(
         children: <Widget>[
-          Form(
+          Container(
+           
+            width: 400,
+            child:         Form(
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
@@ -425,11 +427,12 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                      },
+                    validator: (value) {
+                          if (value.length < 10 || value.isEmpty) {
+                            return 'Answer is to short';
+                          }
+                          return null;
+                        },
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(labelText: "Answer"),
@@ -444,11 +447,14 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                         primary: Colors.green[300],
                       ),
                       onPressed: () async {
+if (_formKey.currentState.validate()) {
+
+
                         var answer = _answerController.text;
 
                         addAnswer(answer, widget.question['ID'], "");
                         Navigator.of(context).pop();
-                        final result = await Navigator.pushReplacement(
+                         await Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ForumDetailPage(
@@ -456,13 +462,8 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                   )),
                         );
 
-                        //below you can get your result and update the view with setState
-                        //changing the value if you want, i just wanted know if i have to
-                        //update, and if is true, reload state
 
-                        if (result) {
-                          setState(() {});
-                        }
+}
                       },
                     ),
                   )
@@ -470,6 +471,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
               ),
             ),
           ),
+          
+          
+          )
+  
         ],
       ),
     );

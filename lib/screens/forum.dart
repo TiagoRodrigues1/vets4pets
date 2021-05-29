@@ -19,7 +19,7 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
-  File _image = null;
+  File _image = null,_image2=null;
   final picker = ImagePicker();
   final TextEditingController _questiontitleController =
       TextEditingController();
@@ -35,12 +35,13 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future getImage() async {
+    
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
 
-        print(_image.path);
+       // print(_image.path);
       } else {
         print('No image selected.');
       }
@@ -119,6 +120,7 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Widget _buildQuestion() {
+
     return new AlertDialog(
       content: Stack(
         children: <Widget>[
@@ -163,7 +165,8 @@ class _ForumPageState extends State<ForumPage> {
                     ClipRRect(
                         child: InkWell(
                       onTap: () {
-                        getImage();
+                            getImage();
+                       
                       },
                       child: _image == null
                           ? CircleAvatar(

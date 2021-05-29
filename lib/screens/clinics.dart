@@ -3,13 +3,10 @@ import 'dart:typed_data';
 import 'package:Vets4Pets/models/animaltypes.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:select_form_field/select_form_field.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
-import 'dart:convert' as convert;
 import '../jwt.dart';
 import 'clinicdetail.dart';
-import 'leftside_menu.dart';
 
 class ClinicPage extends StatefulWidget {
   @override
