@@ -23,7 +23,31 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animaltypeController = TextEditingController();
   final TextEditingController _raceController = TextEditingController();
- 
+  final TextEditingController _birthController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+ final TextEditingController _cityController = TextEditingController();
+ String animalTypeValue,raceValue,cityValue;
+
+
+  List animalTypeList = ["Dog", "Cat", "Turtle", "Guinea-Pig", "Hamster", "Snake", "Bird", "Other"];
+
+
+  List cityList = ["Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra","Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Portalegre","Porto", "Santarém", "Setúbal", "Viana do Castelo", "Vila Real", "Viseu"];
+  Map<String, List<String>> data={'Dog': ['Labrador Retriever', 'German Shepherd','Golden Retriever','Bulldog','Beagle','French Bulldog','PitBull','Yorkshire Terrier','Poodle','Rottweiler','Boxer','Husky','Other'], 
+  'Turtle': ['Chelidae','Red-Eared Slider','Yellow-Bellied Slider','Eastern Box','Other'],
+  'Cat': ['Devon Rex', 'Abyssinian','Sphynx','Scottish Fold','American Shorthair','Maine Coon','Persian','British Shorthair','Ragdoll Cats','Exotic Shorthair','Other'], 
+  'Guinea-Pig': ['Abyssinian', 'Alpaca','American','Baldwin','Coronet','Himalayan','Other'], 
+  'Hamster': ['Syrian',  'Winter White','Campbell’s Dwarf','Roborovski','Chinese','Other'], 
+  'Snake': ['Smooth Green', 'Ringneck Snake','Rainbow Boa','Carpet Python','Corn Snake','California King','Other'], 
+  'Bird': ['Budgerigar', 'Cockatiel','Cockatoo', 'Hyacinth Macaw','Parrotlet','Green-Cheeked Conure','Hahn’s Macaw','Other'], 
+  'Other': ['N/A'], 
+
+  };
+
+
+
 
   @override
   void initState() {
@@ -92,7 +116,6 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
   }
 
   @override
@@ -360,7 +383,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 2,
+              height: MediaQuery.of(context).size.height +200,
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.only(top: 62),
               child: Column(
@@ -384,11 +407,104 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                           Icons.pets_sharp,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Pet name',
+                        hintText: 'Title',
                       ),
                     ),
                   ),
-                  Container(
+                    Container(
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      height: 45,
+                      margin: EdgeInsets.only(top: 32),
+                      padding: EdgeInsets.only(
+                          top: 4, left: 16, right: 16, bottom: 4),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black12, blurRadius: 5)
+                          ]),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Container(
+                             
+                             
+                              child: Icon(
+                                Icons.pets,
+                                color: Color(0xFF52B788),
+                                size: 25.0,
+                              )),
+                          Expanded(child:Padding(
+                            padding: EdgeInsets.only(left:15),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                isExpanded: true,
+                            focusColor: Colors.green,
+                            hint: Text("Animal Type"),
+                            value: animalTypeValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                animalTypeValue = newValue;
+                                raceValue=null;
+                              });
+                            },
+                            items: animalTypeList.map((valueType) {
+                              return DropdownMenuItem(
+                                value: valueType,
+                                child: Text(valueType),
+                              );
+                            }).toList(),
+                          ))) ,)
+                         
+                        ],
+                      )),
+               Container(
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      height: 45,
+                      margin: EdgeInsets.only(top: 32),
+                      padding: EdgeInsets.only(
+                          top: 4, left: 16, right: 16, bottom: 4),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black12, blurRadius: 5)
+                          ]),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Container(
+                             
+                             
+                              child: Icon(
+                                Icons.pets,
+                                color: Color(0xFF52B788),
+                                size: 25.0,
+                              )),
+                          Expanded(child:Padding(
+                            padding: EdgeInsets.only(left:15),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                isExpanded: true,
+                            focusColor: Colors.green,
+                            hint: Text("Race"),
+                            value: raceValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                raceValue = newValue;
+                              });
+                            },
+                            items:animalTypeValue!=null? data[animalTypeValue].map((valueType) {
+                              return DropdownMenuItem(
+                                value: valueType,
+                                child: Text(valueType),
+                              );
+                            }).toList():null,
+                          ))) ,)
+                         
+                        ],
+                      )),
+                        Container(
                     width: MediaQuery.of(context).size.width / 1.2,
                     height: 45,
                     margin: EdgeInsets.only(top: 32),
@@ -401,18 +517,43 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                           BoxShadow(color: Colors.black12, blurRadius: 5)
                         ]),
                     child: TextField(
-                      controller: _animaltypeController,
+                      controller: _birthController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         icon: Icon(
-                          Icons.pets,
+                          Icons.date_range,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Pet Type',
+                        hintText: 'Birth',
                       ),
                     ),
                   ),
-                  Container(
+                       Container(
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    height: 200,
+                    margin: EdgeInsets.only(top: 32),
+                    padding:
+                        EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(color: Colors.black12, blurRadius: 5)
+                        ]),
+                    child: TextField(
+                      maxLines: null,
+                      controller:  _textController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        icon: Icon(
+                          Icons.edit,
+                          color: Color(0xFF52B788),
+                        ),
+                        hintText: 'Description',
+                      ),
+                    ),
+                  ),
+                        Container(
                     width: MediaQuery.of(context).size.width / 1.2,
                     height: 45,
                     margin: EdgeInsets.only(top: 32),
@@ -425,18 +566,89 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                           BoxShadow(color: Colors.black12, blurRadius: 5)
                         ]),
                     child: TextField(
-                      controller: _raceController,
+                      controller: _emailController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         icon: Icon(
-                          Icons.pets_outlined,
+                          Icons.email,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Pet Race',
+                        hintText: 'Email',
                       ),
                     ),
                   ),
-                  Spacer(),
+                        Container(
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    height: 45,
+                    margin: EdgeInsets.only(top: 32),
+                    padding:
+                        EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(color: Colors.black12, blurRadius: 5)
+                        ]),
+                    child: TextField(
+                      controller: _phoneController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        icon: Icon(
+                          Icons.phone,
+                          color: Color(0xFF52B788),
+                        ),
+                        hintText: 'Contact',
+                      ),
+                    ),
+                  ),
+                 Container(
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      height: 45,
+                      margin: EdgeInsets.only(top: 32),
+                      padding: EdgeInsets.only(
+                          top: 4, left: 16, right: 16, bottom: 4),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black12, blurRadius: 5)
+                          ]),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Container(
+                             
+                             
+                              child: Icon(
+                                Icons.pets,
+                                color: Color(0xFF52B788),
+                                size: 25.0,
+                              )),
+                          Expanded(child:Padding(
+                            padding: EdgeInsets.only(left:15),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                isExpanded: true,
+                            focusColor: Colors.green,
+                            hint: Text("Animal Type"),
+                            value: cityValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                cityValue = newValue;
+                              });
+                            },
+                            items: cityList.map((valueType) {
+                              return DropdownMenuItem(
+                                value: valueType,
+                                child: Text(valueType),
+                              );
+                            }).toList(),
+                          ))) ,)
+                         
+                        ],
+                      )),
+                  
+                
                   InkWell(
                     onTap: () async {
                       
@@ -458,16 +670,24 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                       String base64img4 = base64Encode(imgBytes4);
                       base64img4 = prefix + base64img4;
 
-                       addAdoption("name", "xd","animaltype", "race","base64img","2021","kkkkk""XD","xddd",base64img,base64img2,base64img3,base64img4,context);
+                      if( raceValue=="Other"){
+                        raceValue="N/A";
+                      }
+                      if(animalTypeValue=="Other"){
+                        animalTypeValue="N/A";
+                        raceValue="N/A";
+                      }
+
+                       addAdoption(_nameController.text, cityValue,_textController.text,_emailController.text,_phoneController.text,_birthController.text,animalTypeValue, raceValue,base64img,base64img2,base64img3,base64img4,context);
                       Navigator.of(context).pop();
-                      /*  Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => PetsPage()),
-                ); 
-*/
+
+
+ 
                     },
                     child: Container(
                       height: 45,
+                                          margin: EdgeInsets.only(top: 32),
+
                       width: MediaQuery.of(context).size.width / 1.2,
                       decoration: BoxDecoration(
                           gradient: LinearGradient(

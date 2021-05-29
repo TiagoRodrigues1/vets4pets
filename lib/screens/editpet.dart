@@ -21,10 +21,26 @@ class _EditPetPageState extends State<EditPetPage> {
   File _image = null;
   final picker = ImagePicker();
 
-  String animalTypeValue;
-  List animalTypeList = ["Dog", "Cat", "Turtle", "Horse"];
+  String animalTypeValue,raceValue,cityValue;
+
+  List animalTypeList = ["Dog", "Cat", "Turtle", "Guinea-Pig", "Hamster", "Snake", "Bird", "Other"];
+
+
+  Map<String, List<String>> data={'Dog': ['Labrador Retriever', 'German Shepherd','Golden Retriever','Bulldog','Beagle','French Bulldog','PitBull','Yorkshire Terrier','Poodle','Rottweiler','Boxer','Husky','Other'], 
+  'Turtle': ['Chelidae','Red-Eared Slider','Yellow-Bellied Slider','Eastern Box','Other'],
+  'Cat': ['Devon Rex', 'Abyssinian','Sphynx','Scottish Fold','American Shorthair','Maine Coon','Persian','British Shorthair','Ragdoll Cats','Exotic Shorthair','Other'], 
+  'Guinea-Pig': ['Abyssinian', 'Alpaca','American','Baldwin','Coronet','Himalayan','Other'], 
+  'Hamster': ['Syrian',  'Winter White','Campbell’s Dwarf','Roborovski','Chinese','Other'], 
+  'Snake': ['Smooth Green', 'Ringneck Snake','Rainbow Boa','Carpet Python','Corn Snake','California King','Other'], 
+  'Bird': ['Budgerigar', 'Cockatiel','Cockatoo', 'Hyacinth Macaw','Parrotlet','Green-Cheeked Conure','Hahn’s Macaw','Other'], 
+  'Other': ['N/A'], 
+
+  };
+
   @override
   void initState() {
+    animalTypeValue=widget.pet['animaltype'];
+    raceValue=widget.pet['race'];
     super.initState();
   }
 
@@ -208,7 +224,7 @@ class _EditPetPageState extends State<EditPetPage> {
                       ),
                     ),
                   ),
-                  Container(
+                   Container(
                       width: MediaQuery.of(context).size.width / 1.2,
                       height: 45,
                       margin: EdgeInsets.only(top: 32),
@@ -235,7 +251,6 @@ class _EditPetPageState extends State<EditPetPage> {
                             padding: EdgeInsets.only(left:15),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton(
-                                
                                 isExpanded: true,
                             focusColor: Colors.green,
                             hint: Text("Animal Type"),
@@ -243,11 +258,11 @@ class _EditPetPageState extends State<EditPetPage> {
                             onChanged: (newValue) {
                               setState(() {
                                 animalTypeValue = newValue;
+                                raceValue=null;
                               });
                             },
                             items: animalTypeList.map((valueType) {
                               return DropdownMenuItem(
-                                
                                 value: valueType,
                                 child: Text(valueType),
                               );
@@ -256,56 +271,85 @@ class _EditPetPageState extends State<EditPetPage> {
                          
                         ],
                       )),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
-                    margin: EdgeInsets.only(top: 32),
-                    padding:
-                        EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 5)
-                        ]),
-                    child: TextField(
-                      controller: _raceController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        icon: Icon(
-                          Icons.pets_outlined,
-                          color: Color(0xFF52B788),
-                        ),
-                        hintText: 'Pet Race',
-                      ),
-                    ),
-                  ),
+               Container(
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      height: 45,
+                      margin: EdgeInsets.only(top: 32),
+                      padding: EdgeInsets.only(
+                          top: 4, left: 16, right: 16, bottom: 4),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black12, blurRadius: 5)
+                          ]),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Container(
+                             
+                             
+                              child: Icon(
+                                Icons.pets,
+                                color: Color(0xFF52B788),
+                                size: 25.0,
+                              )),
+                          Expanded(child:Padding(
+                            padding: EdgeInsets.only(left:15),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                isExpanded: true,
+                            focusColor: Colors.green,
+                            hint: Text("Race"),
+                            value: raceValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                raceValue = newValue;
+                              });
+                            },
+                            items:animalTypeValue!=null? data[animalTypeValue].map((valueType) {
+                              return DropdownMenuItem(
+                                value: valueType,
+                                child: Text(valueType),
+                              );
+                            }).toList():null,
+                          ))) ,)
+                         
+                        ],
+                      )),
                   Spacer(),
                   InkWell(
                     onTap: () async {
                       var name = _nameController.text;
                       var animaltype = _animaltypeController.text;
                       var race = _raceController.text;
+
+
+                       if( raceValue=="Other"){
+                        raceValue="N/A";
+                      }
+                      if(animalTypeValue=="Other"){
+                        animalTypeValue="N/A";
+                        raceValue="N/A";
+                      }
+
+
                       if(_image!=null){
                       List<int> imgBytes = await _image.readAsBytes();
                       String base64img = base64Encode(imgBytes);
                       String prefix = "data:image/jpeg;base64,";
                       base64img = prefix + base64img;
-                      editPet(name, animaltype, race, base64img, context);
+
+
+
+                      editPet(name, animalTypeValue, raceValue, base64img, context);
                       
                       }else{
                       
-                      editPet(name, animaltype, race, widget.pet['picture'], context);
+                      editPet(name,animalTypeValue, raceValue, widget.pet['picture'], context);
 
                       }
-                     
-                      //print(base64img);
                       Navigator.of(context).pop();
-                      /*  Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => PetsPage()),
-                ); 
-*/
                     },
                     child: Container(
                       height: 45,
