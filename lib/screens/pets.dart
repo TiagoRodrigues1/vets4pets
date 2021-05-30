@@ -30,15 +30,12 @@ class _IndexPageState extends State<PetsPage> {
   int sortColumnIndex;
   bool isAscending = false;
 
-  
-
   @override
   void initState() {
     super.initState();
     this.getPets();
   }
 
- 
   getPets() async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
@@ -68,7 +65,7 @@ class _IndexPageState extends State<PetsPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/vaccine/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-print(response.body);
+    print(response.body);
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
@@ -278,13 +275,16 @@ print(response.body);
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                 IconButton(
-                   tooltip: 'Pet Informations',
+                  tooltip: 'Pet Informations',
                   icon: const Icon(Icons.list_alt_outlined, color: Colors.blue),
                   onPressed: () {
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PetsInfoPage(animal: item,)),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PetsInfoPage(
+                                animal: item,
+                              )),
+                    );
                   },
                 ),
                 ElevatedButton(
@@ -373,7 +373,5 @@ print(response.body);
         Navigator.of(context).pop();
       },
     );
-
- 
   }
 }

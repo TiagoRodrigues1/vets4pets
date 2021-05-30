@@ -10,48 +10,41 @@ class AdoptionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
- String profileUrl = animal['attachement1'];
+    String profileUrl = animal['attachement1'];
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
 
- String profileUrl2 = animal['attachement2'];
+    String profileUrl2 = animal['attachement2'];
     profileUrl2 = profileUrl2.substring(23, profileUrl2.length);
     Uint8List bytes2 = base64.decode(profileUrl2);
 
-     String profileUrl3 = animal['attachement3'];
+    String profileUrl3 = animal['attachement3'];
     profileUrl3 = profileUrl3.substring(23, profileUrl3.length);
     Uint8List bytes3 = base64.decode(profileUrl3);
 
-     String profileUrl4 = animal['attachement4'];
+    String profileUrl4 = animal['attachement4'];
     profileUrl4 = profileUrl4.substring(23, profileUrl4.length);
     Uint8List bytes4 = base64.decode(profileUrl4);
 
     final topContent = Stack(
       children: <Widget>[
         Container(
-            
             height: 400,
             child: CarouselSlider(
               options: CarouselOptions(height: 400.0),
-              items: [
-               bytes,
-              bytes2,
-              bytes3,
-             bytes4
-              ].map((i) {
+              items: [bytes, bytes2, bytes3, bytes4].map((i) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
-                        width: 400,
-                        margin: EdgeInsets.symmetric(horizontal: 1.0),
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: MemoryImage(i),
-                               fit: BoxFit.cover,
-                            ),
-                            color: Colors.amber),
-                        );
+                      width: 400,
+                      margin: EdgeInsets.symmetric(horizontal: 1.0),
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: MemoryImage(i),
+                            fit: BoxFit.cover,
+                          ),
+                          color: Colors.amber),
+                    );
                   },
                 );
               }).toList(),

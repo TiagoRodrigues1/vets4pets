@@ -204,12 +204,12 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
                 ),
               ),
               onTap: () {
-
-                     Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AppointmentPage(clinic: widget.clinic)),
-                  );
-               
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AppointmentPage(clinic: widget.clinic)),
+                );
               },
             ),
           ),
@@ -226,36 +226,41 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
         title: Text("Clinic profile"),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle, color: Colors.white,),
+            icon: const Icon(
+              Icons.add_circle,
+              color: Colors.white,
+            ),
             tooltip: 'New Pet',
             onPressed: () {
               Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AppointmentPage(clinic: widget.clinic)),
-                  );
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AppointmentPage(clinic: widget.clinic)),
+              );
             },
           ),
-            InkWell(
-              child:Container(
-                        margin: EdgeInsets.only(right: 10),
-
-                 child:Center(
-                  child: new Text(
-                    "SET APPOINTMENT",
-                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-                  ),
-                
+          InkWell(
+            child: Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Center(
+                child: new Text(
+                  "SET APPOINTMENT",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
                 ),
-                
+              ),
             ),
-              onTap: () {
-                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AppointmentPage(clinic: widget.clinic)),
-                  );
-                  },
-            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AppointmentPage(clinic: widget.clinic)),
+              );
+            },
+          ),
         ],
       ),
       body: Stack(
@@ -281,11 +286,6 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
           ),
         ],
       ),
-      
     );
   }
-
-  
- 
-
 }

@@ -14,11 +14,8 @@ class AdoptionsPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<AdoptionsPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _animaltypeController = TextEditingController();
-  final TextEditingController _raceController = TextEditingController();
   List adoptions = [];
-  List<Map<String,dynamic>> adoptionsType = animalTypes;
+  List<Map<String, dynamic>> adoptionsType = animalTypes;
   bool isLoading = false;
   @override
   void initState() {
@@ -27,14 +24,14 @@ class _IndexPageState extends State<AdoptionsPage> {
   }
 
   getAdoptions() async {
-   var jwt = await storage.read(key: "jwt");
+    var jwt = await storage.read(key: "jwt");
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/adoptionByTime'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-  
+
     if (response.statusCode == 200) {
-      var items =json.decode(utf8.decode(response.bodyBytes))['data'];
+      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         adoptions = items;
         isLoading = false;
@@ -43,15 +40,12 @@ class _IndexPageState extends State<AdoptionsPage> {
     } else {
       adoptions = [];
       isLoading = false;
-  }
-  }
-
-  addAdoption(String name, String animaltype, String race, BuildContext context) async {
-  
+    }
   }
 
+  addAdoption(String name, String animaltype, String race,
+      BuildContext context) async {}
 
- 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -88,19 +82,20 @@ class _IndexPageState extends State<AdoptionsPage> {
     var name = item['name'];
     var animaltype = item['animaltype'];
     var race = item['race'];
-    var status= item['adopted'];  
-     String profileUrl = item['attachement1'];
+    var status = item['adopted'];
+    String profileUrl = item['attachement1'];
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
-    
+
     return Card(
         elevation: 1.5,
         child: new InkWell(
           onTap: () {
-           Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AdoptionDetailsPage(animal:item)),
-                    );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AdoptionDetailsPage(animal: item)),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -113,8 +108,9 @@ class _IndexPageState extends State<AdoptionsPage> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(60 / 2),
                         image: DecorationImage(
-                            fit: BoxFit.cover,
-                           image: MemoryImage(bytes),)),
+                          fit: BoxFit.cover,
+                          image: MemoryImage(bytes),
+                        )),
                   ),
                   SizedBox(
                     width: 20,
@@ -131,24 +127,21 @@ class _IndexPageState extends State<AdoptionsPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text("Type: " +
-                        animaltype +" |"+ " Race: " + race,
+                      Text(
+                        "Type: " + animaltype + " |" + " Race: " + race,
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],
                   ),
-                    // ignore: missing_required_param
-                    IconButton(
-                      icon: status==true?const Icon(Icons.check_circle,color:Colors.green) : const Icon(Icons.cancel ,color:Colors.red)
-          ),     
+                  // ignore: missing_required_param
+                  IconButton(
+                      icon: status == true
+                          ? const Icon(Icons.check_circle, color: Colors.green)
+                          : const Icon(Icons.cancel, color: Colors.red)),
                 ],
               ),
             ),
           ),
         ));
   }
-
-
-
- 
 }

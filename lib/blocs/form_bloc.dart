@@ -1,8 +1,7 @@
-
 import './validation_mixin.dart';
 import 'package:rxdart/rxdart.dart';
 
-class FormBloc with ValidationMixin{
+class FormBloc with ValidationMixin {
   final _email = new BehaviorSubject<String>();
   final _password = new BehaviorSubject<String>();
 

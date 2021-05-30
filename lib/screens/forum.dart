@@ -19,7 +19,8 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
-  File _image = null,_image2=null;
+  // ignore: avoid_init_to_null
+  File _image = null;
   final picker = ImagePicker();
   final TextEditingController _questiontitleController =
       TextEditingController();
@@ -35,13 +36,12 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future getImage() async {
-    
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
 
-       // print(_image.path);
+        // print(_image.path);
       } else {
         print('No image selected.');
       }
@@ -120,7 +120,6 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Widget _buildQuestion() {
-
     return new AlertDialog(
       content: Stack(
         children: <Widget>[
@@ -140,7 +139,7 @@ class _ForumPageState extends State<ForumPage> {
                         validator: (value) {
                           if (value.length < 5 || value.isEmpty) {
                             return 'Title is to short';
-                          }else if( value.length>20){
+                          } else if (value.length > 20) {
                             return 'Title is to long';
                           }
                           return null;
@@ -165,8 +164,7 @@ class _ForumPageState extends State<ForumPage> {
                     ClipRRect(
                         child: InkWell(
                       onTap: () {
-                            getImage();
-                       
+                        getImage();
                       },
                       child: _image == null
                           ? CircleAvatar(

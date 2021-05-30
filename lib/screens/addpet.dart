@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show  base64Encode;
+import 'dart:convert' show base64Encode;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../main.dart';
@@ -15,27 +15,117 @@ class AddPetPage extends StatefulWidget {
 }
 
 class _AddPetPageState extends State<AddPetPage> {
+  // ignore: avoid_init_to_null
   File _image = null;
   final picker = ImagePicker();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _animaltypeController = TextEditingController();
-  final TextEditingController _raceController = TextEditingController();
-String animalTypeValue,raceValue,cityValue;
 
+  String animalTypeValue, raceValue, cityValue;
 
-  List animalTypeList = ["Dog", "Cat", "Turtle", "Guinea-Pig", "Hamster", "Snake", "Bird", "Other"];
+  List animalTypeList = [
+    "Dog",
+    "Cat",
+    "Turtle",
+    "Guinea-Pig",
+    "Hamster",
+    "Snake",
+    "Bird",
+    "Other"
+  ];
 
-
-  List cityList = ["Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra","Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Portalegre","Porto", "Santarém", "Setúbal", "Viana do Castelo", "Vila Real", "Viseu"];
-  Map<String, List<String>> data={'Dog': ['Labrador Retriever', 'German Shepherd','Golden Retriever','Bulldog','Beagle','French Bulldog','PitBull','Yorkshire Terrier','Poodle','Rottweiler','Boxer','Husky','Other'], 
-  'Turtle': ['Chelidae','Red-Eared Slider','Yellow-Bellied Slider','Eastern Box','Other'],
-  'Cat': ['Devon Rex', 'Abyssinian','Sphynx','Scottish Fold','American Shorthair','Maine Coon','Persian','British Shorthair','Ragdoll Cats','Exotic Shorthair','Other'], 
-  'Guinea-Pig': ['Abyssinian', 'Alpaca','American','Baldwin','Coronet','Himalayan','Other'], 
-  'Hamster': ['Syrian',  'Winter White','Campbell’s Dwarf','Roborovski','Chinese','Other'], 
-  'Snake': ['Smooth Green', 'Ringneck Snake','Rainbow Boa','Carpet Python','Corn Snake','California King','Other'], 
-  'Bird': ['Budgerigar', 'Cockatiel','Cockatoo', 'Hyacinth Macaw','Parrotlet','Green-Cheeked Conure','Hahn’s Macaw','Other'], 
-  'Other': ['N/A'], 
-
+  List cityList = [
+    "Aveiro",
+    "Beja",
+    "Braga",
+    "Bragança",
+    "Castelo Branco",
+    "Coimbra",
+    "Évora",
+    "Faro",
+    "Guarda",
+    "Leiria",
+    "Lisboa",
+    "Portalegre",
+    "Porto",
+    "Santarém",
+    "Setúbal",
+    "Viana do Castelo",
+    "Vila Real",
+    "Viseu"
+  ];
+  Map<String, List<String>> data = {
+    'Dog': [
+      'Labrador Retriever',
+      'German Shepherd',
+      'Golden Retriever',
+      'Bulldog',
+      'Beagle',
+      'French Bulldog',
+      'PitBull',
+      'Yorkshire Terrier',
+      'Poodle',
+      'Rottweiler',
+      'Boxer',
+      'Husky',
+      'Other'
+    ],
+    'Turtle': [
+      'Chelidae',
+      'Red-Eared Slider',
+      'Yellow-Bellied Slider',
+      'Eastern Box',
+      'Other'
+    ],
+    'Cat': [
+      'Devon Rex',
+      'Abyssinian',
+      'Sphynx',
+      'Scottish Fold',
+      'American Shorthair',
+      'Maine Coon',
+      'Persian',
+      'British Shorthair',
+      'Ragdoll Cats',
+      'Exotic Shorthair',
+      'Other'
+    ],
+    'Guinea-Pig': [
+      'Abyssinian',
+      'Alpaca',
+      'American',
+      'Baldwin',
+      'Coronet',
+      'Himalayan',
+      'Other'
+    ],
+    'Hamster': [
+      'Syrian',
+      'Winter White',
+      'Campbell’s Dwarf',
+      'Roborovski',
+      'Chinese',
+      'Other'
+    ],
+    'Snake': [
+      'Smooth Green',
+      'Ringneck Snake',
+      'Rainbow Boa',
+      'Carpet Python',
+      'Corn Snake',
+      'California King',
+      'Other'
+    ],
+    'Bird': [
+      'Budgerigar',
+      'Cockatiel',
+      'Cockatoo',
+      'Hyacinth Macaw',
+      'Parrotlet',
+      'Green-Cheeked Conure',
+      'Hahn’s Macaw',
+      'Other'
+    ],
+    'Other': ['N/A'],
   };
   @override
   void initState() {
@@ -62,7 +152,7 @@ String animalTypeValue,raceValue,cityValue;
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
 
-     await http.post(
+    await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
       body: convert.jsonEncode(
         <String, dynamic>{
@@ -76,7 +166,6 @@ String animalTypeValue,raceValue,cityValue;
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-   
   }
 
   @override
@@ -220,41 +309,40 @@ String animalTypeValue,raceValue,cityValue;
                             BoxShadow(color: Colors.black12, blurRadius: 5)
                           ]),
                       child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Container(
-                             
-                             
                               child: Icon(
-                                Icons.pets,
-                                color: Color(0xFF52B788),
-                                size: 25.0,
-                              )),
-                          Expanded(child:Padding(
-                            padding: EdgeInsets.only(left:15),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                isExpanded: true,
-                            focusColor: Colors.green,
-                            hint: Text("Animal Type"),
-                            value: animalTypeValue,
-                            onChanged: (newValue) {
-                              setState(() {
-                                animalTypeValue = newValue;
-                                raceValue=null;
-                              });
-                            },
-                            items: animalTypeList.map((valueType) {
-                              return DropdownMenuItem(
-                                value: valueType,
-                                child: Text(valueType),
-                              );
-                            }).toList(),
-                          ))) ,)
-                         
+                            Icons.pets,
+                            color: Color(0xFF52B788),
+                            size: 25.0,
+                          )),
+                          Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 15),
+                                child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                  isExpanded: true,
+                                  focusColor: Colors.green,
+                                  hint: Text("Animal Type"),
+                                  value: animalTypeValue,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      animalTypeValue = newValue;
+                                      raceValue = null;
+                                    });
+                                  },
+                                  items: animalTypeList.map((valueType) {
+                                    return DropdownMenuItem(
+                                      value: valueType,
+                                      child: Text(valueType),
+                                    );
+                                  }).toList(),
+                                ))),
+                          )
                         ],
                       )),
-             Container(
+                  Container(
                       width: MediaQuery.of(context).size.width / 1.2,
                       height: 45,
                       margin: EdgeInsets.only(top: 32),
@@ -267,62 +355,59 @@ String animalTypeValue,raceValue,cityValue;
                             BoxShadow(color: Colors.black12, blurRadius: 5)
                           ]),
                       child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Container(
-                             
-                             
                               child: Icon(
-                                Icons.pets,
-                                color: Color(0xFF52B788),
-                                size: 25.0,
-                              )),
-                          Expanded(child:Padding(
-                            padding: EdgeInsets.only(left:15),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                isExpanded: true,
-                            focusColor: Colors.green,
-                            hint: Text("Race"),
-                            value: raceValue,
-                            onChanged: (newValue) {
-                              setState(() {
-                                raceValue = newValue;
-                              });
-                            },
-                            items:animalTypeValue!=null? data[animalTypeValue].map((valueType) {
-                              return DropdownMenuItem(
-                                value: valueType,
-                                child: Text(valueType),
-                              );
-                            }).toList():null,
-                          ))) ,)
-                         
+                            Icons.pets,
+                            color: Color(0xFF52B788),
+                            size: 25.0,
+                          )),
+                          Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 15),
+                                child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                  isExpanded: true,
+                                  focusColor: Colors.green,
+                                  hint: Text("Race"),
+                                  value: raceValue,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      raceValue = newValue;
+                                    });
+                                  },
+                                  items: animalTypeValue != null
+                                      ? data[animalTypeValue].map((valueType) {
+                                          return DropdownMenuItem(
+                                            value: valueType,
+                                            child: Text(valueType),
+                                          );
+                                        }).toList()
+                                      : null,
+                                ))),
+                          )
                         ],
                       )),
                   Spacer(),
                   InkWell(
                     onTap: () async {
-                    
-                      
                       List<int> imgBytes = await _image.readAsBytes();
                       String base64img = base64Encode(imgBytes);
                       String prefix = "data:image/jpeg;base64,";
                       base64img = prefix + base64img;
 
-                      
-                      if( raceValue=="Other"){
-                        raceValue="N/A";
+                      if (raceValue == "Other") {
+                        raceValue = "N/A";
                       }
-                      if(animalTypeValue=="Other"){
-                        animalTypeValue="N/A";
-                        raceValue="N/A";
+                      if (animalTypeValue == "Other") {
+                        animalTypeValue = "N/A";
+                        raceValue = "N/A";
                       }
 
-                      addPet( _nameController.text, animalTypeValue,raceValue, base64img, context);
+                      addPet(_nameController.text, animalTypeValue, raceValue,
+                          base64img, context);
                       Navigator.of(context).pop();
-               
-
                     },
                     child: Container(
                       height: 45,

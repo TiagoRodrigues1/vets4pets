@@ -7,14 +7,17 @@ class AppColorsTheme {
   Color textColor;
   Color secondaryGradientColor;
 
-  AppColorsTheme({this.primarySwatch, this.titleBarGradientStartColor, this.titleBarGradientEndColor, this.textColor, this.secondaryGradientColor});
+  AppColorsTheme(
+      {this.primarySwatch,
+      this.titleBarGradientStartColor,
+      this.titleBarGradientEndColor,
+      this.textColor,
+      this.secondaryGradientColor});
 
   static final AppColorsTheme myTheme = new AppColorsTheme(
-    primarySwatch: Colors.green,
-    titleBarGradientStartColor : Colors.greenAccent,
-    titleBarGradientEndColor: Colors.green[300],
-    textColor: Colors.black,
-    secondaryGradientColor: Colors.grey[300]
-  );
-  
+      primarySwatch: Colors.green,
+      titleBarGradientStartColor: Colors.greenAccent,
+      titleBarGradientEndColor: Colors.green[300],
+      textColor: Colors.black,
+      secondaryGradientColor: Colors.grey[300]);
 }

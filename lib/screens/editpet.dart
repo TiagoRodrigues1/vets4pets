@@ -9,42 +9,112 @@ import 'dart:convert' as convert;
 import '../jwt.dart';
 
 class EditPetPage extends StatefulWidget {
-    final Map<String, dynamic> pet;
-  EditPetPage({Key key,  this.pet}) : super(key: key);
+  final Map<String, dynamic> pet;
+  EditPetPage({Key key, this.pet}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => new _EditPetPageState();
-  
 }
 
 class _EditPetPageState extends State<EditPetPage> {
+  // ignore: avoid_init_to_null
   File _image = null;
   final picker = ImagePicker();
 
-  String animalTypeValue,raceValue,cityValue;
+  String animalTypeValue, raceValue, cityValue;
 
-  List animalTypeList = ["Dog", "Cat", "Turtle", "Guinea-Pig", "Hamster", "Snake", "Bird", "Other"];
+  List animalTypeList = [
+    "Dog",
+    "Cat",
+    "Turtle",
+    "Guinea-Pig",
+    "Hamster",
+    "Snake",
+    "Bird",
+    "Other"
+  ];
 
-
-  Map<String, List<String>> data={'Dog': ['Labrador Retriever', 'German Shepherd','Golden Retriever','Bulldog','Beagle','French Bulldog','PitBull','Yorkshire Terrier','Poodle','Rottweiler','Boxer','Husky','Other'], 
-  'Turtle': ['Chelidae','Red-Eared Slider','Yellow-Bellied Slider','Eastern Box','Other'],
-  'Cat': ['Devon Rex', 'Abyssinian','Sphynx','Scottish Fold','American Shorthair','Maine Coon','Persian','British Shorthair','Ragdoll Cats','Exotic Shorthair','Other'], 
-  'Guinea-Pig': ['Abyssinian', 'Alpaca','American','Baldwin','Coronet','Himalayan','Other'], 
-  'Hamster': ['Syrian',  'Winter White','Campbell’s Dwarf','Roborovski','Chinese','Other'], 
-  'Snake': ['Smooth Green', 'Ringneck Snake','Rainbow Boa','Carpet Python','Corn Snake','California King','Other'], 
-  'Bird': ['Budgerigar', 'Cockatiel','Cockatoo', 'Hyacinth Macaw','Parrotlet','Green-Cheeked Conure','Hahn’s Macaw','Other'], 
-  'Other': ['N/A'], 
-
+  Map<String, List<String>> data = {
+    'Dog': [
+      'Labrador Retriever',
+      'German Shepherd',
+      'Golden Retriever',
+      'Bulldog',
+      'Beagle',
+      'French Bulldog',
+      'PitBull',
+      'Yorkshire Terrier',
+      'Poodle',
+      'Rottweiler',
+      'Boxer',
+      'Husky',
+      'Other'
+    ],
+    'Turtle': [
+      'Chelidae',
+      'Red-Eared Slider',
+      'Yellow-Bellied Slider',
+      'Eastern Box',
+      'Other'
+    ],
+    'Cat': [
+      'Devon Rex',
+      'Abyssinian',
+      'Sphynx',
+      'Scottish Fold',
+      'American Shorthair',
+      'Maine Coon',
+      'Persian',
+      'British Shorthair',
+      'Ragdoll Cats',
+      'Exotic Shorthair',
+      'Other'
+    ],
+    'Guinea-Pig': [
+      'Abyssinian',
+      'Alpaca',
+      'American',
+      'Baldwin',
+      'Coronet',
+      'Himalayan',
+      'Other'
+    ],
+    'Hamster': [
+      'Syrian',
+      'Winter White',
+      'Campbell’s Dwarf',
+      'Roborovski',
+      'Chinese',
+      'Other'
+    ],
+    'Snake': [
+      'Smooth Green',
+      'Ringneck Snake',
+      'Rainbow Boa',
+      'Carpet Python',
+      'Corn Snake',
+      'California King',
+      'Other'
+    ],
+    'Bird': [
+      'Budgerigar',
+      'Cockatiel',
+      'Cockatoo',
+      'Hyacinth Macaw',
+      'Parrotlet',
+      'Green-Cheeked Conure',
+      'Hahn’s Macaw',
+      'Other'
+    ],
+    'Other': ['N/A'],
   };
 
   @override
   void initState() {
-    animalTypeValue=widget.pet['animaltype'];
-    raceValue=widget.pet['race'];
+    animalTypeValue = widget.pet['animaltype'];
+    raceValue = widget.pet['race'];
     super.initState();
   }
-
-
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -62,13 +132,12 @@ class _EditPetPageState extends State<EditPetPage> {
 
   editPet(String name, String animaltype, String race, String picture,
       BuildContext context) async {
-   print(name);
-    int id=widget.pet['ID'];
+    print(name);
+    int id = widget.pet['ID'];
     var jwt = await storage.read(key: "jwt");
-      var results = parseJwtPayLoad(jwt);
- 
+    var results = parseJwtPayLoad(jwt);
+
     int id_user = results["UserID"];
-    
 
     var response = await http.put(
       Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
@@ -84,17 +153,15 @@ class _EditPetPageState extends State<EditPetPage> {
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-   print(response.body);
+    print(response.body);
   }
 
   @override
   Widget build(BuildContext context) {
-     
-      final TextEditingController _nameController = TextEditingController( text:widget.pet['name']);
-  final TextEditingController _animaltypeController = TextEditingController(text:widget.pet['animaltype']);
-  final TextEditingController _raceController = TextEditingController(text:widget.pet['race']);
+    final TextEditingController _nameController =
+        TextEditingController(text: widget.pet['name']);
 
-  String profileUrl = widget.pet['picture'];
+    String profileUrl = widget.pet['picture'];
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);
     return Scaffold(
@@ -157,8 +224,12 @@ class _EditPetPageState extends State<EditPetPage> {
                                           ),
                                         ),
                                         radius: 50.0,
-                                        backgroundImage: widget.pet["picture"]==null? AssetImage(
-                                            "assets/images/petdefault.jpg"):MemoryImage(bytes),
+                                        backgroundImage: widget
+                                                    .pet["picture"] ==
+                                                null
+                                            ? AssetImage(
+                                                "assets/images/petdefault.jpg")
+                                            : MemoryImage(bytes),
                                       )
                                     : CircleAvatar(
                                         child: Align(
@@ -212,7 +283,6 @@ class _EditPetPageState extends State<EditPetPage> {
                           BoxShadow(color: Colors.black12, blurRadius: 5)
                         ]),
                     child: TextField(
-                      
                       controller: _nameController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -224,7 +294,7 @@ class _EditPetPageState extends State<EditPetPage> {
                       ),
                     ),
                   ),
-                   Container(
+                  Container(
                       width: MediaQuery.of(context).size.width / 1.2,
                       height: 45,
                       margin: EdgeInsets.only(top: 32),
@@ -237,41 +307,40 @@ class _EditPetPageState extends State<EditPetPage> {
                             BoxShadow(color: Colors.black12, blurRadius: 5)
                           ]),
                       child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Container(
-                             
-                             
                               child: Icon(
-                                Icons.pets,
-                                color: Color(0xFF52B788),
-                                size: 25.0,
-                              )),
-                          Expanded(child:Padding(
-                            padding: EdgeInsets.only(left:15),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                isExpanded: true,
-                            focusColor: Colors.green,
-                            hint: Text("Animal Type"),
-                            value: animalTypeValue,
-                            onChanged: (newValue) {
-                              setState(() {
-                                animalTypeValue = newValue;
-                                raceValue=null;
-                              });
-                            },
-                            items: animalTypeList.map((valueType) {
-                              return DropdownMenuItem(
-                                value: valueType,
-                                child: Text(valueType),
-                              );
-                            }).toList(),
-                          ))) ,)
-                         
+                            Icons.pets,
+                            color: Color(0xFF52B788),
+                            size: 25.0,
+                          )),
+                          Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 15),
+                                child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                  isExpanded: true,
+                                  focusColor: Colors.green,
+                                  hint: Text("Animal Type"),
+                                  value: animalTypeValue,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      animalTypeValue = newValue;
+                                      raceValue = null;
+                                    });
+                                  },
+                                  items: animalTypeList.map((valueType) {
+                                    return DropdownMenuItem(
+                                      value: valueType,
+                                      child: Text(valueType),
+                                    );
+                                  }).toList(),
+                                ))),
+                          )
                         ],
                       )),
-               Container(
+                  Container(
                       width: MediaQuery.of(context).size.width / 1.2,
                       height: 45,
                       margin: EdgeInsets.only(top: 32),
@@ -284,70 +353,64 @@ class _EditPetPageState extends State<EditPetPage> {
                             BoxShadow(color: Colors.black12, blurRadius: 5)
                           ]),
                       child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Container(
-                             
-                             
                               child: Icon(
-                                Icons.pets,
-                                color: Color(0xFF52B788),
-                                size: 25.0,
-                              )),
-                          Expanded(child:Padding(
-                            padding: EdgeInsets.only(left:15),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                isExpanded: true,
-                            focusColor: Colors.green,
-                            hint: Text("Race"),
-                            value: raceValue,
-                            onChanged: (newValue) {
-                              setState(() {
-                                raceValue = newValue;
-                              });
-                            },
-                            items:animalTypeValue!=null? data[animalTypeValue].map((valueType) {
-                              return DropdownMenuItem(
-                                value: valueType,
-                                child: Text(valueType),
-                              );
-                            }).toList():null,
-                          ))) ,)
-                         
+                            Icons.pets,
+                            color: Color(0xFF52B788),
+                            size: 25.0,
+                          )),
+                          Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 15),
+                                child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                  isExpanded: true,
+                                  focusColor: Colors.green,
+                                  hint: Text("Race"),
+                                  value: raceValue,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      raceValue = newValue;
+                                    });
+                                  },
+                                  items: animalTypeValue != null
+                                      ? data[animalTypeValue].map((valueType) {
+                                          return DropdownMenuItem(
+                                            value: valueType,
+                                            child: Text(valueType),
+                                          );
+                                        }).toList()
+                                      : null,
+                                ))),
+                          )
                         ],
                       )),
                   Spacer(),
                   InkWell(
                     onTap: () async {
                       var name = _nameController.text;
-                      var animaltype = _animaltypeController.text;
-                      var race = _raceController.text;
 
-
-                       if( raceValue=="Other"){
-                        raceValue="N/A";
+                      if (raceValue == "Other") {
+                        raceValue = "N/A";
                       }
-                      if(animalTypeValue=="Other"){
-                        animalTypeValue="N/A";
-                        raceValue="N/A";
+                      if (animalTypeValue == "Other") {
+                        animalTypeValue = "N/A";
+                        raceValue = "N/A";
                       }
 
+                      if (_image != null) {
+                        List<int> imgBytes = await _image.readAsBytes();
+                        String base64img = base64Encode(imgBytes);
+                        String prefix = "data:image/jpeg;base64,";
+                        base64img = prefix + base64img;
 
-                      if(_image!=null){
-                      List<int> imgBytes = await _image.readAsBytes();
-                      String base64img = base64Encode(imgBytes);
-                      String prefix = "data:image/jpeg;base64,";
-                      base64img = prefix + base64img;
-
-
-
-                      editPet(name, animalTypeValue, raceValue, base64img, context);
-                      
-                      }else{
-                      
-                      editPet(name,animalTypeValue, raceValue, widget.pet['picture'], context);
-
+                        editPet(name, animalTypeValue, raceValue, base64img,
+                            context);
+                      } else {
+                        editPet(name, animalTypeValue, raceValue,
+                            widget.pet['picture'], context);
                       }
                       Navigator.of(context).pop();
                     },
