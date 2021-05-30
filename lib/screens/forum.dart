@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:Vets4Pets/screens/forumdetail.dart';
 import 'package:image_picker/image_picker.dart';
 import '../jwt.dart';
-import 'colors.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -275,7 +274,7 @@ Widget entryItem(context, item) {
       padding: const EdgeInsets.all(3.0),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       decoration: new BoxDecoration(
-        color: AppColorsTheme.myTheme.secondaryGradientColor,
+       
         borderRadius: new BorderRadius.all(new Radius.circular(15.0)),
       ),
       child: new ListTile(
