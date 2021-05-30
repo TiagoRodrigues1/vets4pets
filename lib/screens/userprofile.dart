@@ -1,16 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'userappointments.dart';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show base64, base64Encode;
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import '../main.dart';
 import 'dart:convert' as convert;
 import '../jwt.dart';
@@ -32,11 +27,13 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
+  // ignore: avoid_init_to_null
   File _image = null;
+  // ignore: avoid_init_to_null
   String picture = null;
-   String picture2 = null;
-   bool button=false;
-   
+
+  bool button = false;
+
   final picker = ImagePicker();
 
   @override
@@ -46,14 +43,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   loadPicture() async {
-
-
     picture = await storage.read(key: 'profilePicture');
-    
-     setState(() {
-     
-      });
-    
+
+    setState(() {});
+
     print(picture);
   }
 
@@ -89,7 +82,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("My profile"),
-        actions: button==true
+        actions: button == true
             ? <Widget>[
                 IconButton(
                   icon: const Icon(Icons.save),
@@ -100,12 +93,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     String base64img = base64Encode(imgBytes);
                     String prefix = "data:image/jpeg;base64,";
                     base64img = prefix + base64img;
-                   await editUserPicture(base64img);
-                    
-     setState(() {
-     //_image=null;
-    button=false;
-      });
+                    await editUserPicture(base64img);
+
+                    setState(() {
+                      //_image=null;
+                      button = false;
+                    });
                   },
                 ),
               ]
@@ -117,11 +110,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget getBody() {
     Size screenSize = MediaQuery.of(context).size;
-     // print("mano" + picture);
-    if ( picture == null) {
+
+    if (picture == null) {
       return Center(child: CircularProgressIndicator());
     }
-    
+
     return Stack(
       children: <Widget>[
         _buildCoverImage(screenSize),
@@ -167,7 +160,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        button=true;
+        button = true;
         print(_image.path);
       } else {
         print('No image selected.');
@@ -178,7 +171,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget _buildProfileImage() {
     Uint8List bytes;
     print(picture);
-    if (picture != null) {
+    if (picture != "") {
       String profileUrl = picture;
       profileUrl = profileUrl.substring(23, profileUrl.length);
       bytes = base64.decode(profileUrl);
@@ -211,7 +204,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               ),
                             ),
                             radius: 50.0,
-                            backgroundImage: picture != null
+                            backgroundImage: picture != ""
                                 ? MemoryImage(bytes)
                                 : AssetImage("assets/images/defaultuser.jpg"),
                           )
@@ -342,8 +335,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
     );
   }
-
-
 
   Widget _buildButtons(context) {
     return Padding(

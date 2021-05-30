@@ -5,7 +5,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../main.dart';
-import 'dart:convert' show  json;
+import 'dart:convert' show json;
 import 'dart:convert' as convert;
 import 'showpic.dart';
 
@@ -246,57 +246,55 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                     bottomLeft: const Radius.circular(20.0),
                     bottomRight: const Radius.circular(20.0))),
             child: Align(
-            alignment: Alignment.centerLeft,
-
+              alignment: Alignment.centerLeft,
               child: Container(
-                child: Column(children: <Widget>[
-              Text(widget.question['question']),
-              widget.question['attachement'] != ""
-                  ? Row(children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PhotoPage(
-                                    image: widget.question['attachement'])),
-                          );
-                        },
-                        child: Container(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "Photo",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
+                  child: Column(children: <Widget>[
+                Text(widget.question['question']),
+                widget.question['attachement'] != ""
+                    ? Row(children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PhotoPage(
+                                      image: widget.question['attachement'])),
+                            );
+                          },
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "Photo",
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    ])
-                  : Text(""),
-              Row(children: <Widget>[
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: Text("Posted on: " + outputDate),
-                ),
-                Spacer(),
-                Container(
-                  child: IconButton(
-                    icon: const Icon(Icons.question_answer_outlined),
-                    color: Colors.green[300],
-                    tooltip: 'Answer this question',
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => _buildAnswer(),
-                      );
-                    },
+                        )
+                      ])
+                    : Text(""),
+                Row(children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: Text("Posted on: " + outputDate),
                   ),
-                ),
-              ])
-            ])),
+                  Spacer(),
+                  Container(
+                    child: IconButton(
+                      icon: const Icon(Icons.question_answer_outlined),
+                      color: Colors.green[300],
+                      tooltip: 'Answer this question',
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => _buildAnswer(),
+                        );
+                      },
+                    ),
+                  ),
+                ])
+              ])),
             ),
-           
           ),
         ],
       ),
@@ -416,65 +414,57 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       content: Stack(
         children: <Widget>[
           Container(
-           
             width: 400,
-            child:         Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: TextFormField(
-                    validator: (value) {
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        validator: (value) {
                           if (value.length < 10 || value.isEmpty) {
                             return 'Answer is to short';
                           }
                           return null;
                         },
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(labelText: "Answer"),
-                      controller: _answerController,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextButton(
-                      child: Text("Submit"),
-                      style: TextButton.styleFrom(
-                        primary: Colors.green[300],
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration(labelText: "Answer"),
+                        controller: _answerController,
                       ),
-                      onPressed: () async {
-if (_formKey.currentState.validate()) {
-
-
-                        var answer = _answerController.text;
-
-                        addAnswer(answer, widget.question['ID'], "");
-                        Navigator.of(context).pop();
-                         await Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForumDetailPage(
-                                    question: widget.question,
-                                  )),
-                        );
-
-
-}
-                      },
                     ),
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton(
+                        child: Text("Submit"),
+                        style: TextButton.styleFrom(
+                          primary: Colors.green[300],
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            var answer = _answerController.text;
+
+                            addAnswer(answer, widget.question['ID'], "");
+                            Navigator.of(context).pop();
+                            await Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ForumDetailPage(
+                                        question: widget.question,
+                                      )),
+                            );
+                          }
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          
-          
           )
-  
         ],
       ),
     );

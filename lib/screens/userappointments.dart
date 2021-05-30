@@ -11,11 +11,8 @@ import 'package:flutter/cupertino.dart';
 
 List appointments = [];
 
-
-
 class UserAppointments extends StatefulWidget {
-
-  UserAppointments({Key key,  this.title}) : super(key: key);
+  UserAppointments({Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -132,6 +129,8 @@ class _UserAppointmentsState extends State<UserAppointments> {
           itemBuilder: (context, index) {
             return getCardHour(selectedEvents[selectedDay][index]);
           });
+    } else {
+      return Container();
     }
   }
 
@@ -157,8 +156,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
   }
 
   Widget getCalender() {
-    // _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
-
+    // ignore: non_constant_identifier_names
     var now_date = DateTime.now();
 
     return Column(

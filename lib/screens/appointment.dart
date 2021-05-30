@@ -11,9 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert' as convert;
 
-
 List appointments = [];
-
 
 class AppointmentPage extends StatefulWidget {
   final Map<String, dynamic> clinic;
@@ -82,8 +80,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
   List pets = [];
   List vets = [];
 
+  // ignore: avoid_init_to_null
   Map<String, dynamic> selectedPet = null;
+  // ignore: avoid_init_to_null
   Map<String, dynamic> selectedVet = null;
+  // ignore: avoid_init_to_null
   Event selectedHour = null;
 
   bool isLoading = false;
@@ -418,7 +419,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   Widget _buildSlots() {
     if (selectedSlots[selectedDay] == null ||
         selectedSlots[selectedDay].length == 0) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: Container());
     } else {
       return ListView.builder(
           scrollDirection: Axis.vertical,
@@ -613,10 +614,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
           slots.add(element);
         }
       });
-    
+
       selectedSlots[date] = slots;
     } else {
-     
       selectedSlots[date] = horas;
     }
   }

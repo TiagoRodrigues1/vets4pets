@@ -6,9 +6,8 @@ import 'package:http/http.dart' as http;
 import 'leftside_menu.dart';
 import '../main.dart';
 
-
 class LoginPage extends StatelessWidget {
-  int state=0;
+  int state = 0;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -18,7 +17,8 @@ class LoginPage extends StatelessWidget {
             AlertDialog(title: Text(title), content: Text(text)),
       );
 
- Future <int> attemptLogIn(String email, String password, BuildContext context) async {
+  Future<int> attemptLogIn(
+      String email, String password, BuildContext context) async {
     var response = await http.post(
         Uri.parse('http://52.47.179.213:8081/api/v1/auth/login'),
         body: convert.jsonEncode(
@@ -27,30 +27,29 @@ class LoginPage extends StatelessWidget {
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       if (jsonResponse != null) {
-       state=1;
-        var token=json.decode(response.body)['token'];
-       
-        var profilePicture=json.decode(response.body)['profilePicture'];
+        state = 1;
+        var token = json.decode(response.body)['token'];
+
+        var profilePicture = json.decode(response.body)['profilePicture'];
 
         await storage.write(key: 'jwt', value: token);
         await storage.write(key: 'profilePicture', value: profilePicture);
-        
       }
       return 1;
     } else {
-      state=0;
+      state = 0;
       print("Incorrect");
-     return 0;
+      return 0;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Log In"),
-        ),
-        body: Container(
+      appBar: AppBar(
+        title: Text("Log In"),
+      ),
+      body: Container(
         child: ListView(
           children: <Widget>[
             Container(
@@ -86,20 +85,17 @@ class LoginPage extends StatelessWidget {
                         alignment: Alignment.topCenter,
                         child: SizedBox(
                           child: CircleAvatar(
-                              radius: 55.0,
-                              
-                               
-                                     child:CircleAvatar(
-                                        child: Align(
-                                          alignment: Alignment.bottomRight,
-                                         
-                                        ),
-                                        radius: 50.0,
-                                        backgroundImage: AssetImage(
-                                            "assets/images/icon.png"),
-                                      ),
-                                    backgroundColor: Colors.white,
+                            radius: 55.0,
+                            child: CircleAvatar(
+                              child: Align(
+                                alignment: Alignment.bottomRight,
                               ),
+                              radius: 50.0,
+                              backgroundImage:
+                                  AssetImage("assets/images/icon.png"),
+                            ),
+                            backgroundColor: Colors.white,
+                          ),
                         )),
                   ])),
                   Spacer(),
@@ -122,64 +118,49 @@ class LoginPage extends StatelessWidget {
               padding: EdgeInsets.only(top: 62),
               child: Column(
                 children: <Widget>[
-             Container(
-                    width: MediaQuery.of(context).size.width/1.2,
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.2,
                     height: 45,
-                    padding: EdgeInsets.only(
-                      top: 4,left: 16, right: 16, bottom: 4
-                    ),
+                    padding:
+                        EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50)
-                      ),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 5
-                        )
-                      ]
-                    ),
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(color: Colors.black12, blurRadius: 5)
+                        ]),
                     child: TextField(
-                        controller: _usernameController,
+                      controller: _usernameController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        icon: Icon(Icons.email,
-                              color: Color(0xFF52B788),
+                        icon: Icon(
+                          Icons.email,
+                          color: Color(0xFF52B788),
                         ),
-                          hintText: 'Email',
+                        hintText: 'Email',
                       ),
                     ),
                   ),
-          
-                 Container(
-                    width: MediaQuery.of(context).size.width/1.2,
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.2,
                     height: 45,
                     margin: EdgeInsets.only(top: 32),
-                    padding: EdgeInsets.only(
-                        top: 4,left: 16, right: 16, bottom: 4
-                    ),
+                    padding:
+                        EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(50)
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
                         color: Colors.white,
                         boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 5
-                          )
-                        ]
-                    ),
+                          BoxShadow(color: Colors.black12, blurRadius: 5)
+                        ]),
                     child: TextField(
-                       controller: _passwordController,
-                       obscureText:true,
+                      controller: _passwordController,
+                      obscureText: true,
                       decoration: InputDecoration(
-                                             
-
                         border: InputBorder.none,
-                        icon: Icon(Icons.vpn_key,
-                          color:    Color(0xFF52B788),
+                        icon: Icon(
+                          Icons.vpn_key,
+                          color: Color(0xFF52B788),
                         ),
                         hintText: 'Password',
                       ),
@@ -188,102 +169,85 @@ class LoginPage extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 16, right: 32
-                      ),
-                      child: Text('Forgot Password ?',
-                        style: TextStyle(
-                          color: Colors.grey
-                        ),
+                      padding: const EdgeInsets.only(top: 16, right: 32),
+                      child: Text(
+                        'Forgot Password ?',
+                        style: TextStyle(color: Colors.grey),
                       ),
                     ),
                   ),
                   Spacer(),
                   InkWell(
                     onTap: () async {
-                 
                       var username = _usernameController.text;
-                    var password = _passwordController.text;
-                   await attemptLogIn(username, password, context);
-                  
-                    if(state==0){
+                      var password = _passwordController.text;
+                      await attemptLogIn(username, password, context);
+
+                      if (state == 0) {
                         showDialog(
-                        context: context,
-                        builder: (BuildContext context) => _showDialog(context),
-                      );
-
-                    }else{
+                          context: context,
+                          builder: (BuildContext context) =>
+                              _showDialog(context),
+                        );
+                      } else {
                         Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => NavDrawer()),
-        );
-                    }
-                     
-                     
+                          context,
+                          MaterialPageRoute(builder: (context) => NavDrawer()),
+                        );
+                      }
                     },
-                    child:Container(
-                    height: 45,
-                    width: MediaQuery.of(context).size.width/1.2,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFF52B788),
+                    child: Container(
+                      height: 45,
+                      width: MediaQuery.of(context).size.width / 1.2,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
                               Color(0xFF52B788),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50)
-                      )
-                    ),
-                    child: Center(
-                      child: Text('Login'.toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                    
-                    ),
-                  ),
-                  Column(children: [
-                            Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 16, right: 32
-                      ),
-                      child: Text('    Dont have a account?',
-                        style: TextStyle(
-                          color: Colors.grey
+                              Color(0xFF52B788),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                      child: Center(
+                        child: Text(
+                          'Login'.toUpperCase(),
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap:(){
-                      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RegisterPage()),
-        );
-                    },
-                    child:Align(
-                    
-                    alignment: Alignment.topCenter,
-                      child: Text('Sign up now',
-                        style: TextStyle(
-                           decoration: TextDecoration.underline,
-                          color: Colors.green[300]
+                  Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16, right: 32),
+                          child: Text(
+                            '    Dont have a account?',
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ),
                       ),
-                    ),
-                  
-                  ),
-
-                   
-              
-                  ],)
-                         
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPage()),
+                          );
+                        },
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(
+                            'Sign up now',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.green[300]),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -292,18 +256,24 @@ class LoginPage extends StatelessWidget {
             ),
           ],
         ),
-      ),);
+      ),
+    );
   }
 
   Widget _showDialog(context) {
     return AlertDialog(
-      title: new Text("Error",textAlign: TextAlign.center,  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
-      content: new Text("Wrong password or email!",textAlign: TextAlign.center),
+      title: new Text(
+        "Error",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+      ),
+      content:
+          new Text("Wrong password or email!", textAlign: TextAlign.center),
       actions: <Widget>[
         new TextButton(
           child: new Text("Close"),
           onPressed: () {
-             Navigator.of(context).pop();
+            Navigator.of(context).pop();
           },
         ),
       ],

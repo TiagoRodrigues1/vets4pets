@@ -1,7 +1,7 @@
 import 'form_bloc.dart';
 import 'package:flutter/material.dart';
 
-class FormProvider extends InheritedWidget{
+class FormProvider extends InheritedWidget {
   final bloc = FormBloc();
 
   FormProvider({Key key, Widget child}) : super(key: key, child: child);

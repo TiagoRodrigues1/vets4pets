@@ -30,20 +30,18 @@ class _IndexPageState extends State<MyAdoptionsPage> {
 
   getAdoptions() async {
     var jwt = await storage.read(key: "jwt");
-    
 
     var response = await http.get(
       Uri.parse('http://52.47.179.213:8081/api/v1/adoption/1'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-   
+
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         adoptions = items;
         isLoading = false;
       });
-    
     } else {
       adoptions = [];
       isLoading = false;
@@ -101,7 +99,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
             icon: const Icon(Icons.add),
             tooltip: 'New Adoption',
             onPressed: () {
-               showDialog(
+              showDialog(
                 context: context,
                 builder: (BuildContext context) => AddAdoptionPage(),
               );
@@ -193,32 +191,35 @@ class _IndexPageState extends State<MyAdoptionsPage> {
         ));
   }
 
-
   Widget _showDialog(int id) {
     return AlertDialog(
-      title: new Text("Delete adoption",textAlign: TextAlign.center,),
-      content: new Text("Are you sure that you want to delete this adoption?",textAlign: TextAlign.center),
+      title: new Text(
+        "Delete adoption",
+        textAlign: TextAlign.center,
+      ),
+      content: new Text("Are you sure that you want to delete this adoption?",
+          textAlign: TextAlign.center),
       actions: <Widget>[
         new TextButton(
           child: new Text("No"),
           onPressed: () {
-             Navigator.of(context).pop();
+            Navigator.of(context).pop();
           },
         ),
         Padding(
-          padding:const EdgeInsets.only(left:178),
+          padding: const EdgeInsets.only(left: 178),
           child: TextButton(
-             style: TextButton.styleFrom(
-                      primary: Colors.red,
-                    ),
+            style: TextButton.styleFrom(
+              primary: Colors.red,
+            ),
             child: new Text("Yes"),
             onPressed: () {
               deleteAdoption(id);
-            Navigator.of(context).pop();
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => MyAdoptionsPage()),
-                (Route<dynamic> route) => false); 
+              Navigator.of(context).pop();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => MyAdoptionsPage()),
+                  (Route<dynamic> route) => false);
             },
           ),
         ),

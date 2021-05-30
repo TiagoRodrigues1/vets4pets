@@ -53,7 +53,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
     }
   }
 
-    getHistory(int id) async {
+  getHistory(int id) async {
     var jwt = await storage.read(key: "jwt");
 
     var response = await http.get(
@@ -63,12 +63,8 @@ class _PetsInfoState extends State<PetsInfoPage> {
     print(response.body);
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
-      setState(() {
-       
-      });
-    } else {
-     
-    }
+      setState(() {});
+    } else {}
   }
 
   Widget build(BuildContext context) {
@@ -85,24 +81,26 @@ class _PetsInfoState extends State<PetsInfoPage> {
         ),
         title: Text("Information about " + widget.animal['name']),
       ),
-      body:  
-      Column(
+      body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           Text("Vaccines"),
           SingleChildScrollView(
-          child:Container(
-             height: MediaQuery.of(context).size.height/2.9,
-            child: getBody(),
-          ),),
-          SizedBox(height: 10,),
-            Text("Medical History"),
-              SingleChildScrollView(
-          child:Container(
-            
-               height: MediaQuery.of(context).size.height/2.3,
-            child: getBody(),
-          ),)
+            child: Container(
+              height: MediaQuery.of(context).size.height / 2.9,
+              child: getBody(),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text("Medical History"),
+          SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height / 2.3,
+              child: getBody(),
+            ),
+          )
         ],
       ),
     );
@@ -113,7 +111,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
       return Center(child: CircularProgressIndicator());
     } else {
       return ListView.builder(
-         scrollDirection: Axis.vertical,
+          scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemCount: vaccines.length,
           itemBuilder: (context, index) {
