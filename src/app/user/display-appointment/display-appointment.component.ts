@@ -40,7 +40,7 @@ export class DisplayAppointmentComponent implements OnInit,AfterViewInit {
     this.accountService.getAppointmentsUser(this.val.getUserId()).subscribe(
       (response: Appointment[]) => {
       this.app = response['data'];      
-      this.app.forEach(appoitment => this.eventstest.push({start:appoitment.date,title:"Appointment",allday:false,id:appoitment.AnimalID})); // precisar de passar a endDate depois
+      this.app.forEach(appoitment => this.eventstest.push({start:appoitment.date,title:"Doctors Appointment",allday:false,id:appoitment.AnimalID})); // precisar de passar a endDate depois
       this.calendarOptions = {
       initialView: 'dayGridMonth',
       height: '850px',
@@ -48,9 +48,9 @@ export class DisplayAppointmentComponent implements OnInit,AfterViewInit {
       events: this.eventstest,
       eventColor:'#52b788',
       headerToolbar: {
-        left : 'prev,next today',
+        left : 'prev next today',
         center :'title',
-        right: 'dayGridMonth, dayGridWeek, dayGridDay,listWeek'
+        right: 'dayGridMonth dayGridWeek dayGridDay'
       },
       views: {
         timeGrid:{

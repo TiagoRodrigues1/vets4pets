@@ -56,7 +56,7 @@ export class AddPetComponent implements OnInit {
 
     {race: 'Devon Rex',viewValue : 'Devon Rex',key:'Cat'},
     {race: 'Abyssinian',viewValue : 'Abyssinian',key:'Cat'},
-    {race: 'Sphynx',viewValue : 'Sphynx ',key:'Cat'},
+    {race: 'Sphynx',viewValue : 'Sphynx',key:'Cat'},
     {race: 'Scottish Fold',viewValue : 'Scottish Fold',key:'Cat'},
     {race: 'American Shorthair',viewValue : 'American Shorthair',key:'Cat'},
     {race: 'Maine Coon',viewValue : 'Maine Coon',key:'Cat'},
@@ -161,7 +161,6 @@ fileChangeEvent(fileInput) {
                 image.onload = rs => {
                     const img_height = rs.currentTarget['height'];
                     const img_width = rs.currentTarget['width'];
-                    console.log(img_height, img_width);
                     if (img_height > max_height && img_width > max_width) {
                         this.imageError =
                             'Maximum dimentions allowed ' +

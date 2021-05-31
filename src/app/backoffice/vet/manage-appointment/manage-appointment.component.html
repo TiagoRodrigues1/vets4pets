@@ -9,7 +9,7 @@
             <mat-label style = "font-size:18px">Title</mat-label>
             <p>{{displayData.title}}</p>
             <tr> 
-            <div style = "display: inline-block;vertical-align: top;float:right;position:relative;left:65%;bottom:50px">
+            <div style = "vertical-align: top;float:right;position:relative;left:65%;bottom:50px">
               <div *ngIf = "pet?.profilePicture; else default">
               <img src = "{{pet.profilePicture}}" style="width:160px;height:140px;border:2px solid #52b788;">
             </div>
@@ -38,9 +38,15 @@
               </mat-form-field>
           </div> 
           <p *ngIf = "error" style ="color:red;font-size:medium;">{{error}}</p>
-        <div mat-dialog-actions>
+        <div mat-dialog-actions >
           <button mat-button type="submit" >SUBMIT</button>
           <button mat-button class="close" (click) ="onNoClick()">CLOSE</button>   
+          <div *ngIf = "selected" style = "padding-left: 2%;">
+          <button mat-button (click) = "openAddVaccine()">VACCINES</button>
+        </div>
+        <div *ngIf = "selected" style = "padding-left: 1%;">
+          <button mat-button (click) = "openAddPrescription()">PRESC</button>
+        </div>
       </div>
       </form>  
 </div>

@@ -36,12 +36,23 @@ export class VetComponent implements OnInit {
     this.accountService.getAppointmentByVet(this.val.getUserId()).subscribe(
       (response: Appointment[]) => {
       this.app = response['data'];      
-      this.app.forEach(appoitment => this.eventstest.push({start:appoitment.date,title:"Consulta",allday:false,extendedProps: {appointment:appoitment}})); // precisar de passar a endDate depois
+      this.app.forEach(appoitment => this.eventstest.push({start:appoitment.date,title:"Appointment",allday:false,extendedProps: {appointment:appoitment}})); // precisar de passar a endDate depois
       this.calendarOptions = {
       initialView: 'dayGridMonth',
       height: '850px',
+      dayMaxEventRows:true,
       events: this.eventstest,
       eventColor:'#52b788',
+      headerToolbar: {
+        left : 'prev next today',
+        center :'title',
+        right: 'dayGridMonth dayGridWeek dayGridDay'
+      },
+      views: {
+        timeGrid: {
+          dayMaxEventRows:6,
+        }
+      },
       eventClick:this.eventClick.bind(this),
       eventTimeFormat: {
         hour: '2-digit',

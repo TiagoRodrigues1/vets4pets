@@ -37,6 +37,7 @@ export class UserProfileComponent implements OnInit {
       const userString =  JSON.parse(this.payload);
       this.user = userString;
       this.user.profilePicture = this.userAux.profilePicture;
+      this.user.userType = this.userAux.userType;
       this.user.token = this.userAux.token;
       this.userAux = null;
    }
@@ -109,8 +110,7 @@ export class UserProfileComponent implements OnInit {
                           this.accountService.editUser(this.val.getUserId(),this.user).subscribe();
                           
                           localStorage.setItem('user',JSON.stringify(this.user));
-                          
-                          window.location.reload();
+                          //window.location.reload();
                       }
                   };
               };

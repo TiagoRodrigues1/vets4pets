@@ -4,4 +4,5 @@ export class Vaccines {
     dateTaken:Date;
     validity:Date;
     vaccineName:String;
+    AnimalID:Number;
 }

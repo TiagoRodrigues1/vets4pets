@@ -1,6 +1,6 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,9 +10,7 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule} from '@angular/material/form-field';
-import { MenuModule } from '@syncfusion/ej2-angular-navigations';
-import { SidebarModule } from '@syncfusion/ej2-angular-navigations';
-import { TreeViewModule } from '@syncfusion/ej2-angular-navigations';
+
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatToolbarModule} from '@angular/material/toolbar';
 import { MatIconModule} from '@angular/material/icon';
@@ -34,8 +32,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { ClinicComponent } from './clinics/clinic/clinic.component';
 import { ClinicProfileComponent } from './clinics/clinic-profile/clinic-profile.component';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DatePickerModule, DateTimePickerModule, TimePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { ChoosePetComponent } from './clinics/choose-pet/choose-pet.component';
 import { MatSortModule } from "@angular/material/sort";
 import { MatPaginatorModule } from "@angular/material/paginator";
@@ -65,6 +61,12 @@ import { AddVetClinicComponent } from './backoffice/admin/add-vet-clinic/add-vet
 import { RemoveVetClinicComponent } from './backoffice/admin/remove-vet-clinic/remove-vet-clinic.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatStepperModule} from '@angular/material/stepper';
+import { AddVaccineComponent } from './backoffice/vet/add-vaccine/add-vaccine.component';
+import { AppMaterialElevationDirective } from './clinics/clinic/app-material-elevation.directive';
+import { AddadoptionComponent } from './adoptions/addadoption/addadoption.component';
+import { DisplayadoptionComponent } from './adoptions/displayadoption/displayadoption.component';
+import { LastadoptionsComponent } from './adoptions/lastadoptions/lastadoptions.component';
+import { MyadoptionsComponent } from './adoptions/myadoptions/myadoptions.component';
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
   interactionPlugin
@@ -97,7 +99,13 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     PipeVaccinePipe,
     NotFoundComponent,
     AddVetClinicComponent,
-    RemoveVetClinicComponent
+    RemoveVetClinicComponent,
+    AddVaccineComponent,
+    AppMaterialElevationDirective,
+    AddadoptionComponent,
+    DisplayadoptionComponent,
+    LastadoptionsComponent,
+    MyadoptionsComponent
   ],
   imports: [
     BrowserModule,
@@ -106,9 +114,6 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     ReactiveFormsModule,
     MatFormFieldModule,
     BrowserAnimationsModule,
-    MenuModule,
-    SidebarModule,
-    TreeViewModule,
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
@@ -124,18 +129,15 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     MatSelectModule,
     MatRadioModule,
     MatNativeDateModule,
-    DateTimePickerModule,
-    DateRangePickerModule,
     MatPaginatorModule, 
     MatProgressSpinnerModule, 
     MatSortModule, 
     MatTableModule,
-    TimePickerModule,
-    DatePickerModule,
     NgbModule,
     FullCalendarModule,
     MatTooltipModule,
     MatStepperModule,
+    FormsModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

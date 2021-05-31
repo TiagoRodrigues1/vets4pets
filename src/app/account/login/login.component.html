@@ -3,7 +3,7 @@
   <mat-card fxFlex = "50">
       <mat-toolbar>Login Page</mat-toolbar>
       <form fxLayoutAlign = "stretch" fxLayout = "column" class = "login-form" [formGroup] = "form" (ngSubmit) = "onSubmit()">
-          <mat-form-field>
+          <mat-form-field appearance="legacy">
             <input matInput placeholder = "Email" formControlName = "email" type = "email" ngModel email >
           </mat-form-field>
           <div *ngIf="(f.email.touched || f.email.dirty) && f.email.errors">

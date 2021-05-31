@@ -68,3 +68,9 @@
 ::ng-deep.fc-event-title {
   cursor:pointer;
 }
+
+:ng-deep.a {
+  color:black;
+  text-decoration: none;
+  background-color: transparent;
+}

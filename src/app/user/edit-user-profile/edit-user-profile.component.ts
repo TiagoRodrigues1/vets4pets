@@ -47,7 +47,6 @@ export class EditUserProfileComponent implements OnInit {
     this.form = this.formBuilder.group({
        name: ['',Validators.required],
        contact: ['',[Validators.required,Validators.pattern(this.phoneRegex)]],
-       gender: ['',Validators.required],
       });
      this.form.get('name').setValue(this.user.name);
      this.form.get('contact').setValue(this.user.contact);

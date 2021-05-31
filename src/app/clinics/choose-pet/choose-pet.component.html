@@ -6,7 +6,7 @@
 </div>
   <ng-template #default>
   <mat-horizontal-stepper linear #stepper>
-    <mat-step [editable]="isEditable" [stepControl] = "valid">
+    <mat-step [editable]="isEditable" [stepControl] = "valid" state = "petsA">
       <ng-template matStepLabel>Choose Pet</ng-template>
       <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
         <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
@@ -36,7 +36,7 @@
   </div>
 
     </mat-step>
-    <mat-step [editable]="isEditable" [stepControl] = "valid2">
+    <mat-step [editable]="isEditable" [stepControl] = "valid2" state = "vetsA">
       <ng-template matStepLabel>Choose Vet</ng-template>
       <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
         <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
@@ -62,31 +62,45 @@
         <button mat-button matStepperPrevious >BACK</button>
         <button mat-button matStepperNext style = "float:right" type="submit" (click) = "getVetAppointments()">NEXT</button>
     </div>
-        
     </mat-step>
-    
-    <mat-step mat-step [stepControl]="form" [editable]="isEditable" errorMessage="Something Went Wrong" >
+
+    <mat-step mat-step [stepControl]="form" [stepControl] = "valid3" [editable]="isEditable" errorMessage="Something Went Wrong"  state = "calendar">
       <ng-template matStepLabel>Date and Hour</ng-template>
       <form style ="padding-left:20px;padding-top: 20px;" class = "appointment-form" fxLayoutAlign = "stretch" [formGroup] = "form" (ngSubmit) = "onSubmit()">
         <div style ="padding-left: 10%;padding-right:10%">
-        <ejs-datepicker id = "datepicker" [min]='minDate' [max]='maxDate' formControlName = "date" ></ejs-datepicker>
+          <mat-form-field appearance="fill" style = "width: 95%;">
+          <mat-label>Select Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName = "date" [ngClass]="{ 'is-invalid': submitted && form.controls.date.errors }" [max] = "maxDate" [min] = "minDate">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker ></mat-datepicker>
+          </mat-form-field>
+
       </div>
         <div *ngIf="(form.controls.date.touched || form.controls.date.dirty) && form.controls.date.errors">
           <div *ngIf="form.controls.date.errors.required" style="color:red;font-size: small;position:relative;left:10%" >Date is <strong>required</strong></div>
       </div>     
-      <div style ="padding-left: 10%;padding-right:10%">
-       <ejs-timepicker id = "timepicker" [min]='minHour' [max]='maxHour' formControlName = "hour" ></ejs-timepicker>
+      <div style ="padding-left: 10%;padding-right:10%"></div>
+      <div style="display:flex; flex-direction: row;flex-wrap: wrap;">
+        <mat-card class ="example-card1" *ngFor = "let apps of hours" (click)="onSelectCardApp($event,apps,valid3,false,apps)" [ngClass]="{'card-selected mat-elevation-z4': selected && apps == selectApp}"  style ="padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;cursor: pointer;font-size: 20px;text-align: center;">
+          <span [matTooltip]="selected ? 'Select' : 'Not Selected'" class="selection">
+          <mat-icon>check_circle</mat-icon>
+          </span>
+          <div style = "position: relative;top:25%">
+            {{apps}}
+          </div>
+        </mat-card>
       </div>
-       <div *ngIf="(form.controls.hour.touched || form.controls.hour.dirty) && form.controls.hour.errors">
-        <div *ngIf="form.controls.hour.errors.required" style="color:red;font-size: small;position:relative;left:10%">Hour is <strong>required</strong></div>
-    </div>  <div *ngIf = "errorAppApi" style ="color:red;font-size: small;">{{errorAppApi}}</div>
+    <div *ngIf = "errorApp" style ="color:red;font-size: small;">{{errorAppApi}}</div>
+    <div *ngIf = "errorAppApi" style ="color:red;font-size: small;">{{errorAppApi}}</div>
     <div *ngIf="(form.controls.date.touched || form.controls.date.dirty) && form.controls.date.errors" >
     <div *ngIf="form.controls.date.hasError('appointmentExists')" style="color:red;font-size: small;position:relative;left:10%" >Appointments already <strong>exists</strong> select another Date or Hour</div>
     </div>
     <p>&nbsp;</p>
     <div mat-dialog-actions> 
         <button mat-button matStepperPrevious >BACK</button>
-        <button mat-button matStepperNext style = "float:right" type="submit" >SUBMIT</button>
+        <span *ngIf = "selectApp != null" >
+        <button mat-button matStepperNext style = "float:right;" type="submit" >SUBMIT</button>
+        </span>
     </div>
   </form>  
     </mat-step>
@@ -94,25 +108,45 @@
     <mat-step > 
       <ng-template matStepLabel>You're Finished!</ng-template>
       <div style ="text-align: center;">
-
-        <p style ="color:green; font-family: 'Raleway',sans-serif;font-weight:600;font-size: 20px;text-transform: uppercase;">Appointment Created Successefully, Check your profile to see all your Appointments</p>
-        <h1 style =" font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Vet Picture</h1>
+        <p style ="color:green; font-family: 'Raleway',sans-serif;font-weight:600;font-size: 20px;text-transform: uppercase;">Success, Check your profile to see all your Appointments</p>
+        <p style =" font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Vet Picture</p>
         <div *ngIf = "vet?.profilePicture; else default">
-        <img src = "{{vet?.profilePicture}}">
+        <img src = "{{vet?.profilePicture}}" style = "border-radius: 50%;width: 75px;height:75px;border:3px solid #52b788;">
       </div>
       <ng-template #default>
-        <img src = "../../../assets/img/default-user-image.png" style = "border-radius: 50%;width: 75px;height:75px">
+        <img src = "../../../assets/img/default-user-image.png" style = "border-radius: 50%;width: 75px;height:75px;border:3px solid #52b788;">
       </ng-template>
-        <h1 style = " font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;">Vet Name</h1>
-        <p style ="font-family: 'Raleway',sans-serif; font-size: 12px; font-weight: 300;">{{vet?.name}}</p>
-        <h1 style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Vet Contact</h1>
-        <p style ="font-family: 'Raleway',sans-serif; font-size: 12px; font-weight: 300;">{{vet?.contact}}</p>
-        <h1 style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Start Date</h1>
-        <p style ="font-family: 'Raleway',sans-serif; font-size: 12px; font-weight: 300;" >{{startDate}}</p>
+        <p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase;">Vet Name</p>
+        <p style ="font-family: 'Raleway',sans-serif; font-size: 13px; font-weight: 500;">{{vet?.name}}</p>
+        <!--<p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Vet Contact</p>
+        <p style ="font-family: 'Raleway',sans-serif; font-size: 12px; font-weight: 300;">{{vet?.contact}}</p> -->
+        <p style =" font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase;" >Pet Picture</p>
+        <div *ngIf = "pet?.profilePicture; else defaultpet">
+          <img src = "{{pet?.profilePicture}}" style = "border-radius: 50%;width: 75px;height:75px;border:3px solid #52b788;">
+        </div>
+        <ng-template #defaultpet>
+          <img src = "../../../assets/img/default.png" style = "border-radius: 50%;width: 75px;height:75px;border:3px solid #52b788;">
+        </ng-template>
+        <p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase;">Pet Name</p>
+        <p style ="font-family: 'Raleway',sans-serif; font-size: 13px; font-weight: 500;">{{pet?.name}}</p>
+        <!--<p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Vet Contact</p>
+        <p style ="font-family: 'Raleway',sans-serif; font-size: 12px; font-weight: 300;">{{vet?.contact}}</p> -->
+        <p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Date</p>
+        <p style ="font-family: 'Raleway',sans-serif; font-size: 13px; font-weight: 500;" >{{dateString}}</p>
       </div>
         <div mat-dialog-actions> 
           <button mat-button class ="close1" (click)  = "onClose()">CLOSE</button>
       </div>
     </mat-step>
+
+    <ng-template matStepperIcon="petsA">
+      <mat-icon>pets</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="vetsA">
+      <mat-icon>local_hospital</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="calendar">
+      <mat-icon>calendar_today</mat-icon>
+    </ng-template>
   </mat-horizontal-stepper>
 </ng-template>

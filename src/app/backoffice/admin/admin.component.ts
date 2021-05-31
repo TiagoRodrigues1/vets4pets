@@ -54,7 +54,6 @@ export class AdminComponent implements OnInit {
   onCreate() {
     this.adminService.form.reset();
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;  
     dialogConfig.disableClose = true;
     dialogConfig.width = "35%"
@@ -81,7 +80,6 @@ export class AdminComponent implements OnInit {
   }
  
   editUser(user:User) {
-    //this.adminService.populateForm(user);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;  
     dialogConfig.disableClose = true;

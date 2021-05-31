@@ -6,6 +6,7 @@ import { Observable, throwError } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Adoption } from '../models/adoption.model';
 import { Appointment } from '../models/appointment.model';
 import { Clinic } from '../models/clinic.model';
 import { Pet } from '../models/pet.model';
@@ -77,13 +78,19 @@ resetPassword(token:string, password: string, passwordConfirm: string) {
 getPets(id: number): Observable<Pet[]> {
   return this.http.get<Pet[]>(`${environment.apiUrl}/userAnimals/${id}`);
 }
-
+getAdoptions(id: number): Observable<Adoption[]> {                                  //Vai buscar as adoções de um user 
+  return this.http.get<Adoption[]>(`${environment.apiUrl}/adoption/${id}`);
+}
 createPet (pet : Pet) {
   return this.http.post(`${environment.apiUrl}/animal/`,pet);
 }
 
 deletePet(id: number) {
   return this.http.delete(`${environment.apiUrl}/animal/${id}`);
+}
+
+deleteAdoption(id: number) {
+  return this.http.delete(`${environment.apiUrl}/adoption/${id}`);
 }
 
 editPet(id:number, pet: Pet) {
@@ -96,6 +103,14 @@ getClinics():Observable<Clinic[]> {
 
 getVetByClinic(id:number):Observable<User[]> {
   return this.http.get<User[]>(`${environment.apiUrl}/vetsClinic/${id}`)
+}
+
+createAdoption (adoption : Adoption) {
+  return this.http.post(`${environment.apiUrl}/adoption/`,adoption);
+}
+
+EditAdoption(id: number, adoption: Adoption) {
+  return this.http.put(`${environment.apiUrl}/adoption/${id}`,adoption);
 }
 
 createAppointment(app:Appointment) {
@@ -134,6 +149,9 @@ getUsers(): Observable<User[]> {
   return this.http.get<User[]>(`${environment.apiUrl}/user/`)
 }
 
+getRecentAdoptions(): Observable<Adoption[]> {  
+  return this.http.get<Adoption[]>(`${environment.apiUrl}/adoptionByTime/`);
+}
 getUsersNormal() : Observable<User[]> {
   return this.http.get<User[]>(`${environment.apiUrl}/userNormal/`)
 }

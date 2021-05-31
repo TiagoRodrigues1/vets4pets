@@ -11,6 +11,9 @@ import { AccountService } from 'src/app/services/account.service';
 })
 export class ClinicComponent implements OnInit {
   Clinic : Clinic[];
+  defaultElevation = 2;
+  raisedElevation = 8;
+  titleSelected;
   s: string;
   constructor(private accountService: AccountService, private router: Router) { }
 
@@ -29,6 +32,7 @@ export class ClinicComponent implements OnInit {
   }
 
   goProfile(id: number, clinic: Clinic) { 
+    this.titleSelected = clinic.name;
     this.router.navigate([`/clinic/${id}`],{state: {data: clinic}});
   }
 

@@ -1,0 +1,81 @@
+<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
+    <!-- <h1 mat-dialog-title style = "padding-left: 20px;font-family: Arial, Helvetica, sans-serif;display: inline-block;">New Adoption</h1> -->
+     <div mat-dialog-content>
+       <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "service.form" (ngSubmit) = "onSubmit()">
+         <div fxLayout="row">
+           <mat-form-field style = "width:80%">
+             <input matInput placeholder="Name" formControlName = "name" >
+             <mat-error *ngIf="service.form.controls.name.hasError('required') && service.form.controls.name.touched" style="color:red;font-size: small;">
+               Name is <strong>required</strong>
+              </mat-error>
+           </mat-form-field>
+           <mat-form-field style = "width:80%;padding-left: 20px;">
+             <input matInput placeholder="Birth" formControlName = "birth" >
+           </mat-form-field>
+         </div> 
+         <div fxLayout="row">
+           <mat-form-field style = "width:80%;padding-top: 20px;">
+             <mat-label>Type of Pet</mat-label>
+             <mat-select formControlName = "animaltype">
+               <mat-option *ngFor = "let animal of animalType" [value] = "animal.type">
+                  {{animal.viewValue}} 
+                  <mat-error *ngIf="service.form.controls.animaltype.hasError('required') && service.form.controls.animaltype.touched" style="color:red;font-size: small;">
+                   Animal Type is <strong>required</strong>
+                 </mat-error>
+               </mat-option>
+              
+             </mat-select>
+          
+           </mat-form-field>
+          
+           <mat-form-field style = "width:80%;padding-left: 20px;padding-top: 20px" >
+             <input matInput placeholder="Race" formControlName = "race">
+           </mat-form-field>
+         </div>
+         <div fxLayout="row">
+           <mat-form-field style = "width:80%;padding-top: 20px;">
+             <input matInput placeholder="Phone Number" formControlName = "phonenumber" >
+           </mat-form-field>
+           <mat-form-field style = "width:80%;padding-left: 20px;padding-top: 20px;">
+             <input matInput placeholder="Email" formControlName = "email" >
+             <mat-error *ngIf="service.form.controls.email.hasError('required') && service.form.controls.email.touched" style="color:red;font-size: small;">
+               Email is <strong>required</strong>
+             </mat-error>
+           </mat-form-field>
+         </div> 
+         <div fxLayout="row">
+         <mat-form-field appearance="outline" class="textbox" style="outline-color: #52b788;">
+           <textarea matInput placeholder="Description" formControlName = "text"  > </textarea>
+           <mat-error *ngIf="service.form.controls.text.hasError('required') && service.form.controls.text.touched" style="color:red;font-size: small;">
+             Description is <strong>required</strong>
+           </mat-error>
+           </mat-form-field>
+             <a *ngFor="let url of urls ; let i=index" class="rounded mb-3">
+                 <div *ngIf="i<2; else elseBlock">
+                   <img [src]='url'   width="70" height="70" style="padding-left: 5px;padding-top: 5px;">
+                 </div>
+               <ng-template #elseBlock>
+                 <img [src]='url'   width="70" height="70" style="padding-left: 5px;padding-top: 5px;">
+               </ng-template>  
+           </a>       
+           </div> 
+           <div fxLayout="row">
+             <mat-form-field style = "width:50%;padding-top: 20px;">
+             <mat-label>City</mat-label>
+             <mat-select formControlName = "city">
+               <mat-option *ngFor = "let city of citys" [value] = "city.type">
+                  {{city.viewValue}} 
+               </mat-option>
+             </mat-select>
+           </mat-form-field>
+             </div> 
+             <div fxLayout="row">
+         <div class="file-upload">
+           <input type="file" name="image" accept="image/x-png,image,image/jpeg" multiple (change)="onSelectFile($event)" />
+          
+         </div> 
+         <button  mat-raised-button type="submit" style = "margin-left: 30%;" (click) = "onSubmit()" >SUBMIT</button>
+         </div>
+       </form>  
+     </div>
+   </div>

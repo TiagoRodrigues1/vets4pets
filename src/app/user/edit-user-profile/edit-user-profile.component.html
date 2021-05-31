@@ -19,13 +19,6 @@
           <div *ngIf="form.controls.contact.errors.pattern">Contact not <strong>valid</strong></div>
         </div>
 
-         <mat-radio-group aria-label="Select an option" formControlName = "gender">
-          <mat-radio-button value="0" [value] = "false">Male</mat-radio-button>
-          <mat-radio-button value="1" [value] = "true">Female</mat-radio-button>
-        </mat-radio-group>
-        <div *ngIf="(form.controls.gender.touched || form.controls.gender.dirty) && form.controls.gender.errors" style="color: red;font-size: small;">
-          <div *ngIf="form.controls.gender.errors.required">Gender is <strong>required</strong></div>
-      </div>
           <div mat-dialog-actions>
           <button mat-button type="submit">SUBMIT</button>
           <button mat-button class="close1"  (click) ="onNoClick()">CLOSE</button>

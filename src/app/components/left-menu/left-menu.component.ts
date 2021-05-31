@@ -6,6 +6,7 @@ import { Pet } from 'src/app/models/pet.model';
 import { User } from 'src/app/models/user.model';
 import { AccountService } from 'src/app/services/account.service';
 import { SidenavService } from 'src/app/services/sidenav.service';
+import { Roles } from 'src/app/models/roles.enum';
 
 interface Page {
   link: string;
@@ -34,11 +35,18 @@ export class LeftMenuComponent implements OnInit {
     {name: 'Forum', link:'some-link', icon: 'supervisor_account'},
     {name: 'Near Vets', link:'/maps', icon: 'place'},
   ]
+
+  public pagesVet: Page[] = [
+    {name: 'Appointments',link:'/vet',icon:'calendar_today'},
+  ]
+
+  public pagesAdm: Page [] = [
+    {name: 'BackOffice',link:'/admin',icon:'lock'},
+  ]
   string: string;
   
   constructor(private _sidenavService: SidenavService,private accountService: AccountService) { 
-    this.user = this.accountService.userValue;
-
+    this.accountService.user.subscribe(x => this.user = x);
   }
 
   ngOnInit(): void {
@@ -50,7 +58,21 @@ export class LeftMenuComponent implements OnInit {
     this.userH = (JSON.parse(this.string));
   }
   
+  get isAdmin() {
+    return this.user && this.user.userType === Roles.Admin;
+  }
 
+  get isVet() {
+    return this.user && this.user.userType === Roles.Vet;
+  }
+
+  get isManager() {
+    return this.user && this.user.userType === Roles.Manager;
+  }
+
+  get isNormal() {
+    return this.user && this.user.userType === Roles.User;
+  }
 
   onSinenavToggle() {
     this.sideNavState = !this.sideNavState

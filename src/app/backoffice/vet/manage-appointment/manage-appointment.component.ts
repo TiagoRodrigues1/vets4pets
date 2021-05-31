@@ -1,20 +1,23 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Appointment } from 'src/app/models/appointment.model';
 import { Pet } from 'src/app/models/pet.model';
 import { AccountService } from 'src/app/services/account.service';
+import { AddVaccineComponent } from '../add-vaccine/add-vaccine.component';
 import { VetComponent } from '../vet.component';
 
 interface Showed {
   viewValue:string,
   value: boolean,
 }
+
 @Component({
   selector: 'app-manage-appointment',
   templateUrl: './manage-appointment.component.html',
-  styleUrls: ['./manage-appointment.component.css']
+  styleUrls: ['./manage-appointment.component.css'],
 })
+
 export class ManageAppointmentComponent implements OnInit {
   pet:Pet;
   date:string;
@@ -31,7 +34,7 @@ export class ManageAppointmentComponent implements OnInit {
     {viewValue: 'No', value: false}
   ]
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<VetComponent>,private accountService:AccountService, private formBuilder: FormBuilder) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<VetComponent>,private accountService:AccountService, private formBuilder: FormBuilder,private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.app = this.data.extendedProps.appointment;
@@ -39,6 +42,7 @@ export class ManageAppointmentComponent implements OnInit {
     this.form = this.formBuilder.group({
       showedUp: [],
     });
+    this.form.get('showedUp').setValue(this.app.showedUp);
   }
 
   onSubmit() {
@@ -49,9 +53,11 @@ export class ManageAppointmentComponent implements OnInit {
   onNoClick() {
     this.dialogRef.close();
   }
+
   get displayData() {
     return this.data;
   }
+
   getPet() {
     this.error = '';
     this.accountService.getPetVet(this.app.AnimalID).subscribe(
@@ -69,5 +75,17 @@ export class ManageAppointmentComponent implements OnInit {
       } else {
         this.date = `${this.day}/${this.month + 1}/${this.year} ${this.hour}:${this.minutes}`;
       }
+    }
+    get selected() {
+      return this.form.controls.showedUp.value;
+    }
+
+    openAddVaccine() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = false;  
+    dialogConfig.width = "35%"
+    dialogConfig.data = this.pet.id;
+    this.dialog.open(AddVaccineComponent,dialogConfig);
     }
 }

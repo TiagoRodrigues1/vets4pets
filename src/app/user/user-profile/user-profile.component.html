@@ -40,16 +40,16 @@
         	           <div class="profile">
 	                        <div class="avatar">
                             <div *ngIf = "userH.profilePicture;else defaultProfile">
-	                           <img src="{{userH.profilePicture}}" alt="Circle Image" class="circular"> 
-                             <div class="image-upload" style ="position: relative;bottom:100px;left:45px">  
-                                <label for="file-input">
+	                           <img src="{{userH.profilePicture}}" alt="Circle Image" class="circular" style ="border:3px solid #52b788;"> 
+                             <div class="image-upload" style ="position: relative;bottom:100px;left:45px;">  
+                                <label for="file-input" style ="cursor:pointer">
                                   <mat-icon>camera_alt</mat-icon>
                                 </label>
                                 <input id="file-input" type="file" (change)="fileChangeEvent($event)" />
                               </div>
 	                        </div>
                         <ng-template #defaultProfile>
-                          <img src="../../../assets/img/default-user-image.png" alt="Circle Image" class="circular">
+                          <img src="../../../assets/img/default-user-image.png" alt="Circle Image" class="circular" style ="border:3px solid #52b788;">
                               <div class="image-upload" style ="position: relative;bottom:100px;left:45px">  
                                 <label for="file-input">
                                   <mat-icon>camera_alt</mat-icon>

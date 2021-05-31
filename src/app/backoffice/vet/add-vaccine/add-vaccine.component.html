@@ -1,0 +1,25 @@
+<script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+<div fxFlex="row" fxLayoutGap="10px" class="header" style ="background-color:#52b788">
+<h1 style = "padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white">New Vaccine</h1>
+</div>
+<form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "form" (ngSubmit) = "onSubmit()">
+        <mat-form-field style = "width:95%">
+          <input matInput placeholder="Vaccine Name" formControlName = "vaccineName" >
+        </mat-form-field>
+        <div *ngIf="(form.controls.vaccineName.touched || form.controls.vaccineName.dirty) && form.controls.vaccineName.errors">
+          <div *ngIf = "form.controls.vaccineName.errors.required" style="color:red;font-size: small;" >Vaccine name is <strong>required</strong></div>
+        </div>
+        <mat-form-field appearance="fill" style = "width:95%" >
+            <mat-label>Validity Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName = "validity" [ngClass]="{ 'is-invalid': submitted && form.controls.validty.errors }">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <div *ngIf="(form.controls.validity.touched || form.controls.validity.dirty) && form.controls.validity.errors" style="color: red;font-size: small;">
+            <div *ngIf="form.controls.validity.errors.required">Validity is <strong>required</strong></div>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-button type="submit" >SUBMIT</button>
+            <button mat-button class="close" (click) ="onNoClick()">CLOSE</button>   
+        </div>
+</form>

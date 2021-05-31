@@ -438,3 +438,7 @@ p {
 .red {
     background-color: white;
 }
+.mat-fab{
+    color: #52b788 !important;
+    background-color: #ffff !important;
+  }

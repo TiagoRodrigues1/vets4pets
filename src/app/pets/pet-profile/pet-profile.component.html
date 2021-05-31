@@ -36,19 +36,26 @@
                 <div class="row">
 	                <div class="col-md-6 ml-auto mr-auto">
         	           <div class="profile">
+                      <button mat-fab type="button" style ="position: relative;left: 120%;" (click) = "editPet(pet?.id,pet)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <span style = "padding-left: 2%;"></span>
+                      <button mat-fab type="button" style ="position: relative;left: 120%;bottom:10%;" (click) = "deletePet(pet?.id)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
 	                        <div class="avatar">
                             <div *ngIf = "pet?.profilePicture; else defaultProfile">
-	                            <img src="{{pet?.profilePicture}}" alt="pet {{pet?.name}} profile picture" class="circular">
-                              <div class="image-upload" style ="position: relative;bottom:100px;left:45px">  
+	                            <img src="{{pet?.profilePicture}}" alt="pet {{pet?.name}} profile picture" class="circular" style ="border:3px solid #52b788">
+                              <div class="image-upload" style ="position: relative;bottom:100px;left:45px;">  
                                 <label for="file-input">
                                   <mat-icon>camera_alt</mat-icon>
                                 </label>
-                                <input id="file-input" type="file" (change)="fileChangeEvent($event)" />
+                                <input id="file-input" type="file" (change)="fileChangeEvent($event)"/>
                               </div>
                             </div>
                             <ng-template #defaultProfile>
-	                            <img src="../../assets/img/default.png" alt="pet {{pet?.name}} profile picture" class="img-raised rounded-circle img-fluid">
-                              <div class="image-upload" style ="position: relative;bottom:100px;left:45px">
+	                            <img src="../../assets/img/default.png" alt="pet {{pet?.name}} profile picture" class="img-raised rounded-circle img-fluid" style = "border:3px solid #52b788">
+                              <div class="image-upload" style ="position: relative;bottom:108px;left:45px;">
                                 <label for="file-input">
                                   <mat-icon>camera_alt</mat-icon>
                                 </label>
@@ -82,6 +89,19 @@
                                    Historic
                                 </a>
                             </li>
+                          <!--  <li class="nav-item">
+                              <a class="nav-link active" role="tab" data-toggle="tab" (click) = "showVaccines()" style = "padding-bottom: 5px;cursor: pointer">
+                                <i class="material-icons">edit</i>
+                                Edit Pet
+                              </a>
+                          </li>
+                            <li class="nav-item">
+                                <a class="nav-link" role="tab" data-toggle="tab" style ="cursor: pointer;">
+                                  <i class="material-icons">delete_outline</i>
+                                   Delete Pet
+                                </a>
+                            </li>
+                            -->
                           </ul>
                         </div>
     	    	    </div>

@@ -1,0 +1,54 @@
+<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
+    <!-- <h1 mat-dialog-title style = "padding-left: 20px;font-family: Arial, Helvetica, sans-serif;display: inline-block;">New Adoption</h1> -->
+     <div mat-dialog-content>
+       <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column">
+         <div fxLayout="row">
+           <mat-form-field style = "width:80%">
+            <mat-label>Name</mat-label>
+             <input matInput placeholder="Name" floatLabel='never' value="{{adoption?.name}}" >
+           </mat-form-field>
+  
+           <mat-form-field style = "width:80%;padding-left: 20px;">
+            <mat-label>Birth</mat-label>
+             <input matInput placeholder="Birth" value="{{adoption?.birth}}" >
+           </mat-form-field>
+         </div> 
+  
+         <div fxLayout="row">
+          <mat-form-field style = "width:80%;padding-top: 20px;">
+            <mat-label>Animal Type</mat-label>
+             <input matInput  value="{{adoption.animaltype}}" >
+           </mat-form-field>
+  
+           <mat-form-field style = "width:80%;padding-left: 20px;padding-top: 20px;">
+            <mat-label>Race</mat-label>
+             <input matInput  value="{{adoption?.race}}" >
+           </mat-form-field>
+         </div>
+  
+        
+         <div fxLayout="row">
+  
+         <mat-form-field appearance="outline" class="textbox" style="outline-color: #52b788;">
+          <mat-label>Description</mat-label>
+          <input matInput  value="{{adoption?.text}}" >
+           </mat-form-field>
+  
+           </div> 
+           <mat-label>Contacts:</mat-label>
+           <div fxLayout="row">
+            
+            <mat-form-field style = "width:50%;padding-top: 20px;">
+              <mat-label>Phone number/Email</mat-label>
+               <input matInput  value="{{adoption?.phonenumber}}/{{adoption?.email}}" >
+             </mat-form-field>
+          </div> 
+           <div fxLayout="row">
+            <mat-form-field style = "width:50%;padding-top: 20px;">
+              <mat-label>City</mat-label>
+               <input matInput  value="{{adoption?.city}}" >
+             </mat-form-field>    
+             </div> 
+       </form>  
+     </div>
+   </div>

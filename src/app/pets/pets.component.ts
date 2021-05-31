@@ -22,6 +22,7 @@ export class PetsComponent implements OnInit {
   Pet : Pet[];
   status: string;
   loading:boolean = true;
+  titleSelected;
   constructor(private accountService: AccountService, private dialog: MatDialog, private petService: PetService,private alertService: AlertService,private router: Router) {}
 
   ngOnInit(): void {
@@ -61,26 +62,10 @@ export class PetsComponent implements OnInit {
     this.dialog.open(AddPetComponent,dialogConfig);
   }
 
-  deletePet(id:number) {
-    this.petService.form.reset();
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;  
-    dialogConfig.width = "20%"
-    dialogConfig.data = id;
-    this.dialog.open(DeletePetComponent,dialogConfig);
-  }
-
-  editPet(pet) {
-    this.petService.populateForm(pet);
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;  
-    dialogConfig.disableClose = true;
-    dialogConfig.width = "35%"
-    this.dialog.open(AddPetComponent,dialogConfig);
-  }
+  
  
   goProfile(id:number) {
+    this.titleSelected = id;
     this.router.navigate([`/pets/${id}`],{state: {data: id}});
   }
 }

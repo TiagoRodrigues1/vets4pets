@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
+import { AddPetComponent } from 'src/app/add-pet/add-pet.component';
 import { Pet } from 'src/app/models/pet.model';
 import { AccountService } from 'src/app/services/account.service';
 import { CustomValidatorService } from 'src/app/services/custom-validator.service';
+import { PetService } from 'src/app/services/pet.service';
+import { DeletePetComponent } from '../delete-pet/delete-pet.component';
 import { ShowVaccinesComponent } from '../show-vaccines/show-vaccines.component';
 
 @Component({
@@ -18,7 +21,7 @@ export class PetProfileComponent implements OnInit {
   private sub: any;
   error;
   imageError:string;
-  constructor(private dialog: MatDialog,private accountService: AccountService, private route: ActivatedRoute, private val: CustomValidatorService, private router:Router) { }
+  constructor(private dialog: MatDialog,private accountService: AccountService, private route: ActivatedRoute, private val: CustomValidatorService, private router:Router, private petService: PetService) { }
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
@@ -93,8 +96,26 @@ export class PetProfileComponent implements OnInit {
           }
       }
 
-    editPet(id:number,pet:Pet) {
-      this.accountService.editPet(id,pet).subscribe();
-    }
+    //editPet(id:number,pet:Pet) {
+    //  this.accountService.editPet(id,pet).subscribe();
+    //}
 
+    deletePet(id:number) {
+      this.petService.form.reset();
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;  
+      dialogConfig.width = "20%"
+      dialogConfig.data = id;
+      this.dialog.open(DeletePetComponent,dialogConfig);
+    }
+  
+    editPet(id:number,pet:Pet) {
+      this.petService.populateForm(pet);
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.autoFocus = true;  
+      dialogConfig.disableClose = true;
+      dialogConfig.width = "35%"
+      this.dialog.open(AddPetComponent,dialogConfig);
+    }
 }

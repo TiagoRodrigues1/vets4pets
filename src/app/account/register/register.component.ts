@@ -29,9 +29,7 @@ export class RegisterComponent implements OnInit {
       email: ['', Validators.compose([Validators.required,Validators.pattern(this.emailPattern),Validators.email])],
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      gender: ['', Validators.required],
       contact: ['', [Validators.required,Validators.pattern(this.phoneRegex)]],
-      birthday: ['', Validators.required],
   },{
     validator: this.customValidator.passwordMatchValidator("password","passwordConfirm")
   });
