@@ -1,0 +1,31 @@
+<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
+  <div fxFlex="row" fxLayoutGap="10px" class="header" style ="background-color:#52b788">
+    <h1 style = "padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white;">Answer Question</h1>
+  </div>
+    <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "service.form" (ngSubmit) = "onSubmit()">
+     <div mat-dialog-content> 
+         <div fxLayout="row">
+         <mat-form-field appearance="outline" class="textbox" style="outline-color: #52b788;width: 35.5%;">
+           <textarea  matInput placeholder="Answer" formControlName = "answer" style ="resize: none;" maxlength="1000" ></textarea>
+           <div *ngIf="(service.form.controls.answer.touched || service.form.controls.answer.dirty) && service.form.controls.answer.errors">
+            <div *ngIf="service.form.controls.answer.required" style="color:red;font-size: small;">
+              Answer is <strong>required</strong>
+            </div>
+            </div>
+           </mat-form-field>
+          </div> 
+          <div *ngIf = "image">
+            <img src= "{{image}}" width="60" height="60">
+          </div>
+           <div fxLayout="row" style="padding-top: 5px;">
+         <div class="file-upload">
+           <input type="file" name="image" accept="image/x-png,image,image/jpeg" multiple (change)="fileChangeEvent($event)" />
+         </div>
+         <div *ngIf = "imageError">{{imageError}}</div>
+           </div>
+     </div>   
+     <div mat-dialog-actions>
+      <button  mat-raised-button type="submit">SUBMIT</button>
+      <button  mat-raised-button class="close1" (click)  ="onClose()">CLOSE</button>
+     </div> 
+  </form>  

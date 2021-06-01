@@ -1,0 +1,49 @@
+<div fxLayoutAlign="center center" class="main-div" fxFlexFill>
+  <div fxFlex="row" fxLayoutGap="10px" class="header" style="background-color:#52b788">
+    <h1
+      style="padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white;">
+      New Question</h1>
+  </div>
+  <form style="padding-left:20px;padding-top: 20px;" fxLayoutAlign="stretch" fxLayout="column"
+    [formGroup]="service.form" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content>
+      <div fxLayout="row">
+        <mat-form-field style="width:95%;padding-top: 10px;">
+          <input matInput placeholder="Title" formControlName="questiontitle">
+          <div
+            *ngIf="(service.form.controls.questiontitle.touched || service.form.controls.questiontitle.dirty) && service.form.controls.questiontitle.errors">
+            <div *ngIf="service.form.controls.questiontitle.required" style="color:red;font-size: small;">
+              Title is <strong>required</strong>
+            </div>
+          </div>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" style="padding-top: 5px;">
+        <mat-form-field appearance="outline" class="textbox" style="outline-color: #52b788;width: 35.5%;">
+          <textarea matInput placeholder="Description" formControlName="question" style="resize: none; " 
+            maxlength="1000"></textarea>
+          <div
+            *ngIf="(service.form.controls.question.touched || service.form.controls.question.dirty) && service.form.controls.question.errors">
+            <div *ngIf="service.form.controls.question.required" style="color:red;font-size: small;">Question is
+              <strong>required</strong></div>
+            <div *ngIf="service.form.controls.question.maxlength" style="color:red;font-size: small;">Max chars
+              <strong>1000</strong></div>
+          </div>
+        </mat-form-field>
+      </div>
+      <div *ngIf="image">
+        <img src="{{image}}" width="60" height="60">
+      </div>
+      <div fxLayout="row" style="padding-top: 5px;">
+        <div class="file-upload">
+          <input type="file" name="image" accept="image/x-png,image,image/jpeg" multiple
+            (change)="fileChangeEvent($event)" />
+        </div>
+        <div *ngIf="imageError">{{imageError}}</div>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button type="submit">SUBMIT</button>
+      <button mat-raised-button class="close1" (click)="onClose()">CLOSE</button>
+    </div>
+  </form>

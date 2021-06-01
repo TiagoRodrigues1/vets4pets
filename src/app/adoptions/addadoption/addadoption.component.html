@@ -1,81 +1,104 @@
-<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
-    <!-- <h1 mat-dialog-title style = "padding-left: 20px;font-family: Arial, Helvetica, sans-serif;display: inline-block;">New Adoption</h1> -->
-     <div mat-dialog-content>
-       <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "service.form" (ngSubmit) = "onSubmit()">
-         <div fxLayout="row">
-           <mat-form-field style = "width:80%">
-             <input matInput placeholder="Name" formControlName = "name" >
-             <mat-error *ngIf="service.form.controls.name.hasError('required') && service.form.controls.name.touched" style="color:red;font-size: small;">
-               Name is <strong>required</strong>
-              </mat-error>
-           </mat-form-field>
-           <mat-form-field style = "width:80%;padding-left: 20px;">
-             <input matInput placeholder="Birth" formControlName = "birth" >
-           </mat-form-field>
-         </div> 
-         <div fxLayout="row">
-           <mat-form-field style = "width:80%;padding-top: 20px;">
-             <mat-label>Type of Pet</mat-label>
-             <mat-select formControlName = "animaltype">
-               <mat-option *ngFor = "let animal of animalType" [value] = "animal.type">
-                  {{animal.viewValue}} 
-                  <mat-error *ngIf="service.form.controls.animaltype.hasError('required') && service.form.controls.animaltype.touched" style="color:red;font-size: small;">
-                   Animal Type is <strong>required</strong>
-                 </mat-error>
-               </mat-option>
-              
-             </mat-select>
-          
-           </mat-form-field>
-          
-           <mat-form-field style = "width:80%;padding-left: 20px;padding-top: 20px" >
-             <input matInput placeholder="Race" formControlName = "race">
-           </mat-form-field>
-         </div>
-         <div fxLayout="row">
-           <mat-form-field style = "width:80%;padding-top: 20px;">
-             <input matInput placeholder="Phone Number" formControlName = "phonenumber" >
-           </mat-form-field>
-           <mat-form-field style = "width:80%;padding-left: 20px;padding-top: 20px;">
-             <input matInput placeholder="Email" formControlName = "email" >
-             <mat-error *ngIf="service.form.controls.email.hasError('required') && service.form.controls.email.touched" style="color:red;font-size: small;">
-               Email is <strong>required</strong>
-             </mat-error>
-           </mat-form-field>
-         </div> 
-         <div fxLayout="row">
-         <mat-form-field appearance="outline" class="textbox" style="outline-color: #52b788;">
-           <textarea matInput placeholder="Description" formControlName = "text"  > </textarea>
-           <mat-error *ngIf="service.form.controls.text.hasError('required') && service.form.controls.text.touched" style="color:red;font-size: small;">
-             Description is <strong>required</strong>
-           </mat-error>
-           </mat-form-field>
-             <a *ngFor="let url of urls ; let i=index" class="rounded mb-3">
-                 <div *ngIf="i<2; else elseBlock">
-                   <img [src]='url'   width="70" height="70" style="padding-left: 5px;padding-top: 5px;">
-                 </div>
-               <ng-template #elseBlock>
-                 <img [src]='url'   width="70" height="70" style="padding-left: 5px;padding-top: 5px;">
-               </ng-template>  
-           </a>       
-           </div> 
-           <div fxLayout="row">
-             <mat-form-field style = "width:50%;padding-top: 20px;">
-             <mat-label>City</mat-label>
-             <mat-select formControlName = "city">
-               <mat-option *ngFor = "let city of citys" [value] = "city.type">
-                  {{city.viewValue}} 
-               </mat-option>
-             </mat-select>
-           </mat-form-field>
-             </div> 
-             <div fxLayout="row">
-         <div class="file-upload">
-           <input type="file" name="image" accept="image/x-png,image,image/jpeg" multiple (change)="onSelectFile($event)" />
-          
-         </div> 
-         <button  mat-raised-button type="submit" style = "margin-left: 30%;" (click) = "onSubmit()" >SUBMIT</button>
-         </div>
-       </form>  
-     </div>
-   </div>
+<div fxLayoutAlign="center center" class="main-div" fxFlexFill>
+  <div fxFlex="row" fxLayoutGap="10px" class="header" style="background-color:#52b788">
+    <h1
+      style="padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white;">
+      Add Adoption</h1>
+  </div>
+  <form style="padding-left:20px;padding-top: 20px;" fxLayoutAlign="stretch" fxLayout="column"
+    [formGroup]="service.form" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content>
+
+        <mat-form-field style="width:95%;padding-top: 10px;">
+          <input matInput placeholder="Name" formControlName="name">
+          <div *ngIf="(service.form.controls.name.touched || service.form.controls.name.dirty) && service.form.controls.name.errors">
+            <div *ngIf="service.form.controls.name.required" style="color:red;font-size: small;">
+              Name is <strong>required</strong>
+            </div>
+          </div>
+        </mat-form-field>
+
+        <mat-form-field style="width:95%;">
+          <input matInput placeholder="Age/Year" formControlName="birth">
+          <div *ngIf="(service.form.controls.birth.touched || service.form.controls.birth.dirty) && service.form.controls.birth.errors">
+            <div *ngIf="service.form.controls.birth.required" style="color:red;font-size: small;">
+              Birth is <strong>required</strong>
+            </div>
+          </div>
+        </mat-form-field>
+      
+        <mat-form-field style = "width:95%">
+          <mat-label>Type of Pet</mat-label>
+          <mat-select formControlName = "animaltype" [(ngModel)] = "departure">
+            <mat-option *ngFor = "let animal of animalType" [value] = "animal.type">
+               {{animal.viewValue}} 
+            </mat-option>
+            <div *ngIf="(service.form.controls.animaltype.touched || service.form.controls.animaltype.dirty ) && service.form.controls.name.errors">
+              <div *ngIf = "service.form.controls.animaltype.required" style="color:red;font-size: small;" >Pet Type is <strong>required</strong></div>
+            </div>
+          </mat-select>
+        </mat-form-field>
+        
+              <mat-form-field style = "width:95%">
+          <mat-label>Breed</mat-label>
+          <mat-select formControlName = "race"> 
+            <ng-container *ngFor = "let animal of animalRace">
+            <mat-option  [value] = "animal.race" *ngIf="animal.key === departure" >
+               {{animal.viewValue}} 
+            </mat-option>
+          </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <div *ngIf="(service.form.controls.race.touched || service.form.controls.race.dirty) && service.form.controls.race.errors">
+          <div *ngIf = "service.form.controls.race.required" style="color:red;font-size: small;" >Pet Race is <strong>required</strong></div>
+        </div>
+
+        <mat-form-field style="width:95%;">
+          <input matInput placeholder="Phone Number" formControlName="phonenumber">
+          <div *ngIf="(service.form.controls.phonenumber.touched || service.form.controls.phonenumber.dirty) && service.form.controls.phonenumber.errors">
+            <div *ngIf = "service.form.controls.phonenumber.pattern" style="color:red;font-size: small;" >Phone Number is not <strong>valid</strong></div>
+          </div>
+        </mat-form-field>
+
+        <mat-form-field style="width:95%;">
+          <input matInput placeholder="Email" formControlName="email">
+          <div *ngIf="(service.form.controls.email.touched || service.form.controls.email.dirty) && service.form.controls.email.errors">
+            <div *ngIf = "service.form.controls.email.required" style="color:red;font-size: small;" >Email is <strong>required</strong></div>
+            <div *ngIf="service.form.controls.email.errors.pattern" style="color:red;font-size: small;" >Email not <strong>valid</strong></div>
+          </div>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="textbox" style="outline-color: #52b788;padding-top: 4px;width: 35.5%;">
+          <textarea matInput placeholder="Description" formControlName="text" style="resize: none;"
+            maxlength="1000"> </textarea>
+            <div *ngIf="(service.form.controls.text.touched || service.form.controls.text.dirty) && service.form.controls.text.errors">
+              <div *ngIf = "service.form.controls.text.required" style="color:red;font-size: small;" >Description is <strong>required</strong></div>
+            </div>
+        </mat-form-field>
+
+        <mat-form-field style="width:95%;">
+          <mat-label>City</mat-label>
+          <mat-select formControlName="city">
+            <mat-option *ngFor="let city of citys" [value]="city.type">
+              {{city.viewValue}}
+            </mat-option>
+            <div *ngIf="(service.form.controls.city.touched || service.form.controls.city.dirty) && service.form.controls.city.errors">
+              <div *ngIf = "service.form.controls.city.required" style="color:red;font-size: small;" >City is <strong>required</strong></div>
+            </div>
+          </mat-select>
+        </mat-form-field>
+        <a *ngFor="let url of urls ; let i=index" class="rounded mb-3">
+            <img [src]='url'   width="70" height="70" style="padding-left: 5px;padding-top: 5px;">
+      
+    </a>
+      <div fxLayout="row" style="padding-top: 5px;">
+        <div class="file-upload" *ngIf = "urls.length < 4">
+          <input type="file" name="image" accept="image/x-png,image,image/jpeg" multiple
+            (change)="onSelectFile($event)"/>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button type="submit">SUBMIT</button>
+      <button mat-raised-button class="close1" (click)="onClose()">CLOSE</button>
+    </div>
+  </form>

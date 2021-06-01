@@ -1,51 +1,51 @@
 ::ng-deep .mat-focused .mat-form-field-label {
-    /*change color of label*/
-    color: #52b788 !important;
-   }
-  
-   ::ng-deep.mat-form-field-underline {
-    /*change color of underline*/
-    background-color: #52b788 !important;
-  } 
-  
-  ::ng-deep.mat-form-field-ripple {
-   /*change color of underline when focused*/
-   background-color: #52b788 !important;
-  }
-  
-  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
-    height: 165px !important;
-    width:150%;
-    }
-  
-    .mat-raised-button{
-      color: #ffff !important;
-      background-color: #52b788 !important;
-    }
-  
-  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
-   
-    color: #52b788 !important;
-  }
-  
-  .mat-form-field {
-    pointer-events:none;
-  } 
-  ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: black;
-  
-  }
-  
-  .mat-dialog-content{
-   width: 90%;
-   height: 100%;
-   pointer-events:none;
+  /*change color of label*/
+  color: #52b788 !important;
+ }
+
+ ::ng-deep.mat-form-field-underline {
+  /*change color of underline*/
+  background-color: #52b788 !important;
+} 
+
+::ng-deep.mat-form-field-ripple {
+ /*change color of underline when focused*/
+ background-color: #52b788 !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+  height: 150px !important;
+  width:270%;
   }
 
-  ::ng-deep.mat-form-field-disabled .mat-form-field-underline 
-    { 
-    background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 33%, #c2c7cc 0 ) !important; 
-    background-size: 1px 100% !important;
-     background-repeat: repeat-x !important; 
-    } 
-  
+  .mat-raised-button{
+    color: #ffff !important;
+    background-color: #52b788 !important;
+  }
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #52b788 !important;
+}
+
+textarea {
+  width: 270%;
+  height: 110px;
+}
+
+.close1 {
+  color: #52b788 !important;
+  background-color: #ffff !important;
+ }
+
+ .column {
+  float: left;
+  width: 33.33%;
+  padding: 0px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}

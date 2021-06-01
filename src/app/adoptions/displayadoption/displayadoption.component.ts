@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit , ViewChild} from '@angular/core';
-import {  MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {  MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Adoption } from 'src/app/models/adoption.model';
+import { LastadoptionsComponent } from '../lastadoptions/lastadoptions.component';
 
 
 @Component({
@@ -10,10 +11,30 @@ import { Adoption } from 'src/app/models/adoption.model';
 })
 export class DisplayadoptionComponent implements OnInit  {
   adoption:Adoption;
-  
-  constructor(@Inject(MAT_DIALOG_DATA) public data:any) { 
+  attachements:string[] = [];
+  imageObject:any;
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<LastadoptionsComponent>) { 
     this.adoption=data;      //Remove informação inutil (createAt,updateAt,deletedAt)
+    
   }
   ngOnInit(): void {
+    this.imageObject = [{
+      image: this.adoption.attachement1,
+      thumbImage: this.adoption.attachement1,
+  }, {
+      image: this.adoption.attachement2,
+      thumbImage: this.adoption.attachement2,
+  }, {
+    image: this.adoption.attachement3,
+    thumbImage: this.adoption.attachement3,
+  },{
+    image: this.adoption.attachement4,
+    thumbImage: this.adoption.attachement4,
+  }];
+  }
+
+  onClose() {
+    this.dialogRef.close();
   }
 }

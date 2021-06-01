@@ -22,13 +22,11 @@ export class MyadoptionsComponent implements OnInit {
   ELEMENT_DATA : Adoption[]=[];
   dataSource = new MatTableDataSource<Adoption>(this.ELEMENT_DATA);
   status: string;
-  displayedColumns: string[] = ['id', 'name', 'animaltype', 'race','delete/edit'];
+  displayedColumns: string[] = ['id','profilePicture', 'name', 'animaltype', 'race','delete/edit'];
   user: User;
   string : string;
   payload;
   
-  
-
   constructor(private accountService: AccountService,private dialog: MatDialog, private adoptionService: AdoptionService) { 
   }
 
@@ -47,8 +45,10 @@ export class MyadoptionsComponent implements OnInit {
 
  public adoptions()  {
   let resp =  this.accountService.getAdoptions(this.getUserId());
-  resp.subscribe(report => this.dataSource.data = report['data'] as Adoption[])
+  resp.subscribe(report => {this.dataSource.data = report['data'] as Adoption[];})
+  
 }
+
   getUserId()  {
     this.string = localStorage.getItem('user');
     this.user = (JSON.parse(this.string));
@@ -62,10 +62,10 @@ export class MyadoptionsComponent implements OnInit {
 
   onCreate() {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = true;  
-    dialogConfig.width = "55%"
-    dialogConfig.height = "80%"
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = false;  
+    dialogConfig.width = "40%"
+    dialogConfig.height = "90%"
     this.dialog.open(AddadoptionComponent,dialogConfig);
   }
 
@@ -74,7 +74,7 @@ export class MyadoptionsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;  
-    dialogConfig.width = "55%"
+    dialogConfig.width = "40%"
     dialogConfig.height = "80%"
     this.dialog.open(AddadoptionComponent,dialogConfig);
   }
@@ -84,8 +84,8 @@ export class MyadoptionsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;  
-    dialogConfig.width = "55%"
-    dialogConfig.height = "80%"
+    dialogConfig.width = "40%"
+    dialogConfig.height = "85%"
     dialogConfig.data=adoption;
    
     this.dialog.open(DisplayadoptionComponent,dialogConfig);

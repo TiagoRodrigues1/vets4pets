@@ -196,12 +196,77 @@ table {
   h1{
     text-align: center;
   }
-  .main_content {
+
+.main_content {
     width: 100%;
     padding-left:10px;
     padding-top: 10px;
     height: 100%-10%; 
     background: #FAFAFA;
-  }
+}
   
-  
+::ng-deep .mat-focused .mat-form-field-label {
+ /*change color of label*/
+ color: #52b788 !important;
+}
+
+::ng-deep.mat-form-field-underline {
+ /*change color of underline*/
+ background-color: #52b788 !important;
+} 
+
+::ng-deep.mat-form-field-ripple {
+/*change color of underline when focused*/
+background-color: #52b788 !important;
+}
+
+.mat-raised-button{
+ color: #52b788 !important;
+}
+
+::ng-deep mat-option.mat-selected {
+ background: COLOR2 !important;
+ color: #52b788 !important;
+}
+
+::ng-deep.mat-select-arrow {
+ color: #52b788 !important;
+}
+
+::ng-deep.fc-view, .fc-view>table {
+background:#ffff !important;
+}
+
+::ng-deep.fc-col-header-cell-cushion {
+color:rgb(0, 0, 0);
+}
+
+::ng-deep.fc-toolbar-title {
+padding-left: 7px;
+padding-top: 5px;
+}
+
+::ng-deep.fc-daygrid-day-number {
+color:#52b788
+}
+
+.circular {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+.circular img {
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}

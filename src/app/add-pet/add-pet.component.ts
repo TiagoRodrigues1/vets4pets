@@ -16,7 +16,7 @@ interface AnimalType {
 interface AnimalRace {
   race:string,
   viewValue:string,
-  key:string,
+  key:string
 }
 
 @Component({
@@ -29,6 +29,7 @@ export class AddPetComponent implements OnInit {
   departure:string;
   imageError:string;
   image:string;
+  
   public animalType: AnimalType[] = [
     {type: 'Dog',viewValue:'Dog'},
     {type: 'Cat',viewValue:'Cat'},
@@ -117,6 +118,7 @@ onSubmit() {
   }
   this.petService.form.get('UserID').setValue(this.val.getUserId());
   this.petService.form.get('picture').setValue(this.image);
+  console.log(this.petService.form.value);
   this.accountService.createPet(this.petService.form.value).pipe(first()).subscribe({
     next: () => {
       this.router.navigate(['../pets'],{relativeTo: this.route});
@@ -198,7 +200,6 @@ onNoClick() {
     this.dialogRef.close();
   }
   
-
 }
 
 

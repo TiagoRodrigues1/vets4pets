@@ -1,11 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AddPetComponent } from './add-pet/add-pet.component';
+import { LastadoptionsComponent } from './adoptions/lastadoptions/lastadoptions.component';
+import { MyadoptionsComponent } from './adoptions/myadoptions/myadoptions.component';
 import { AdminComponent } from './backoffice/admin/admin.component';
 import { ManagerComponent } from './backoffice/manager/manager.component';
 import { VetComponent } from './backoffice/vet/vet.component';
 import { ClinicProfileComponent } from './clinics/clinic-profile/clinic-profile.component';
 import { ClinicComponent } from './clinics/clinic/clinic.component';
+import { ForumComponent } from './forum/forum.component';
+import { ForumdisplayComponent } from './forum/forumdisplay/forumdisplay.component';
+import { MyanswersComponent } from './forum/myanswers/myanswers.component';
+import { MyquestionsComponent } from './forum/myquestions/myquestions.component';
 import { AuthGuard } from './helpers/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { Roles } from './models/roles.enum';
@@ -28,6 +34,12 @@ const routes: Routes = [
   { path: 'vet', component: VetComponent, canActivate:[AuthGuard], data: {roles: [Roles.Vet]}},
   { path: 'manager', component: ManagerComponent, canActivate:[AuthGuard], data: {roles: [Roles.Manager]}},
   { path: 'userprofile',component: UserProfileComponent, canActivate:[AuthGuard]},
+  { path: 'adoptions',component: LastadoptionsComponent, canActivate:[AuthGuard]},
+  { path: 'forumdisplay/:id',component: ForumdisplayComponent, canActivate:[AuthGuard]},
+  { path: 'forum/myquestions',component: MyquestionsComponent, canActivate:[AuthGuard]},
+  { path: 'forum/myanswers',component: MyanswersComponent, canActivate:[AuthGuard]},
+  { path: 'myadoptions',component: MyadoptionsComponent, canActivate:[AuthGuard]},
+  { path: 'forum',component: ForumComponent, canActivate:[AuthGuard]},
   { path: '404', component:NotFoundComponent},
   { path: '**', component:NotFoundComponent}
 ];

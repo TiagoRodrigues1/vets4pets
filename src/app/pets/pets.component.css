@@ -9,7 +9,8 @@ p {
   }
 
   .example-card {
-    max-width: 320px;
+    max-width: 300px;
+    max-height: 300px;
   }
   
   .example-header-image {

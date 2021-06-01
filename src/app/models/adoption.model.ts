@@ -10,4 +10,8 @@ export class Adoption {
     phonenumber: string;
     email: string;
     adopted: boolean; 
+    attachement1:string;
+    attachement2:string;
+    attachement3:string;
+    attachement4:string;
 }

@@ -7,9 +7,11 @@ import { BehaviorSubject } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Adoption } from '../models/adoption.model';
+import { Answer } from '../models/answer.model';
 import { Appointment } from '../models/appointment.model';
 import { Clinic } from '../models/clinic.model';
 import { Pet } from '../models/pet.model';
+import { Question } from '../models/question.model';
 import { User } from '../models/user.model';
 import { Vaccines } from '../models/vaccines';
 import { CustomValidatorService } from './custom-validator.service';
@@ -41,7 +43,6 @@ getUserPic(id:number) {
   return this.http.get(`${environment.apiUrl}/userPic/${id}`);
 }
 
-
 logout() {
   // remove user from local storage and set current user to null
   this.dialogRef.closeAll();
@@ -53,7 +54,8 @@ logout() {
 register(user: User) {
   return this.http.post(`${environment.apiUrl}/auth/register`, user);
 }
-  
+
+
 refreshToken() {
   return this.http.put<any>(`${environment.apiUrl}/auth/refresh_token`,{}, {withCredentials: true}).pipe(
     map((user) => {
@@ -78,13 +80,50 @@ resetPassword(token:string, password: string, passwordConfirm: string) {
 getPets(id: number): Observable<Pet[]> {
   return this.http.get<Pet[]>(`${environment.apiUrl}/userAnimals/${id}`);
 }
+
 getAdoptions(id: number): Observable<Adoption[]> {                                  //Vai buscar as adoções de um user 
   return this.http.get<Adoption[]>(`${environment.apiUrl}/adoption/${id}`);
 }
+
 createPet (pet : Pet) {
   return this.http.post(`${environment.apiUrl}/animal/`,pet);
 }
 
+GetQuestions():Observable<Question[]>{
+  return this.http.get<Question[]>(`${environment.apiUrl}/questions/`);
+}
+
+GetQuestion(id: number):Observable<Question>  {
+  return this.http.get<Question>(`${environment.apiUrl}/question/${id}`);
+}
+
+createQuestion (question: Question) {
+  return this.http.post(`${environment.apiUrl}/question/`,question);
+}
+
+deleteQuestion(id: number) {
+  return this.http.delete(`${environment.apiUrl}/question/${id}`);
+}
+
+getAnswers(id: number):Observable<Answer[]> {
+  return this.http.get<Answer[]>(`${environment.apiUrl}/answer/${id}`);
+}
+
+createAnswer (answer: Answer) {
+  return this.http.post(`${environment.apiUrl}/answer/`,answer);
+}
+
+deleteAnswer(id: number) {
+  return this.http.delete(`${environment.apiUrl}/answer/${id}`);
+}
+
+getAnswersOfUser(id: number):Observable<Answer[]> {
+  return this.http.get<Answer[]>(`${environment.apiUrl}/answersByUser/${id}`);
+}
+
+getQuestionsOfUser(id: number):Observable<Question[]> {
+  return this.http.get<Question[]>(`${environment.apiUrl}/questionsByUser/${id}`);
+}
 deletePet(id: number) {
   return this.http.delete(`${environment.apiUrl}/animal/${id}`);
 }
@@ -165,7 +204,7 @@ editUser(id:number, user:User) {
 }
 
 getUser(id:number): Observable<User> {
-  return this.http.get<User>(`${environment.apiUrl}/user/`)
+  return this.http.get<User>(`${environment.apiUrl}/user/${id}`)
 }
 
 getAppointmentsUser(id:number) {

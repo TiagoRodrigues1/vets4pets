@@ -4,48 +4,43 @@
     <app-left-menu></app-left-menu>
   </mat-sidenav>
   <mat-sidenav-content>
-   <!-- <div class="alert-section">
-      <app-alert></app-alert>
-</div> -->
-<div *ngIf = "loading;else default"class = "main_content" style= "padding-left: 50%;padding-top: 20%;">
-  <mat-spinner></mat-spinner>
-</div>
-  <ng-template #default>
-    <div class="main_content">
-      <div style="padding: 20px;display:flex; flex-direction: row;flex-wrap: wrap;">
-        <mat-card appAppMaterialElevation class="example-card" *ngFor = "let pet of Pet" style ="padding-right:20px;padding-left: 20px;margin-right: 2% ;margin-bottom:2%;cursor: pointer;" (click) = "goProfile(pet.ID)"  [ngClass]="{'selected-card':titleSelected === pet.ID} ">
-          <mat-card-header>
-            <div mat-card-avatar *ngIf = "pet?.profilePicture; else defaultProfile" class="example-header-image" [ngStyle] = "{'background-image': 'url(' + pet?.profilePicture + ')'}"></div>
-            <ng-template #defaultProfile>
-              <div mat-card-avatar class="example-header-image" style ="background-image: url('../../assets/img/default.png');" >
-              </div>
-            </ng-template>
-            <mat-card-title>{{pet?.name}}</mat-card-title> 
-            <mat-card-subtitle>{{pet?.race}}</mat-card-subtitle>
-          </mat-card-header>
-          <div *ngIf = "pet.picture; else default">
-          <img mat-card-image src="{{pet?.picture}}" alt="profile picture of {{pet?.name}}" style ="width: 312px;height: 301.94px;margin-top: 0px;">
-        </div>
-        <ng-template #default>
-        <img mat-card-image src="../../assets/img/default-image-620x600.jpg" alt="profile picture of {{pet?.name}}" style ="width: 312px;height: 301.94px;margin-top: 0px;">
-      </ng-template>
-          <mat-card-content>
-           <div style = "display: flex;justify-content: center;align-items: center;">
-           <!-- <button mat-icon-button color = "primary" (click) = "editPet(pet)" floating ="true" >
-              <mat-icon style ="color:rgb(82,183,136)">edit</mat-icon>
-            </button>
-           
-            <button mat-icon-button color = "warn" (click) = "deletePet(pet.ID)">
-              <mat-icon>delete_outline</mat-icon>
-            </button>
-             -->
-          </div>
-        </mat-card-content>
-        </mat-card>
-        <button mat-button style = "padding-right:20px;padding-left: 20px;margin-right: 2% ;margin-bottom:2%;color: #52b788;font-size : 300px;width:320px;height:439.94px" (click) = "onCreate()">+</button>
-      </div>
+    <div *ngIf="loading;else default" class="main_content" style="padding-left: 50%;padding-top: 20%;">
+      <mat-spinner></mat-spinner>
     </div>
-  </ng-template>
+    <ng-template #default>
+      <div class="main_content">
+        <div style="padding: 20px;display:flex; flex-direction: row;flex-wrap: wrap;">
+          <mat-card appAppMaterialElevation class="example-card" *ngFor="let pet of Pet"
+            style="padding-right:20px;padding-left: 20px;margin-right: 0.6% ;margin-bottom:0.6%;cursor: pointer;"
+            (click)="goProfile(pet.ID)" [ngClass]="{'selected-card':titleSelected === pet.ID} ">
+            <mat-card-header>
+              <div mat-card-avatar *ngIf="pet?.profilePicture; else defaultProfile" class="example-header-image"
+                [ngStyle]="{'background-image': 'url(' + pet?.profilePicture + ')'}"></div>
+              <ng-template #defaultProfile>
+                <div mat-card-avatar class="example-header-image"
+                  style="background-image: url('../../assets/img/default.png');">
+                </div>
+              </ng-template>
+              <mat-card-title>{{pet?.name}}</mat-card-title>
+              <mat-card-subtitle>{{pet?.race}}</mat-card-subtitle>
+            </mat-card-header>
+            <div *ngIf="pet.picture; else default" >
+              <img mat-card-image src="{{pet?.picture}}" alt=" picture of {{pet?.name}}"
+                style="width: 280px;height: 191.94px;position: relative;margin-bottom: 20px;">
+            </div>
+            <ng-template #default>
+              <img mat-card-image src="../../assets/img/default-image-620x600.jpg"
+                alt=" default picture" style="width: 280px;height: 191.94px;position: relative;bottom: 19px;">
+            </ng-template>
+            <mat-card-content >
+              
+            </mat-card-content>
+          </mat-card>
+          <button mat-button
+            style="padding-right:20px;padding-left: 20px;margin-right: 0.6% ;margin-bottom:0.6%;color: #52b788;font-size : 300px;width:289.94px;height:300px"
+            (click)="onCreate()">+</button>
+        </div>
+      </div>
+    </ng-template>
   </mat-sidenav-content>
 </mat-sidenav-container>
-

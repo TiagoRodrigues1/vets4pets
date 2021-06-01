@@ -100,13 +100,13 @@ export class PetProfileComponent implements OnInit {
     //  this.accountService.editPet(id,pet).subscribe();
     //}
 
-    deletePet(id:number) {
+    deletePet(pet:Pet) {
       this.petService.form.reset();
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;  
       dialogConfig.width = "20%"
-      dialogConfig.data = id;
+      dialogConfig.data = pet;
       this.dialog.open(DeletePetComponent,dialogConfig);
     }
   

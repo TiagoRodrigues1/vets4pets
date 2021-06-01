@@ -32,7 +32,7 @@ export class LeftMenuComponent implements OnInit {
     {name: 'Veterinaries', link:'/clinic', icon: 'store'},
     {name: 'Pets', link:'/pets', icon: 'pets'},
     {name: 'Adoptions', link:'/adoptions', icon: 'favorite'},
-    {name: 'Forum', link:'some-link', icon: 'supervisor_account'},
+    {name: 'Forum', link:'/forum', icon: 'supervisor_account'},
     {name: 'Near Vets', link:'/maps', icon: 'place'},
   ]
 

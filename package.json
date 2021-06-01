@@ -31,6 +31,7 @@
     "@syncfusion/ej2-angular-navigations": "^19.1.54",
     "bootstrap": "^4.5.0",
     "lodash-es": "^4.17.21",
+    "ng-image-slider": "^2.8.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.3"

@@ -67,6 +67,14 @@ import { AddadoptionComponent } from './adoptions/addadoption/addadoption.compon
 import { DisplayadoptionComponent } from './adoptions/displayadoption/displayadoption.component';
 import { LastadoptionsComponent } from './adoptions/lastadoptions/lastadoptions.component';
 import { MyadoptionsComponent } from './adoptions/myadoptions/myadoptions.component';
+import { ForumComponent } from './forum/forum.component';
+import { AddquestionComponent } from './forum/addquestion/addquestion.component';
+import { AddanswerComponent } from './forum/addanswer/addanswer.component';
+import { ForumdisplayComponent } from './forum/forumdisplay/forumdisplay.component';
+import { MyanswersComponent } from './forum/myanswers/myanswers.component';
+import { MyquestionsComponent } from './forum/myquestions/myquestions.component';
+import { NgImageSliderModule } from 'ng-image-slider';
+import { MapsComponent } from './maps/maps.component';
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
   interactionPlugin
@@ -105,7 +113,14 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     AddadoptionComponent,
     DisplayadoptionComponent,
     LastadoptionsComponent,
-    MyadoptionsComponent
+    MyadoptionsComponent,
+    ForumComponent,
+    AddquestionComponent,
+    AddanswerComponent,
+    ForumdisplayComponent,
+    MyanswersComponent,
+    MyquestionsComponent,
+    MapsComponent,
   ],
   imports: [
     BrowserModule,
@@ -138,6 +153,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     MatTooltipModule,
     MatStepperModule,
     FormsModule,
+    NgImageSliderModule,
+
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

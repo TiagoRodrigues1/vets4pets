@@ -22,7 +22,7 @@ export class LastadoptionsComponent implements OnInit {
 
   ELEMENT_DATA : Adoption[]=[];
   dataSource = new MatTableDataSource<Adoption>(this.ELEMENT_DATA);
-  displayedColumns: string[] = ['name', 'animaltype', 'race','birth'];
+  displayedColumns: string[] = ['name','profilePicture', 'animaltype', 'race','birth'];
   user: User;
   string : string;
   payload;
@@ -53,10 +53,10 @@ export class LastadoptionsComponent implements OnInit {
 
   displayAdoption(adoption:Adoption){
      const dialogConfig = new MatDialogConfig();
-     dialogConfig.disableClose = false;
-     dialogConfig.autoFocus = true;  
-     dialogConfig.width = "55%"
-     dialogConfig.height = "80%"
+     dialogConfig.disableClose = true;
+     dialogConfig.autoFocus = false;  
+     dialogConfig.width = "40%"
+     dialogConfig.height = "85%"
      dialogConfig.data=adoption;
      console.log(adoption);
      this.dialog.open(DisplayadoptionComponent,dialogConfig);

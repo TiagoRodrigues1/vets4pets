@@ -77,13 +77,11 @@ export class UserProfileComponent implements OnInit {
   
               if (fileInput.target.files[0].size > max_size) {
                   this.imageError = 'Maximum size allowed is ' + max_size / 1000 + 'MB';
-                      this.displayError(this.imageError);
                       return false;
               }
   
               if (!_.includes(allowed_types, fileInput.target.files[0].type)) {
                   this.imageError = 'Only allowed images are of type JPG or PNG';
-                  this.displayError(this.imageError);
                   return false;
               }
               const reader = new FileReader();
@@ -101,7 +99,6 @@ export class UserProfileComponent implements OnInit {
                               'x' +
                               max_width +
                               'px';
-                              this.displayError(this.imageError);
                           return false;
                       } else {
                           const imgBase64Path = e.target.result;
@@ -118,10 +115,4 @@ export class UserProfileComponent implements OnInit {
           }
       }
       
-      private displayError(message: string) {
-        this.alertService.error(message,
-          { autoClose: false }
-        );
-      }
-   
 }

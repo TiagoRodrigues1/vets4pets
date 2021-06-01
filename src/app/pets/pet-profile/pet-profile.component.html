@@ -36,12 +36,12 @@
                 <div class="row">
 	                <div class="col-md-6 ml-auto mr-auto">
         	           <div class="profile">
-                      <button mat-fab type="button" style ="position: relative;left: 120%;" (click) = "editPet(pet?.id,pet)">
-                        <mat-icon>edit</mat-icon>
+                      <button mat-icon-button type="button" style ="position: relative;left: 120%;" (click) = "editPet(pet?.id,pet)">
+                        <mat-icon style = "color:#52b788">edit</mat-icon>
                       </button>
                       <span style = "padding-left: 2%;"></span>
-                      <button mat-fab type="button" style ="position: relative;left: 120%;bottom:10%;" (click) = "deletePet(pet?.id)">
-                        <mat-icon>delete</mat-icon>
+                      <button mat-icon-button type="button" style ="position: relative;left: 120%;bottom:15%;" (click) = "deletePet(pet)">
+                        <mat-icon style = "color:red">delete_outline</mat-icon>
                       </button>
 	                        <div class="avatar">
                             <div *ngIf = "pet?.profilePicture; else defaultProfile">
