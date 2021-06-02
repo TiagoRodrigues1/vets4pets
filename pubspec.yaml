@@ -45,6 +45,7 @@ dependencies:
   geocoding: ^1.0.5
   geolocator: ^6.1.1
   json_serializable: ^4.1.0
+  add_2_calendar: ^2.1.0
 
   
   

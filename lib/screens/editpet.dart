@@ -113,6 +113,13 @@ class _EditPetPageState extends State<EditPetPage> {
   void initState() {
     animalTypeValue = widget.pet['animaltype'];
     raceValue = widget.pet['race'];
+       if(widget.pet['animaltype']=="N/A"){
+      animalTypeValue="Other";
+      raceValue=null;
+    }
+    if(widget.pet['race']=="N/A"){
+      raceValue=null;
+    }
     super.initState();
   }
 
@@ -161,9 +168,15 @@ class _EditPetPageState extends State<EditPetPage> {
     final TextEditingController _nameController =
         TextEditingController(text: widget.pet['name']);
 
-    String profileUrl = widget.pet['picture'];
-    profileUrl = profileUrl.substring(23, profileUrl.length);
-    Uint8List bytes = base64.decode(profileUrl);
+            String profileUrl = widget.pet['profilePicture'];
+        
+    Uint8List bytes=null;
+    if(profileUrl!="" && profileUrl!=null  ){
+   profileUrl = profileUrl.substring(23, profileUrl.length);
+     bytes = base64.decode(profileUrl);
+    }
+ 
+ 
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Pet"),
@@ -224,9 +237,7 @@ class _EditPetPageState extends State<EditPetPage> {
                                           ),
                                         ),
                                         radius: 50.0,
-                                        backgroundImage: widget
-                                                    .pet["picture"] ==
-                                                null
+                                        backgroundImage:  bytes==null
                                             ? AssetImage(
                                                 "assets/images/petdefault.jpg")
                                             : MemoryImage(bytes),
@@ -375,7 +386,7 @@ class _EditPetPageState extends State<EditPetPage> {
                                       raceValue = newValue;
                                     });
                                   },
-                                  items: animalTypeValue != null
+                                  items:  animalTypeValue != null && animalTypeValue != "Other"
                                       ? data[animalTypeValue].map((valueType) {
                                           return DropdownMenuItem(
                                             value: valueType,
@@ -392,13 +403,18 @@ class _EditPetPageState extends State<EditPetPage> {
                     onTap: () async {
                       var name = _nameController.text;
 
-                      if (raceValue == "Other") {
-                        raceValue = "N/A";
+                             String type= animalTypeValue;
+                          String race= raceValue;
+                
+                      if (animalTypeValue!= "Other" && raceValue=="Other") {
+                        
+                        race = "N/A";
                       }
-                      if (animalTypeValue == "Other") {
-                        animalTypeValue = "N/A";
-                        raceValue = "N/A";
+                      if (animalTypeValue== "Other") {
+                        type="N/A";
+                        race = "N/A";
                       }
+
 
                       if (_image != null) {
                         List<int> imgBytes = await _image.readAsBytes();
@@ -406,10 +422,10 @@ class _EditPetPageState extends State<EditPetPage> {
                         String prefix = "data:image/jpeg;base64,";
                         base64img = prefix + base64img;
 
-                        editPet(name, animalTypeValue, raceValue, base64img,
+                        editPet(name, type, race, base64img,
                             context);
                       } else {
-                        editPet(name, animalTypeValue, raceValue,
+                        editPet(name, type, race,
                             widget.pet['picture'], context);
                       }
                       Navigator.of(context).pop();

@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import '../main.dart';
 import 'dart:convert' as convert;
 
+import 'colors.dart';
+
 class ForumPage extends StatefulWidget {
   ForumPage({Key key, this.title}) : super(key: key);
 
@@ -272,7 +274,8 @@ Widget entryItem(context, item) {
       padding: const EdgeInsets.all(3.0),
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       decoration: new BoxDecoration(
-       
+                 color: AppColorsTheme.myTheme.secondaryGradientColor,
+
         borderRadius: new BorderRadius.all(new Radius.circular(15.0)),
       ),
       child: new ListTile(

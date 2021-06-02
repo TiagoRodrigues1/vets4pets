@@ -10,6 +10,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert' as convert;
+import 'package:add_2_calendar/add_2_calendar.dart';
 
 List appointments = [];
 
@@ -33,33 +34,33 @@ class _AppointmentPageState extends State<AppointmentPage> {
   DateTime selectedDay = DateTime.now();
   String date;
 
-  Map<DateTime, List<Event>> selectedDayAppointment; //Horarios daquele dia
-  Map<DateTime, List<Event>>
+  Map<DateTime, List<AppEvent>> selectedDayAppointment; //Horarios daquele dia
+  Map<DateTime, List<AppEvent>>
       selectedSlots; //Array que vai conter todas os slots diponiveis
-  List<Event> horas = [
-    Event(title: "08:00"),
-    Event(title: "08:30"),
-    Event(title: "09:00"),
-    Event(title: "09:30"),
-    Event(title: "10:00"),
-    Event(title: "10:30"),
-    Event(title: "11:00"),
-    Event(title: "11:30"),
-    Event(title: "12:00"),
-    Event(title: "12:30"),
-    Event(title: "14:00"),
-    Event(title: "14:30"),
-    Event(title: "15:30"),
-    Event(title: "16:00"),
-    Event(title: "16:30"),
-    Event(title: "17:00"),
-    Event(title: "17:30"),
-    Event(title: "18:00"),
-    Event(title: "18:30"),
-    Event(title: "19:00"),
+  List<AppEvent> horas = [
+    AppEvent(title: "08:00"),
+    AppEvent(title: "08:30"),
+    AppEvent(title: "09:00"),
+    AppEvent(title: "09:30"),
+    AppEvent(title: "10:00"),
+    AppEvent(title: "10:30"),
+    AppEvent(title: "11:00"),
+    AppEvent(title: "11:30"),
+    AppEvent(title: "12:00"),
+    AppEvent(title: "12:30"),
+    AppEvent(title: "14:00"),
+    AppEvent(title: "14:30"),
+    AppEvent(title: "15:30"),
+    AppEvent(title: "16:00"),
+    AppEvent(title: "16:30"),
+    AppEvent(title: "17:00"),
+    AppEvent(title: "17:30"),
+    AppEvent(title: "18:00"),
+    AppEvent(title: "18:30"),
+    AppEvent(title: "19:00"),
   ];
 
-  Map<DateTime, List<Event>> schedule; //Horario estatico completo
+  Map<DateTime, List<AppEvent>> schedule; //Horario estatico completo
 
   DateTime focusedDay = DateTime.now();
 
@@ -85,7 +86,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   // ignore: avoid_init_to_null
   Map<String, dynamic> selectedVet = null;
   // ignore: avoid_init_to_null
-  Event selectedHour = null;
+  AppEvent selectedHour = null;
 
   bool isLoading = false;
   bool isLoading2 = false;
@@ -126,7 +127,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
     }
   }
 
-  addAppointments(DateTime date, int animalid, int idvet) async {
+  addAppointments(DateTime date, int animalid, int idvet, String name,
+      String vetname, String contact) async {
     var jwt = await storage.read(key: "jwt");
     String dates = date.toString();
     dates.replaceAll("T", " ");
@@ -146,7 +148,23 @@ class _AppointmentPageState extends State<AppointmentPage> {
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(result.body);
+    print(result.statusCode);
+    if (result.statusCode == 201) {
+      DateTime now = DateTime.now();
+      var timezoneOffset1 = now.timeZoneOffset;
+
+      date = date.subtract(timezoneOffset1);
+
+      Event event = Event(
+        title: 'Appointment of $name',
+        description:
+            'Appointment of $name with ver: $vetname | Contact: $contact',
+        location: widget.clinic['address'],
+        startDate: date,
+        endDate: date.add(Duration(minutes: 30)),
+      );
+      Add2Calendar.addEvent2Cal(event);
+    }
   }
 
   getAppointements(int id) async {
@@ -180,10 +198,12 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
           if (selectedDayAppointment[parseDate] != null) {
             selectedDayAppointment[parseDate].add(
-              Event(title: formattedTime),
+              AppEvent(title: formattedTime),
             );
           } else {
-            selectedDayAppointment[parseDate] = [Event(title: formattedTime)];
+            selectedDayAppointment[parseDate] = [
+              AppEvent(title: formattedTime)
+            ];
           }
         });
 
@@ -219,9 +239,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
     var name = item['name'];
     var animaltype = item['animaltype'];
     String profileUrl = item['profilePicture'];
-    profileUrl = profileUrl.substring(23, profileUrl.length);
 
-    Uint8List bytes = base64.decode(profileUrl);
+    Uint8List bytes = null;
+    if (profileUrl != "" && profileUrl != null) {
+      profileUrl = profileUrl.substring(23, profileUrl.length);
+      bytes = base64.decode(profileUrl);
+    }
+
     return Card(
         color: item == selectedPet ? Colors.green[100] : Colors.white,
         elevation: 1.5,
@@ -243,7 +267,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         borderRadius: BorderRadius.circular(60 / 2),
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: MemoryImage(bytes),
+                          image: bytes == null
+                              ? AssetImage("assets/images/petdefault.jpg")
+                              : MemoryImage(bytes),
                         )),
                   ),
                   SizedBox(
@@ -597,7 +623,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         "\n\nInformation is complete! Go back and select the correct items!\n\n ");
   }
 
-  List<Event> _getEventsfromDay(DateTime date) {
+  List<AppEvent> _getEventsfromDay(DateTime date) {
     return selectedSlots[date] ?? [];
   }
 
@@ -605,9 +631,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
     print(selectedDayAppointment);
     if (selectedDayAppointment[date] != null) {
       selectedSlots[date] = null;
-      List<Event> day_app = selectedDayAppointment[date];
-      List<Event> day_all = horas;
-      List<Event> slots = [];
+      List<AppEvent> day_app = selectedDayAppointment[date];
+      List<AppEvent> day_all = horas;
+      List<AppEvent> slots = [];
 
       day_all.forEach((element) {
         if (!day_app.contains(element)) {
@@ -744,8 +770,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                 finalDay = finalDay.add(
                                     Duration(hours: hours, minutes: minutes));
 
-                                addAppointments(finalDay, selectedPet['ID'],
-                                    selectedVet['ID']);
+                                addAppointments(
+                                    finalDay,
+                                    selectedPet['ID'],
+                                    selectedVet['ID'],
+                                    selectedPet['name'],
+                                    selectedVet['name'],
+                                    selectedVet['contact']);
                                 Navigator.of(context).pop();
                               }
                             : onStepContinue,

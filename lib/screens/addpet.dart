@@ -21,7 +21,7 @@ class _AddPetPageState extends State<AddPetPage> {
   final TextEditingController _nameController = TextEditingController();
 
   String animalTypeValue, raceValue, cityValue;
-
+  bool _validate = false;
   List animalTypeList = [
     "Dog",
     "Cat",
@@ -194,6 +194,7 @@ class _AddPetPageState extends State<AddPetPage> {
                       bottomLeft: Radius.circular(90),
                       bottomRight: Radius.circular(90))),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Spacer(),
@@ -275,7 +276,7 @@ class _AddPetPageState extends State<AddPetPage> {
                 children: <Widget>[
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate ? 55 : 45,
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -287,12 +288,14 @@ class _AddPetPageState extends State<AddPetPage> {
                     child: TextField(
                       controller: _nameController,
                       decoration: InputDecoration(
+                        hintText: _validate ? null : 'Pet name',
+                        errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                        //contentPadding: EdgeInsets.fromLTRB(40.0, 10.0, 20.0, 10.0),
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.pets_sharp,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Pet name',
                       ),
                     ),
                   ),
@@ -329,6 +332,7 @@ class _AddPetPageState extends State<AddPetPage> {
                                   onChanged: (newValue) {
                                     setState(() {
                                       animalTypeValue = newValue;
+
                                       raceValue = null;
                                     });
                                   },
@@ -377,7 +381,8 @@ class _AddPetPageState extends State<AddPetPage> {
                                       raceValue = newValue;
                                     });
                                   },
-                                  items: animalTypeValue != null
+                                  items: animalTypeValue != null &&
+                                          animalTypeValue != "Other"
                                       ? data[animalTypeValue].map((valueType) {
                                           return DropdownMenuItem(
                                             value: valueType,
@@ -392,22 +397,39 @@ class _AddPetPageState extends State<AddPetPage> {
                   Spacer(),
                   InkWell(
                     onTap: () async {
-                      List<int> imgBytes = await _image.readAsBytes();
-                      String base64img = base64Encode(imgBytes);
-                      String prefix = "data:image/jpeg;base64,";
-                      base64img = prefix + base64img;
+                      setState(() {
+                        _nameController.text.isEmpty
+                            ? _validate = true
+                            : _validate = false;
+                      });
 
-                      if (raceValue == "Other") {
-                        raceValue = "N/A";
-                      }
-                      if (animalTypeValue == "Other") {
-                        animalTypeValue = "N/A";
-                        raceValue = "N/A";
-                      }
+                      if (_validate != true) {
+                        String type = animalTypeValue;
+                        String race = raceValue;
 
-                      addPet(_nameController.text, animalTypeValue, raceValue,
-                          base64img, context);
-                      Navigator.of(context).pop();
+                        if (animalTypeValue != "Other" &&
+                            raceValue == "Other") {
+                          race = "N/A";
+                        }
+                        if (animalTypeValue == "Other") {
+                          type = "N/A";
+                          race = "N/A";
+                        }
+
+                        if (_image != null) {
+                          List<int> imgBytes = await _image.readAsBytes();
+                          String base64img = base64Encode(imgBytes);
+                          String prefix = "data:image/jpeg;base64,";
+                          base64img = prefix + base64img;
+                          addPet(_nameController.text, type, race, base64img,
+                              context);
+                        } else {
+                          addPet(
+                              _nameController.text, type, race, null, context);
+                        }
+
+                        Navigator.of(context).pop();
+                      }
                     },
                     child: Container(
                       height: 45,

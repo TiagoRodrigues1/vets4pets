@@ -16,9 +16,7 @@ class MyAdoptionsPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<MyAdoptionsPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _animaltypeController = TextEditingController();
-  final TextEditingController _raceController = TextEditingController();
+
   List adoptions = [];
   List<Map<String, dynamic>> typeoptions = animalTypes;
   bool isLoading = false;
@@ -107,22 +105,22 @@ class _IndexPageState extends State<MyAdoptionsPage> {
           ),
         ],
       ),
-      body: getBody(),
+      body: getBody(context),
     );
   }
 
-  Widget getBody() {
+  Widget getBody(context) {
     if (adoptions.contains(null) || adoptions.length == 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
         itemCount: adoptions.length,
         itemBuilder: (context, index) {
-          return getCard(adoptions[index]);
+          return getCard(adoptions[index],context);
         });
   }
 
-  Widget getCard(item) {
+  Widget getCard(item,context) {
     var id = item['ID'];
     var name = item['name'];
     var animaltype = item['animaltype'];
@@ -175,15 +173,30 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                       ),
                     ],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  Column(children: [
+IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.green),
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (BuildContext context) => _showDialog(id),
+                        builder: (BuildContext context) => _showDialog(id,context),
                       );
                     },
                   ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                    onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _showDialog(id, context),
+                      );
+                    },
+                  ),
+
+
+                  ],)
+                  
                 ],
               ),
             ),
@@ -191,38 +204,43 @@ class _IndexPageState extends State<MyAdoptionsPage> {
         ));
   }
 
-  Widget _showDialog(int id) {
+    Widget _showDialog(int id, context) {
+    Widget yesButton = ElevatedButton(
+        style: TextButton.styleFrom(
+            primary: Colors.white, backgroundColor: Colors.red[300]),
+        child: new Text(
+          "Yes",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        onPressed: () async {
+          deleteAdoption(id);
+          Navigator.pop(context);
+        });
+
+    Widget noButton = ElevatedButton(
+      style: TextButton.styleFrom(
+        primary: Colors.white,
+      ),
+      child: new Text(
+        "No",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
     return AlertDialog(
       title: new Text(
-        "Delete adoption",
+        "Delete Adoption",
         textAlign: TextAlign.center,
       ),
       content: new Text("Are you sure that you want to delete this adoption?",
           textAlign: TextAlign.center),
       actions: <Widget>[
-        new TextButton(
-          child: new Text("No"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 178),
-          child: TextButton(
-            style: TextButton.styleFrom(
-              primary: Colors.red,
-            ),
-            child: new Text("Yes"),
-            onPressed: () {
-              deleteAdoption(id);
-              Navigator.of(context).pop();
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => MyAdoptionsPage()),
-                  (Route<dynamic> route) => false);
-            },
-          ),
-        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[yesButton, noButton])
       ],
     );
   }

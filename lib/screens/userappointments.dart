@@ -21,7 +21,7 @@ class UserAppointments extends StatefulWidget {
 }
 
 class _UserAppointmentsState extends State<UserAppointments> {
-  Map<DateTime, List<Event>> selectedEvents;
+  Map<DateTime, List<AppEvent>> selectedEvents;
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
@@ -73,10 +73,10 @@ class _UserAppointmentsState extends State<UserAppointments> {
           print(parseDate);
           if (selectedEvents[parseDate] != null) {
             selectedEvents[parseDate].add(
-              Event(title: formattedTime),
+              AppEvent(title: formattedTime),
             );
           } else {
-            selectedEvents[parseDate] = [Event(title: formattedTime)];
+            selectedEvents[parseDate] = [AppEvent(title: formattedTime)];
           }
         });
 
@@ -151,7 +151,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
     );
   }
 
-  List<Event> _getEventsfromDay(DateTime date) {
+  List<AppEvent> _getEventsfromDay(DateTime date) {
     return selectedEvents[date] ?? [];
   }
 

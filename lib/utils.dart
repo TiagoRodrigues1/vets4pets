@@ -1,16 +1,16 @@
 import 'package:flutter/foundation.dart';
 
 /// Example event class.
-class Event {
+class AppEvent {
   final String title;
-  Event({@required this.title});
+  AppEvent({@required this.title});
 
   String toString() => this.title;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Event &&
+      other is AppEvent &&
           runtimeType == other.runtimeType &&
           title == other.title;
 

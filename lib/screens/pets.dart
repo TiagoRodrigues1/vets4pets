@@ -22,7 +22,6 @@ class Constants {
 }
 
 class _IndexPageState extends State<PetsPage> {
-  //List vaccines = [];
   List pets = [];
   bool isLoading = false;
   bool isLoading2 = false;
@@ -135,9 +134,14 @@ class _IndexPageState extends State<PetsPage> {
     var id = item['ID'];
     String name = item['name'].toString();
     String animaltype = item['animaltype'];
-    String profileUrl = item['picture'];
-    profileUrl = profileUrl.substring(23, profileUrl.length);
-    Uint8List bytes = base64.decode(profileUrl);
+    String profileUrl = item['profilePicture'];
+
+    Uint8List bytes = null;
+    if (profileUrl != "" && profileUrl != null) {
+      profileUrl = profileUrl.substring(23, profileUrl.length);
+      bytes = base64.decode(profileUrl);
+    }
+
     return Card(
         elevation: 1.5,
         child: new InkWell(
@@ -159,7 +163,9 @@ class _IndexPageState extends State<PetsPage> {
                         borderRadius: BorderRadius.circular(60 / 2),
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: MemoryImage(bytes),
+                          image: bytes == null
+                              ? AssetImage("assets/images/petdefault.jpg")
+                              : MemoryImage(bytes),
                         )),
                   ),
                   SizedBox(
@@ -225,11 +231,14 @@ class _IndexPageState extends State<PetsPage> {
     var name = item['name'];
     var animaltype = item['animaltype'];
     var race = item['race'];
+    String profileUrl = item['profilePicture'];
 
-    String profileUrl = item['picture'];
+    Uint8List bytes = null;
+    if (profileUrl != "" && profileUrl != null) {
+      profileUrl = profileUrl.substring(23, profileUrl.length);
+      bytes = base64.decode(profileUrl);
+    }
 
-    profileUrl = profileUrl.substring(23, profileUrl.length);
-    Uint8List bytes = base64.decode(profileUrl);
     return Stack(
       children: <Widget>[
         Container(
@@ -310,9 +319,16 @@ class _IndexPageState extends State<PetsPage> {
             backgroundColor: Colors.transparent,
             radius: Constants.avatarRadius,
             child: ClipRRect(
-                borderRadius:
-                    BorderRadius.all(Radius.circular(Constants.avatarRadius)),
-                child: Image.memory(bytes, fit: BoxFit.cover)),
+              borderRadius:
+                  BorderRadius.all(Radius.circular(Constants.avatarRadius)),
+              child: Image(
+                image: bytes == null
+                    ? AssetImage("assets/images/petdefault.jpg")
+                    : MemoryImage(
+                        bytes,
+                      ),
+              ),
+            ),
           ),
         ),
       ],
@@ -357,21 +373,6 @@ class _IndexPageState extends State<PetsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[yesButton, noButton])
       ],
-    );
-  }
-
-  Widget _showDialogVaccines(context) {
-    Widget noButton = ElevatedButton(
-      style: TextButton.styleFrom(
-        primary: Colors.white,
-      ),
-      child: new Text(
-        "No",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
     );
   }
 }

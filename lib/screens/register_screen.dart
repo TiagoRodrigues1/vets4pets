@@ -274,21 +274,12 @@ class RegisterPageState extends State<RegisterPage> {
                       var name = _nameController.text;
                       var contact = _contactController.text;
                       print(username);
+
+
                       await attemptSignIn(
                           email, username, password1, name, contact);
 
-                      /* if(state==0){
-                        showDialog(
-                        context: context,
-                        builder: (BuildContext context) => _showDialog(context),
-                      );
-
-                    }else{
-                        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => NavDrawer()),
-        );
-                    }*/
+             
                     },
                     child: Container(
                       height: 45,

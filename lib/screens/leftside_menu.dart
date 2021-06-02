@@ -184,7 +184,7 @@ class NavDrawer extends StatelessWidget {
     gender = results['gender'];
   }
 
-  Widget _showDialog(context) {
+  Widget _showDialog2(context) {
     return AlertDialog(
       title: new Text(
         "Logout",
@@ -216,6 +216,53 @@ class NavDrawer extends StatelessWidget {
             },
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _showDialog( context) {
+    Widget yesButton = ElevatedButton(
+        style: TextButton.styleFrom(
+            primary: Colors.white, backgroundColor: Colors.red[300]),
+        child: new Text(
+          "Yes",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        onPressed: () async {
+          storage.delete(key: "jwt");
+          storage.delete(key: "profilePicture");
+              Navigator.of(context).pop();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => LoginPage()),
+                  (Route<dynamic> route) => false);
+         
+        });
+
+    Widget noButton = ElevatedButton(
+      style: TextButton.styleFrom(
+        primary: Colors.white,
+      ),
+      child: new Text(
+        "No",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    return AlertDialog(
+      title: new Text(
+        "Logout",
+        textAlign: TextAlign.center,
+      ),
+      content: new Text("Terminate session",
+          textAlign: TextAlign.center),
+      actions: <Widget>[
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[yesButton, noButton])
       ],
     );
   }
