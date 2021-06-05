@@ -21,7 +21,8 @@ class _AddPetPageState extends State<AddPetPage> {
   final TextEditingController _nameController = TextEditingController();
 
   String animalTypeValue, raceValue, cityValue;
-  bool _validate = false;
+  bool _validate_name = false,_validate_type = false,_validate_race = false;
+  
   List animalTypeList = [
     "Dog",
     "Cat",
@@ -276,7 +277,7 @@ class _AddPetPageState extends State<AddPetPage> {
                 children: <Widget>[
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: _validate ? 55 : 45,
+                    height: _validate_name ? 55 : 45,
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -288,8 +289,8 @@ class _AddPetPageState extends State<AddPetPage> {
                     child: TextField(
                       controller: _nameController,
                       decoration: InputDecoration(
-                        hintText: _validate ? null : 'Pet name',
-                        errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                        hintText: _validate_name ? null : 'Pet name',
+                        errorText: _validate_name ? validateName(_nameController.text) : null,
                         //contentPadding: EdgeInsets.fromLTRB(40.0, 10.0, 20.0, 10.0),
                         border: InputBorder.none,
                         icon: Icon(
@@ -306,6 +307,7 @@ class _AddPetPageState extends State<AddPetPage> {
                       padding: EdgeInsets.only(
                           top: 4, left: 16, right: 16, bottom: 4),
                       decoration: BoxDecoration(
+                          border: _validate_type?Border.all(width: 2.0, color: Colors.red[300]):null,
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           color: Colors.white,
                           boxShadow: [
@@ -332,7 +334,7 @@ class _AddPetPageState extends State<AddPetPage> {
                                   onChanged: (newValue) {
                                     setState(() {
                                       animalTypeValue = newValue;
-
+                                        _validate_type=false;
                                       raceValue = null;
                                     });
                                   },
@@ -353,6 +355,7 @@ class _AddPetPageState extends State<AddPetPage> {
                       padding: EdgeInsets.only(
                           top: 4, left: 16, right: 16, bottom: 4),
                       decoration: BoxDecoration(
+                          border: _validate_race?Border.all(width: 2.0, color: Colors.red[300]):null,
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           color: Colors.white,
                           boxShadow: [
@@ -375,10 +378,12 @@ class _AddPetPageState extends State<AddPetPage> {
                                   isExpanded: true,
                                   focusColor: Colors.green,
                                   hint: Text("Race"),
+                                  
                                   value: raceValue,
                                   onChanged: (newValue) {
                                     setState(() {
                                       raceValue = newValue;
+                                      _validate_race=false;
                                     });
                                   },
                                   items: animalTypeValue != null &&
@@ -397,13 +402,20 @@ class _AddPetPageState extends State<AddPetPage> {
                   Spacer(),
                   InkWell(
                     onTap: () async {
+                      
                       setState(() {
-                        _nameController.text.isEmpty
-                            ? _validate = true
-                            : _validate = false;
+                        _nameController.text.isEmpty ||  _nameController.text.length>20 ||_nameController.text.length<3
+                            ? _validate_name = true
+                            : _validate_name = false;
+                        animalTypeValue==null
+                             ? _validate_type = true 
+                            : _validate_type = false;
+                        raceValue==null
+                             ? _validate_race = true 
+                            : _validate_race = false;
                       });
 
-                      if (_validate != true) {
+                      if (_validate_name != true && _validate_type!= true && _validate_race != true) {
                         String type = animalTypeValue;
                         String race = raceValue;
 
@@ -462,4 +474,20 @@ class _AddPetPageState extends State<AddPetPage> {
       ),
     );
   }
+
+
+  String validateName(String value) {
+  
+  if(value.isEmpty){
+    return "Name can't be empty";
+  }
+  if (value.length < 3)  {
+    return "Name is to small ";
+  }
+  if (value.length > 20)  {
+    return "Name is to big ";
+  }
+  
+  return null;
+}
 }

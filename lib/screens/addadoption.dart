@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' show base64Encode;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../main.dart';
+import '../../main.dart';
 import 'dart:convert' as convert;
-import '../jwt.dart';
+import '../../jwt.dart';
 
 class AddAdoptionPage extends StatefulWidget {
   @override
@@ -17,10 +17,11 @@ class AddAdoptionPage extends StatefulWidget {
 class _AddAdoptionPageState extends State<AddAdoptionPage> {
   // ignore: avoid_init_to_null
   File _image = null, _image2 = null, _image3 = null, _image4 = null;
+  bool _validate_name = false,_validate_type = false,_validate_race = false, _validate_birth = false,_validate_text = false,_validate_email = false,_validate_contact = false,_validate_city = false;
+
 
   final picker = ImagePicker();
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _birthController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -489,7 +490,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                 children: <Widget>[
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_name ? 55 : 45,
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -501,22 +502,25 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                     child: TextField(
                       controller: _nameController,
                       decoration: InputDecoration(
+                         hintText: _validate_name ? null : 'Title',
+                        errorText: _validate_name ? validateTitle(_nameController.text) : null,
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.pets_sharp,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Title',
+                        
                       ),
                     ),
                   ),
-                  Container(
+                 Container(
                       width: MediaQuery.of(context).size.width / 1.2,
                       height: 45,
                       margin: EdgeInsets.only(top: 32),
                       padding: EdgeInsets.only(
                           top: 4, left: 16, right: 16, bottom: 4),
                       decoration: BoxDecoration(
+                          border: _validate_type?Border.all(width: 2.0, color: Colors.red[300]):null,
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           color: Colors.white,
                           boxShadow: [
@@ -543,6 +547,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                   onChanged: (newValue) {
                                     setState(() {
                                       animalTypeValue = newValue;
+                                        _validate_type=false;
                                       raceValue = null;
                                     });
                                   },
@@ -556,13 +561,14 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                           )
                         ],
                       )),
-                  Container(
+                   Container(
                       width: MediaQuery.of(context).size.width / 1.2,
                       height: 45,
                       margin: EdgeInsets.only(top: 32),
                       padding: EdgeInsets.only(
                           top: 4, left: 16, right: 16, bottom: 4),
                       decoration: BoxDecoration(
+                          border: _validate_race?Border.all(width: 2.0, color: Colors.red[300]):null,
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           color: Colors.white,
                           boxShadow: [
@@ -585,13 +591,16 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                   isExpanded: true,
                                   focusColor: Colors.green,
                                   hint: Text("Race"),
+                                  
                                   value: raceValue,
                                   onChanged: (newValue) {
                                     setState(() {
                                       raceValue = newValue;
+                                      _validate_race=false;
                                     });
                                   },
-                                  items: animalTypeValue != null
+                                  items: animalTypeValue != null &&
+                                          animalTypeValue != "Other"
                                       ? data[animalTypeValue].map((valueType) {
                                           return DropdownMenuItem(
                                             value: valueType,
@@ -605,7 +614,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_birth ? 55 : 45,
                     margin: EdgeInsets.only(top: 32),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
@@ -617,13 +626,16 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                         ]),
                     child: TextField(
                       controller: _birthController,
+
                       decoration: InputDecoration(
+                         hintText: _validate_birth ? null : 'Birth (ex.2020)',
+                        errorText: _validate_birth ? validateBirth(_birthController.text) : null,
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.date_range,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Birth',
+                        
                       ),
                     ),
                   ),
@@ -654,7 +666,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_email ? 55 : 45,
                     margin: EdgeInsets.only(top: 32),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
@@ -667,18 +679,20 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                     child: TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
+                        hintText: _validate_email ? null : 'Email',
+                        errorText: _validate_email ? validateEmail(_emailController.text) : null,
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.email,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Email',
+                        
                       ),
                     ),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_contact ? 55 : 45,
                     margin: EdgeInsets.only(top: 32),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
@@ -690,13 +704,16 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                         ]),
                     child: TextField(
                       controller: _phoneController,
-                      decoration: InputDecoration(
+                        decoration: InputDecoration(
+                           hintText: _validate_contact ? null : 'Contact',
+                        errorText: _validate_contact ? validateContact(_phoneController.text) : null,
+                     
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.phone,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Contact',
+                      
                       ),
                     ),
                   ),
@@ -707,6 +724,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                       padding: EdgeInsets.only(
                           top: 4, left: 16, right: 16, bottom: 4),
                       decoration: BoxDecoration(
+                          border: _validate_city?Border.all(width: 2.0, color: Colors.red[300]):null,
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           color: Colors.white,
                           boxShadow: [
@@ -717,7 +735,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                         children: <Widget>[
                           Container(
                               child: Icon(
-                            Icons.pets,
+                            Icons.location_city ,
                             color: Color(0xFF52B788),
                             size: 25.0,
                           )),
@@ -728,11 +746,12 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                                     child: DropdownButton(
                                   isExpanded: true,
                                   focusColor: Colors.green,
-                                  hint: Text("Animal Type"),
+                                  hint: Text("City"),
                                   value: cityValue,
                                   onChanged: (newValue) {
                                     setState(() {
                                       cityValue = newValue;
+                                      _validate_city=false;
                                     });
                                   },
                                   items: cityList.map((valueType) {
@@ -747,6 +766,55 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                       )),
                   InkWell(
                     onTap: () async {
+                      if(_image==null || _image2==null ||_image3==null || _image4==null)
+                      {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              _showDialog(context),
+                        );
+                        return;
+                      }
+
+
+                           setState(() {
+                        _nameController.text.isEmpty ||  _nameController.text.length>20 || _nameController.text.length<10
+                            ? _validate_name = true
+                            : _validate_name = false;
+                        animalTypeValue==null
+                             ? _validate_type = true 
+                            : _validate_type = false;
+                        raceValue==null
+                             ? _validate_race = true 
+                            : _validate_race = false;
+                        cityValue==null
+                             ? _validate_city = true 
+                            : _validate_city = false;
+                         _birthController.text.length!=4 || (checkDate(_birthController.text)==false)|| _birthController.text.isEmpty
+                              ? _validate_birth = true 
+                            : _validate_birth = false;
+                        _emailController.text.isEmpty || (checkEmail(_emailController.text)==false)
+                              ? _validate_email = true 
+                            : _validate_email= false;
+                           _phoneController.text.length!=9 || (checkDate(_phoneController.text)==false)
+                              ? _validate_contact = true 
+                            : _validate_contact= false;
+                      });
+
+                     
+                      /*print(_validate_name);
+                       print(_validate_type);
+                        print(_validate_race);
+                         print(_validate_city);
+                          print(_validate_email);
+                           print(_validate_contact);
+                            print(_validate_birth);*/
+
+
+
+
+
+                     if (_validate_name != true && _validate_type!= true && _validate_race != true &&_validate_city != true && _validate_email!= true && _validate_contact != true && _validate_birth != true) {
                       List<int> imgBytes = await _image.readAsBytes();
                       String base64img = base64Encode(imgBytes);
                       String prefix = "data:image/jpeg;base64,";
@@ -787,7 +855,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                           base64img4,
                           context);
                       Navigator.of(context).pop();
-                    },
+                    }},
                     child: Container(
                       height: 45,
                       margin: EdgeInsets.only(top: 32),
@@ -820,4 +888,99 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
       ),
     );
   }
+
+   Widget _showDialog(context) {
+    return AlertDialog(
+      title: new Text(
+        "Invaled input",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+      ),
+      content:
+          new Text("Please select 4 photos for this adoption", textAlign: TextAlign.center),
+      actions: <Widget>[
+        new TextButton(
+          child: new Text("Close"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+
+  
+  String validateTitle(String value) {
+  
+  if(value.isEmpty){
+    return "Title can't be empty";
+  }
+  if (value.length < 10)  {
+    return "Title is to small ";
+  }
+  if (value.length > 50)  {
+    return "Title is to big ";
+  }
+  
+  return null;
+}
+
+ String validateBirth(String value) {
+  final numericRegex = 
+    RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
+ if(value.isEmpty){
+   return null;
+ }
+  if (value.length != 4 )  {
+    return "Invalid year";
+  }
+  if (numericRegex.hasMatch(value)==false)  {
+    return "Not a number";
+  }
+  
+  return null;
+}
+
+ String validateEmail(String value) {
+  
+ 
+  if (value.isEmpty)  {
+    return "Email can't be empty";
+  }
+  if (checkEmail(value)==false)  {
+    return "Not a valid email";
+  }
+  return null;
+}
+
+String validateContact(String value) {
+  
+ if(value.isEmpty){
+   return null;
+ }
+  if (value.length!=9)  {
+    return "Not a valid contact";
+  }
+  if (checkDate(value)==false)  {
+    return "Not a valid contact";
+  }
+  return null;
+}
+
+bool checkDate(String string) {
+  if(string.isEmpty){
+    return true;
+  }
+  final numericRegex = 
+    RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
+
+  return numericRegex.hasMatch(string);
+}
+
+bool checkEmail(String string) {
+  final emailRegex = 
+    RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+print(emailRegex.hasMatch(string));
+  return emailRegex.hasMatch(string);
+}
 }

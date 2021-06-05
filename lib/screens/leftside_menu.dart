@@ -29,7 +29,6 @@ class _NavDrawerState extends State<NavDrawer> {
   bool gender;
 
   void initState() {
-   
     this.getData();
   }
 
@@ -198,42 +197,7 @@ class _NavDrawerState extends State<NavDrawer> {
     gender = results['gender'];
   }
 
-  Widget _showDialog2(context) {
-    return AlertDialog(
-      title: new Text(
-        "Logout",
-        textAlign: TextAlign.center,
-      ),
-      content: new Text("Are you sure that you want to terminate session?",
-          textAlign: TextAlign.center),
-      actions: <Widget>[
-        new TextButton(
-          child: new Text("No"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 178),
-          child: TextButton(
-            style: TextButton.styleFrom(
-              primary: Colors.red,
-            ),
-            child: new Text("Yes"),
-            onPressed: () {
-              storage.delete(key: "jwt");
-              Navigator.of(context).pop();
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => LoginPage()),
-                  (Route<dynamic> route) => false);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
+  
   Widget _showDialog( context) {
     Widget yesButton = ElevatedButton(
         style: TextButton.styleFrom(

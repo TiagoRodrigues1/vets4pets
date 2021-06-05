@@ -45,7 +45,6 @@ class _UserAppointmentsState extends State<UserAppointments> {
   void initState() {
     super.initState();
     this.getAppointements();
-    this.loadnotifications();
     selectedEvents = {};
   }
 
@@ -55,18 +54,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
     super.dispose();
   }
 
- loadnotifications() async {
-    String val = (await storage.read(key: 'notifications')) ;
-    if(val=="true")
-    not=true;
-    else
-    not=false;
-    
-    setState(() {});
-
-   ;
-  }
-
+ 
 
   getAppointements() async {
     var jwt = await storage.read(key: "jwt");

@@ -6,10 +6,23 @@ import 'package:http/http.dart' as http;
 import 'leftside_menu.dart';
 import '../main.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _LongPageState();
+  }
+}
+
+class _LongPageState extends State<LoginPage> {
   int state = 0;
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _validate_email = false,_validate_password = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void displayDialog(context, title, text) => showDialog(
         context: context,
@@ -120,7 +133,8 @@ class LoginPage extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_email ? 55 : 45,
+                    margin: EdgeInsets.only(top: 32),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -130,20 +144,23 @@ class LoginPage extends StatelessWidget {
                           BoxShadow(color: Colors.black12, blurRadius: 5)
                         ]),
                     child: TextField(
-                      controller: _usernameController,
+                      controller: _emailController,
                       decoration: InputDecoration(
+                        hintText: _validate_email ? null : 'Email',
+                        errorText: _validate_email
+                            ? validateEmail(_emailController.text)
+                            : null,
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.email,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Email',
                       ),
                     ),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_password ? 55 : 45,
                     margin: EdgeInsets.only(top: 32),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
@@ -155,14 +172,20 @@ class LoginPage extends StatelessWidget {
                         ]),
                     child: TextField(
                       controller: _passwordController,
+                      
                       obscureText: true,
                       decoration: InputDecoration(
+                       hintText: _validate_password ? null : 'Password',
+                        errorText: _validate_password
+                            ? validatePassword(_passwordController.text)
+                            : null,
+
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.vpn_key,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Password',
+                        
                       ),
                     ),
                   ),
@@ -179,21 +202,35 @@ class LoginPage extends StatelessWidget {
                   Spacer(),
                   InkWell(
                     onTap: () async {
-                      var username = _usernameController.text;
+                      var username = _emailController.text;
                       var password = _passwordController.text;
-                      await attemptLogIn(username, password, context);
 
-                      if (state == 0) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              _showDialog(context),
-                        );
-                      } else {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => NavDrawer()),
-                        );
+                      setState(() {
+                        _emailController.text.isEmpty ||
+                                (checkEmail(_emailController.text) == false)
+                            ? _validate_email = true
+                            : _validate_email = false;
+                            _passwordController.text.isEmpty 
+                            ? _validate_password = true
+                            : _validate_password = false;
+                      });
+
+                      if (_validate_email != true) {
+                        await attemptLogIn(username, password, context);
+
+                        if (state == 0) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                _showDialog(context),
+                          );
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NavDrawer()),
+                          );
+                        }
                       }
                     },
                     child: Container(
@@ -278,5 +315,31 @@ class LoginPage extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String validateEmail(String value) {
+    if (value.isEmpty) {
+      return "Email can't be empty";
+    }
+    if (checkEmail(value) == false) {
+      return "Not a valid email";
+    }
+    return null;
+  }
+
+   String validatePassword(String value) {
+    
+    if (value.isEmpty) {
+      return "Password can't be empty";
+    }
+    
+    return null;
+  }
+
+  bool checkEmail(String string) {
+    final emailRegex = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    print(emailRegex.hasMatch(string));
+    return emailRegex.hasMatch(string);
   }
 }

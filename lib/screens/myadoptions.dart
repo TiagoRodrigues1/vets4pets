@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
@@ -15,7 +16,6 @@ class MyAdoptionsPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<MyAdoptionsPage> {
-
   List adoptions = [];
   bool isLoading = false;
   @override
@@ -114,18 +114,22 @@ class _IndexPageState extends State<MyAdoptionsPage> {
     return ListView.builder(
         itemCount: adoptions.length,
         itemBuilder: (context, index) {
-          return getCard(adoptions[index],context);
+          return getCard(adoptions[index], context);
         });
   }
 
-  Widget getCard(item,context) {
+  Widget getCard(item, context) {
     var id = item['ID'];
     var name = item['name'];
     var animaltype = item['animaltype'];
     var race = item['race'];
     var status = item['adopted'];
-    var profileUrl =
-        'https://cdn.discordapp.com/attachments/537753005953384448/838351477395292210/f_00001b.png';
+
+    String profileUrl = item['attachement1'];
+    Uint8List bytes = null;
+    profileUrl = profileUrl.substring(23, profileUrl.length);
+    bytes = base64.decode(profileUrl);
+
     return Card(
         elevation: 1.5,
         child: new InkWell(
@@ -147,8 +151,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(60 / 2),
                         image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(profileUrl))),
+                            fit: BoxFit.cover, image: MemoryImage(bytes))),
                   ),
                   SizedBox(
                     width: 20,
@@ -171,30 +174,31 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                       ),
                     ],
                   ),
-                  Column(children: [
-IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.green),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => _showDialog(id,context),
-                      );
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) =>
-                            _showDialog(id, context),
-                      );
-                    },
-                  ),
-
-
-                  ],)
-                  
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.green),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                _showDialog(id, context),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon:
+                            const Icon(Icons.delete_outline, color: Colors.red),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                _showDialog(id, context),
+                          );
+                        },
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -202,7 +206,7 @@ IconButton(
         ));
   }
 
-    Widget _showDialog(int id, context) {
+  Widget _showDialog(int id, context) {
     Widget yesButton = ElevatedButton(
         style: TextButton.styleFrom(
             primary: Colors.white, backgroundColor: Colors.red[300]),

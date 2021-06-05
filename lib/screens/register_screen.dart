@@ -15,6 +15,14 @@ class RegisterPageState extends State<RegisterPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+  bool _validate_name = false,_validate_username = false,_validate_password = false,_validate_email = false,_validate_contact = false;
+
+
+ @override
+  void initState() {
+    super.initState();
+  }
+
 
   void displayDialog(context, title, text) => showDialog(
         context: context,
@@ -120,9 +128,9 @@ class RegisterPageState extends State<RegisterPage> {
               padding: EdgeInsets.only(top: 32),
               child: Column(
                 children: <Widget>[
-                  Container(
+                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_name ? 55 : 45,
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -134,19 +142,21 @@ class RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: _nameController,
                       decoration: InputDecoration(
+                         hintText: _validate_name ? null : 'Name',
+                        errorText: _validate_name ? validateName(_nameController.text) : null,
                         border: InputBorder.none,
                         icon: Icon(
-                          Icons.person,
+                          Icons.pets_sharp,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Name',
+                        
                       ),
                     ),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
-                    margin: EdgeInsets.only(top: 16),
+                    height: _validate_email ? 55 : 45,
+                    margin: EdgeInsets.only(top: 32),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -158,12 +168,15 @@ class RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
+                        hintText: _validate_email ? null : 'Email',
+                        errorText: _validate_email
+                            ? validateEmail(_emailController.text)
+                            : null,
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.email,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Email',
                       ),
                     ),
                   ),
@@ -241,10 +254,10 @@ class RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
-                  Container(
+                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
-                    margin: EdgeInsets.only(top: 16),
+                    height: _validate_contact ? 55 : 45,
+                    margin: EdgeInsets.only(top: 32),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -255,13 +268,16 @@ class RegisterPageState extends State<RegisterPage> {
                         ]),
                     child: TextField(
                       controller: _contactController,
-                      decoration: InputDecoration(
+                        decoration: InputDecoration(
+                           hintText: _validate_contact ? null : 'Contact',
+                        errorText: _validate_contact ? validateContact(_contactController.text) : null,
+                     
                         border: InputBorder.none,
                         icon: Icon(
-                          Icons.vpn_key,
+                          Icons.phone,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Contact',
+                      
                       ),
                     ),
                   ),
@@ -273,7 +289,27 @@ class RegisterPageState extends State<RegisterPage> {
                       var password2 = _password2Controller.text;
                       var name = _nameController.text;
                       var contact = _contactController.text;
-                      print(username);
+                    
+                             setState(() {
+                        _nameController.text.isEmpty ||  _nameController.text.length>50 || _nameController.text.length<10
+                            ? _validate_name = true
+                            : _validate_name = false;
+                     
+                         _password1Controller.text.isEmpty ||_password1Controller.text!=_password2Controller.text
+                            ? _validate_password = true
+                            : _validate_password = false;
+                             _password2Controller.text.isEmpty ||_password2Controller.text!=_password1Controller.text
+                            ? _validate_password = true
+                            : _validate_password = false;
+                        _emailController.text.isEmpty || (checkEmail(_emailController.text)==false)
+                              ? _validate_email = true 
+                            : _validate_email= false;
+                           _contactController.text.length!=9 || (checkNumber( _contactController.text)==false)
+                              ? _validate_contact = true 
+                            : _validate_contact= false;
+                      });
+
+                     
 
 
                       await attemptSignIn(
@@ -310,4 +346,77 @@ class RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+
+  String validateName(String value) {
+  
+  if(value.isEmpty){
+    return "Name can't be empty";
+  }
+  if (value.length < 10)  {
+    return "Name is to small ";
+  }
+  if (value.length > 50)  {
+    return "Name is to big ";
+  }
+  
+  return null;
+}
+
+ String validateBirth(String value) {
+  final numericRegex = 
+    RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
+ if(value.isEmpty){
+   return null;
+ }
+  if (value.length != 4 )  {
+    return "Invalid year";
+  }
+  if (numericRegex.hasMatch(value)==false)  {
+    return "Not a number";
+  }
+  
+  return null;
+}
+
+ String validateEmail(String value) {
+  
+ 
+  if (value.isEmpty)  {
+    return "Email can't be empty";
+  }
+  if (checkEmail(value)==false)  {
+    return "Not a valid email";
+  }
+  return null;
+}
+
+String validateContact(String value) {
+  
+ if(value.isEmpty){
+  return "Contact can't be empty";
+ }
+  if (value.length!=9)  {
+    return "Not a valid contact";
+  }
+  if (checkNumber(value)==false)  {
+    return "Not a valid contact";
+  }
+  return null;
+}
+
+bool checkNumber(String string) {
+  
+  final numericRegex = 
+    RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
+
+  return numericRegex.hasMatch(string);
+}
+
+bool checkEmail(String string) {
+  final emailRegex = 
+    RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+print(emailRegex.hasMatch(string));
+  return emailRegex.hasMatch(string);
+}
 }

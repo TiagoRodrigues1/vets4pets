@@ -146,7 +146,6 @@ class _IndexPageState extends State<PetsPage> {
     String name = item['name'].toString();
     String animaltype = item['animaltype'];
     String profileUrl = item['profilePicture'];
-
     Uint8List bytes = null;
     if (profileUrl != "" && profileUrl != null) {
       profileUrl = profileUrl.substring(23, profileUrl.length);

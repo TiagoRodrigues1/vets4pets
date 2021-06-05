@@ -2,9 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:Vets4Pets/screens/addadoption.dart';
+import 'addadoption.dart';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import 'package:Vets4Pets/main.dart';
 import 'adoptiondetails.dart';
 
 class AdoptionsPage extends StatefulWidget {
