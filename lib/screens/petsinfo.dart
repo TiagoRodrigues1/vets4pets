@@ -26,6 +26,8 @@ class Constants {
 class _PetsInfoState extends State<PetsInfoPage> {
   List vaccines = [];
   List consults = [];
+
+  List meds = [];
   bool isLoading1 = true;
   bool isLoading2 = true;
   @override
@@ -89,72 +91,72 @@ class _PetsInfoState extends State<PetsInfoPage> {
         ),
         title: Text("Information about " + widget.animal['name']),
       ),
-      body:vaccines.length == 0 && consults.length == 0 ? 
-      
-      Center(child: Text("No info about "+ widget.animal['name'] + " :("))
-      
-      
-      :Column(
-        mainAxisSize: MainAxisSize.max,
-        children: vaccines.length == 0
-            ? [
-                Container(
-                  height: 30,
-                  width: MediaQuery.of(context).size.width,
-                  color: Color.fromRGBO(82, 183, 136, 1),
-                  child: Text(
-                    "Medical History",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ),
-                SingleChildScrollView(
-                    child: Container(
-                  height: MediaQuery.of(context).size.height / 2.3,
-                  child: getBodyHistory(),
-                )),
-              ]
-            : [
-                Container(
-                  height: 30,
-                  width: MediaQuery.of(context).size.width,
-                  color: Color.fromRGBO(82, 183, 136, 1),
-                  child: Center(
-                    child: Text(
-                      "Vaccines",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height / 2.9,
-                    child: getBodyVaccines(),
-                  ),
-                ),
-                Container(
-                    height: 30,
-                    width: MediaQuery.of(context).size.width,
-                    color: Color.fromRGBO(82, 183, 136, 1),
-                    child: Center(
-                      child: Text(
-                        "Medical History",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+      body: vaccines.length == 0 && consults.length == 0
+          ? Center(
+              child: Text("No info about " + widget.animal['name'] + " :("))
+          : Column(
+              mainAxisSize: MainAxisSize.max,
+              children: vaccines.length == 0
+                  ? [
+                      Container(
+                        height: 30,
+                        width: MediaQuery.of(context).size.width,
+                        color: Color.fromRGBO(82, 183, 136, 1),
+                        child: Text(
+                          "Medical History",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
                       ),
-                    )),
-                SingleChildScrollView(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height / 2.3,
-                    child: getBodyHistory(),
-                  ),
-                )
-              ],
-      ),
+                      SingleChildScrollView(
+                          child: Container(
+                        height: MediaQuery.of(context).size.height / 2.3,
+                        child: getBodyHistory(),
+                      )),
+                    ]
+                  : [
+                      Container(
+                        height: 30,
+                        width: MediaQuery.of(context).size.width,
+                        color: Color.fromRGBO(82, 183, 136, 1),
+                        child: Center(
+                          child: Text(
+                            "Vaccines",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 2.9,
+                          child: getBodyVaccines(),
+                        ),
+                      ),
+                      Container(
+                          height: 30,
+                          width: MediaQuery.of(context).size.width,
+                          color: Color.fromRGBO(82, 183, 136, 1),
+                          child: Center(
+                            child: Text(
+                              "Medical History",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                          )),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 2.3,
+                          child: getBodyHistory(),
+                        ),
+                      )
+                    ],
+            ),
     );
   }
 
@@ -245,10 +247,33 @@ class _PetsInfoState extends State<PetsInfoPage> {
         ));
   }
 
-  Widget _showDialog(item) {
-    print(item['Description']);
-    String profileUrl = widget.animal['profilePicture'];
+  getMeds(String protocol) {
+    meds = [];
+    List meds_aux;
+    meds_aux = protocol.split(";");
+    meds_aux.remove("");
+    for (int i = 0; i < meds_aux.length; i++) {
+      List meds_aux_aux;
+      meds_aux_aux = meds_aux[i].toString().split("/");
+      var date = meds_aux_aux[1];
+      DateTime parseDate = new DateFormat("yyyy-MM-dd").parse(date);
+      var inputDate = DateTime.parse(parseDate.toString());
+      var outputFormat = DateFormat('dd/MM/yyyy');
+      var outputDate = outputFormat.format(inputDate);
+      String medication_protocol_aux = meds_aux_aux[0] +
+          " starting on " +
+          outputDate +
+          " for " +
+          meds_aux_aux[2].toString() +
+          " days at " +
+          meds_aux_aux[3].toString();
+      meds.add(medication_protocol_aux);
+    }
+  }
 
+  Widget _showDialog(item) {
+    getMeds(item['medication']);
+    String profileUrl = widget.animal['profilePicture'];
     Uint8List bytes = null;
     if (profileUrl != "" && profileUrl != null) {
       profileUrl = profileUrl.substring(23, profileUrl.length);
@@ -268,14 +293,6 @@ class _PetsInfoState extends State<PetsInfoPage> {
         TextEditingController(text: item['weight'].toString() + " kg");
     final TextEditingController _textController =
         TextEditingController(text: item['Description'].toString());
-    final TextEditingController _medicationController = TextEditingController(
-        text: "Benuron 750mg starting for 7 days on 12:30|15:30|19:30"
-            .toString());
-    final TextEditingController _medication1Controller = TextEditingController(
-        text: "Trifeen 750mg starting 23/06/2021 for 14 days on 14:30"
-            .toString());
-
-    List<String> list = ["1", "2", "3", "4"];
 
     return AlertDialog(
       title: new Text(
@@ -399,7 +416,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
                     ),
                   ),
                   Text("\nMedication:"),
-                  for (var i in list)
+                  for (var i in meds)
                     Container(
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
@@ -413,7 +430,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
                           fontSize: 12.0,
                         ),
                         enabled: false,
-                        controller: _medication1Controller,
+                        controller: TextEditingController()..text = i,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
@@ -452,15 +469,37 @@ class _PetsInfoState extends State<PetsInfoPage> {
         TextEditingController(text: outputDate2);
 
     return Card(
-        elevation: 10,
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: ListTile(
-              title: Row(
+      elevation: 10,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: ListTile(
+          title: Row(
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
+                  Container(
+                    width: 150,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                      color: Colors.white,
+                    ),
+                    child: TextField(
+                      enabled: false,
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: "Vaccine name",
+                        border: InputBorder.none,
+                        icon: Icon(
+                          TablerIcons.vaccine,
+                          color: Color(0xFF52B788),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
                       Container(
                         width: 150,
                         height: 60,
@@ -470,69 +509,45 @@ class _PetsInfoState extends State<PetsInfoPage> {
                         ),
                         child: TextField(
                           enabled: false,
-                          controller: _nameController,
+                          controller: _dateController,
                           decoration: InputDecoration(
-                            labelText: "Vaccine name",
+                            labelText: "Date taken:",
                             border: InputBorder.none,
                             icon: Icon(
-                              TablerIcons.vaccine,
+                              Icons.date_range,
                               color: Color(0xFF52B788),
                             ),
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          Container(
-                            width: 150,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(50)),
-                              color: Colors.white,
-                            ),
-                            child: TextField(
-                              enabled: false,
-                              controller: _dateController,
-                              decoration: InputDecoration(
-                                labelText: "Date taken:",
-                                border: InputBorder.none,
-                                icon: Icon(
-                                  Icons.date_range,
-                                  color: Color(0xFF52B788),
-                                ),
-                              ),
+                      Container(
+                        width: 150,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          color: Colors.white,
+                        ),
+                        child: TextField(
+                          enabled: false,
+                          controller: _dateController2,
+                          decoration: InputDecoration(
+                            labelText: "Validity:",
+                            border: InputBorder.none,
+                            icon: Icon(
+                              Icons.date_range,
+                              color: Color(0xFF52B788),
                             ),
                           ),
-                          Container(
-                            width: 150,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(50)),
-                              color: Colors.white,
-                            ),
-                            child: TextField(
-                              enabled: false,
-                              controller: _dateController2,
-                              decoration: InputDecoration(
-                                labelText: "Validity:",
-                                border: InputBorder.none,
-                                icon: Icon(
-                                  Icons.date_range,
-                                  color: Color(0xFF52B788),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
+                        ),
+                      ),
                     ],
-                  ),
+                  )
                 ],
               ),
-            ),
+            ],
           ),
-        );
+        ),
+      ),
+    );
   }
 }
