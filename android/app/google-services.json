@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "190442415893",
+    "project_id": "vets4pets-notifications",
+    "storage_bucket": "vets4pets-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190442415893:android:cf3bef2809ed4097ffab1c",
+        "android_client_info": {
+          "package_name": "com.example.Vets4Pets"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190442415893-jflafatsbbp7lai1cormbn4i94s7i9oi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBy2uYS9ajyXc8uLwUgTWRmXQWF7hiRidg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "190442415893-jflafatsbbp7lai1cormbn4i94s7i9oi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

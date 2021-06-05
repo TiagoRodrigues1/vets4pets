@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:Vets4Pets/screens/petsinfo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 import '../jwt.dart';
@@ -10,18 +11,25 @@ import 'addpet.dart';
 import 'editpet.dart';
 import 'leftside_menu.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 class PetsPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
 }
 
 class Constants {
+  
   Constants._();
   static const double padding = 20;
   static const double avatarRadius = 45;
 }
 
+
+
 class _IndexPageState extends State<PetsPage> {
+  
   List pets = [];
   bool isLoading = false;
   bool isLoading2 = false;
@@ -35,7 +43,10 @@ class _IndexPageState extends State<PetsPage> {
     this.getPets();
   }
 
+
+
   getPets() async {
+    
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
 

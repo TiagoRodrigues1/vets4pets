@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:Vets4Pets/models/animaltypes.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:Vets4Pets/screens/addadoption.dart';
@@ -15,7 +14,6 @@ class AdoptionsPage extends StatefulWidget {
 
 class _IndexPageState extends State<AdoptionsPage> {
   List adoptions = [];
-  List<Map<String, dynamic>> adoptionsType = animalTypes;
   bool isLoading = false;
   @override
   void initState() {

@@ -51,7 +51,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   editUserPicture(String profilePicture) async {
-    //print("xd");
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
@@ -65,7 +64,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           "name": widget.name,
           "contact": widget.contact,
           "email": widget.email,
-          "gender": true,
+          "gender": widget.gender,
           "profilePicture": profilePicture,
         },
       ),
@@ -73,7 +72,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
     if (response.statusCode == 200) {
       await storage.write(key: 'profilePicture', value: profilePicture);
-      print(response.body);
     }
   }
 
@@ -94,9 +92,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     String prefix = "data:image/jpeg;base64,";
                     base64img = prefix + base64img;
                     await editUserPicture(base64img);
-
                     setState(() {
-                      //_image=null;
                       button = false;
                     });
                   },
@@ -170,7 +166,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _buildProfileImage() {
     Uint8List bytes;
-    print(picture);
     if (picture != "") {
       String profileUrl = picture;
       profileUrl = profileUrl.substring(23, profileUrl.length);
@@ -280,11 +275,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             textAlign: TextAlign.center,
             style: bioTextStyle,
           ),
-          Text(
-            widget.gender == false ? "Male" : "Female",
-            textAlign: TextAlign.center,
-            style: bioTextStyle,
-          ),
+          
         ],
       ),
     );
@@ -364,7 +355,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserAppointments()),
+                  MaterialPageRoute(builder: (context) => UserAppointments(notifications:widget.gender, username: widget.username,
+                              name: widget.name,
+                              email: widget.email,
+                              contact: widget.contact,)),
                 );
               },
             ),

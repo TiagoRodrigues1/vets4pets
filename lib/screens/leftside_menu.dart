@@ -11,12 +11,26 @@ import 'forum.dart';
 import 'login_screen.dart';
 import 'maps.dart';
 
-class NavDrawer extends StatelessWidget {
+
+
+
+class NavDrawer extends StatefulWidget {
+ 
+
+  NavDrawer({Key key}) : super(key: key);
+
+  @override
+  _NavDrawerState createState() => _NavDrawerState();
+}
+
+
+class _NavDrawerState extends State<NavDrawer> {
   String picture, username, contact, email, name;
   bool gender;
 
   void initState() {
-    getData();
+   
+    this.getData();
   }
 
   @override

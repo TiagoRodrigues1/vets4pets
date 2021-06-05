@@ -132,10 +132,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
     var jwt = await storage.read(key: "jwt");
     String dates = date.toString();
     dates.replaceAll("T", " ");
-    print(dates);
-    //print(date.toString());
-    print(animalid);
-    print(idvet);
     var result = await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/appointment/'),
       body: convert.jsonEncode(
@@ -473,15 +469,23 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   Widget _buildContent3() {
     if (selectedPet != null && selectedVet != null && selectedHour != null) {
-      String profileUrl = selectedPet['picture'];
+     String profileUrl = selectedPet['profilePicture'];
+
+    Uint8List bytes = null,bytes2=null;
+    if (profileUrl != "" && profileUrl != null) {
       profileUrl = profileUrl.substring(23, profileUrl.length);
-      Uint8List bytes = base64.decode(profileUrl);
+      bytes = base64.decode(profileUrl);
+    }
       final TextEditingController _dateController =
           TextEditingController(text: date);
 
       String profileUrl2 = selectedVet['profilePicture'];
+ if (profileUrl2 != "" && profileUrl2 != null) {
       profileUrl2 = profileUrl2.substring(23, profileUrl2.length);
-      Uint8List bytes2 = base64.decode(profileUrl2);
+      bytes2 = base64.decode(profileUrl2);
+    }
+
+   
       return Container(
           child: Column(
         children: [
@@ -491,7 +495,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
               height: 100.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: MemoryImage(bytes),
+                  image:bytes==null?AssetImage("assets/images/petdefault.jpg"):MemoryImage(bytes),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(40.0),
@@ -551,7 +555,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
               height: 100.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: MemoryImage(bytes2),
+                   image:bytes==null?AssetImage("assets/images/defaultuser.jpg"):MemoryImage(bytes2),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(40.0),
@@ -609,7 +613,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   Icons.date_range,
                   color: Color(0xFF52B788),
                 ),
-                hintText: 'Pet name',
+               
               ),
             ),
           ),

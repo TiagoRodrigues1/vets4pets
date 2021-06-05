@@ -8,11 +8,25 @@ import '../main.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:convert' as convert;
+
 
 List appointments = [];
 
 class UserAppointments extends StatefulWidget {
-  UserAppointments({Key key, this.title}) : super(key: key);
+  final String picture, username, contact, email, name;
+  final bool notifications;
+
+  UserAppointments(
+      {Key key,
+      this.title,
+      this.notifications,
+      this.username,
+      this.contact,
+      this.name,
+      this.email,
+      this.picture})
+      : super(key: key);
 
   final String title;
 
@@ -25,13 +39,13 @@ class _UserAppointmentsState extends State<UserAppointments> {
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
-
+  bool not;
   TextEditingController _eventController = TextEditingController();
 
   void initState() {
     super.initState();
     this.getAppointements();
-
+    this.loadnotifications();
     selectedEvents = {};
   }
 
@@ -41,8 +55,20 @@ class _UserAppointmentsState extends State<UserAppointments> {
     super.dispose();
   }
 
+ loadnotifications() async {
+    String val = (await storage.read(key: 'notifications')) ;
+    if(val=="true")
+    not=true;
+    else
+    not=false;
+    
+    setState(() {});
+
+   ;
+  }
+
+
   getAppointements() async {
-    print("Wtf");
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
 
@@ -51,7 +77,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
       Uri.parse('http://52.47.179.213:8081/api/v1/appointmentOfuser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+    
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
 
@@ -63,14 +89,12 @@ class _UserAppointmentsState extends State<UserAppointments> {
               .parse(element['date']); //AS horas
           DateTime now = DateTime.now();
           var timezoneOffset1 = now.timeZoneOffset;
-          print(timezoneOffset1);
+         
           DateTime parseDated =
               new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
           String formattedTime = DateFormat.Hm().format(parseDated_);
-          print(formattedTime);
           parseDated = parseDated.add(timezoneOffset1);
           DateTime parseDate = parseDated.toUtc();
-          print(parseDate);
           if (selectedEvents[parseDate] != null) {
             selectedEvents[parseDate].add(
               AppEvent(title: formattedTime),
@@ -80,17 +104,44 @@ class _UserAppointmentsState extends State<UserAppointments> {
           }
         });
 
-        print(selectedEvents);
       });
     } else {
       appointments = [];
     }
   }
 
+  editUserNotifications(bool notification) async {
+    var jwt = await storage.read(key: "jwt");
+    var results = parseJwtPayLoad(jwt);
+    int id = results["UserID"];
+   
+
+    var response = await http.put(
+      Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),
+      body: convert.jsonEncode(
+        <String, dynamic>{
+          "username": widget.username,
+          "name": widget.name,
+          "contact": widget.contact,
+          "email": widget.email,
+          "gender":notification,
+          "profilePicture": widget.picture,
+        },
+      ),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+    if (response.statusCode == 200) {
+      //print(notification);
+      //print(notification.toString());
+      await storage.write(key: 'notifications', value: notification.toString());
+      //print(notification.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-
+  
     var height = screenSize.height;
     return Scaffold(
       appBar: new AppBar(
@@ -100,6 +151,32 @@ class _UserAppointmentsState extends State<UserAppointments> {
           "My Appointments",
           textScaleFactor: 1.3,
         ),
+        actions: [
+          not == true
+              ? IconButton(
+                  icon: const Icon(Icons.notifications_off),
+                  color: Colors.white,
+                  tooltip: 'Turn off notifications',
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => _showDialog(),
+                    );
+
+                  },
+                )
+              : IconButton(
+                  icon: const Icon(Icons.notifications_on),
+                  color: Colors.white,
+                  tooltip: 'Turn on notifications',
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => _showDialog(),
+                    );
+                  },
+                ),
+        ],
       ),
       body: Stack(
         children: <Widget>[
@@ -181,7 +258,6 @@ class _UserAppointmentsState extends State<UserAppointments> {
               selectedDay = selectDay;
               focusedDay = focusDay;
             });
-            print(focusedDay);
           },
           selectedDayPredicate: (DateTime date) {
             return isSameDay(selectedDay, date);
@@ -219,6 +295,58 @@ class _UserAppointmentsState extends State<UserAppointments> {
           height: 300,
           child: _buildEvents(),
         ))
+      ],
+    );
+  }
+
+  Widget _showDialog() {
+    Widget yesButton = ElevatedButton(
+        style: TextButton.styleFrom(
+          primary: Colors.white,
+        ),
+        child: new Text(
+          "Yes",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        onPressed: () async {
+          setState(() {
+            not = !not;
+          });
+          editUserNotifications(not);
+          Navigator.pop(context);
+        });
+
+    Widget noButton = ElevatedButton(
+      style: TextButton.styleFrom(
+        primary: Colors.white,
+      ),
+      child: new Text(
+        "No",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    return AlertDialog(
+      title: not == false
+          ? new Text(
+              "Turn on notifications",
+              textAlign: TextAlign.center,
+            )
+          : new Text("Turn off notifications", textAlign: TextAlign.center),
+      content: not == false
+          ? Text(
+              "You will not receive any notifications",
+              textAlign: TextAlign.center)
+          : Text(
+              "You will receive notifications about the timing of medications for each of your pets",
+              textAlign: TextAlign.center),
+      actions: <Widget>[
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[yesButton, noButton])
       ],
     );
   }
