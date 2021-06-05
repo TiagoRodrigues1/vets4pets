@@ -169,8 +169,14 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   }
 
   Widget build(BuildContext context) {
-    var date = widget.question['CreatedAt'];
+     var date = widget.question['CreatedAt'];
+
+      DateTime now = DateTime.now();
+var timezoneOffset1 = now.timeZoneOffset;
+ 
+ //
     DateTime parseDate = new DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
+     parseDate = parseDate.add(timezoneOffset1);
     var inputDate = DateTime.parse(parseDate.toString());
     var outputFormat = DateFormat('dd/MM/yyyy HH:mm:ss ');
     var outputDate = outputFormat.format(inputDate);
@@ -340,7 +346,13 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
 
   Widget getCard(item) {
     var date = item['CreatedAt'];
+
+      DateTime now = DateTime.now();
+var timezoneOffset1 = now.timeZoneOffset;
+ 
+ //
     DateTime parseDate = new DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
+     parseDate = parseDate.add(timezoneOffset1);
     var inputDate = DateTime.parse(parseDate.toString());
     var outputFormat = DateFormat('dd/MM/yyyy HH:mm:ss ');
     var outputDate = outputFormat.format(inputDate);

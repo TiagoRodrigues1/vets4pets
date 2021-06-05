@@ -68,25 +68,6 @@ class _IndexPageState extends State<PetsPage> {
     }
   }
 
-  getVaccines(int id) async {
-    var jwt = await storage.read(key: "jwt");
-
-    var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/vaccine/$id'),
-      headers: {HttpHeaders.authorizationHeader: jwt},
-    );
-    print(response.body);
-    if (response.statusCode == 200) {
-      var items = json.decode(utf8.decode(response.bodyBytes))['data'];
-      setState(() {
-        vaccines = items;
-        isLoading2 = false;
-      });
-    } else {
-      vaccines = [];
-      isLoading2 = false;
-    }
-  }
 
   deletePet(int id) async {
     var jwt = await storage.read(key: "jwt");

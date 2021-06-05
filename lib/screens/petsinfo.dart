@@ -1,11 +1,11 @@
 import 'dart:io';
+import 'package:Vets4Pets/screens/graph.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
-import 'leftside_menu.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert' show json;
 
@@ -80,15 +80,18 @@ class _PetsInfoState extends State<PetsInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+  actions: [
+          IconButton(
+            tooltip: "Weight transformation",
+          icon: const Icon(Icons.auto_graph, color: Colors.white,),
           onPressed: () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => NavDrawer()),
-                (Route<dynamic> route) => false);
+         Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GraphPage(data: consults,)),
+                  );
           },
         ),
+  ],
         title: Text("Information about " + widget.animal['name']),
       ),
       body: vaccines.length == 0 && consults.length == 0
@@ -248,6 +251,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
   }
 
   getMeds(String protocol) {
+    print(protocol);
     meds = [];
     List meds_aux;
     meds_aux = protocol.split(";");
@@ -267,6 +271,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
           meds_aux_aux[2].toString() +
           " days at " +
           meds_aux_aux[3].toString();
+          
       meds.add(medication_protocol_aux);
     }
   }
@@ -434,7 +439,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
-                            Icons.medication_outlined,
+                             TablerIcons.pill,
                             color: Color(0xFF52B788),
                           ),
                         ),

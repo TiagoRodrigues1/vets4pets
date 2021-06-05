@@ -10,6 +10,8 @@ import '../main.dart';
 import 'forum.dart';
 import 'login_screen.dart';
 import 'maps.dart';
+import 'myanswers.dart';
+import 'myquestions.dart';
 
 
 
@@ -114,7 +116,11 @@ class _NavDrawerState extends State<NavDrawer> {
                           leading: Icon(Icons.email_rounded),
                           title: Text('My Questions'),
                           onTap: () {
-                            print("Nice2");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyQuestionsPage()),
+                            );
                           }),
                       ListTile(
                           leading: Icon(Icons.forward_to_inbox_rounded),
@@ -123,7 +129,7 @@ class _NavDrawerState extends State<NavDrawer> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ForumPage()),
+                                  builder: (context) => MyAnswersPage()),
                             );
                           }),
                     ],

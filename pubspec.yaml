@@ -51,7 +51,8 @@ dependencies:
   flutter_native_timezone: ^1.1.0
   font_awesome_flutter: ^9.0.0
   flutter_tabler_icons: ^1.1.1
-  
+  draw_graph: ^0.0.2
+  syncfusion_flutter_charts: ^19.1.66+1
   
   
 

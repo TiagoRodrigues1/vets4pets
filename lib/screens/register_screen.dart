@@ -15,7 +15,7 @@ class RegisterPageState extends State<RegisterPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
-  bool _validate_name = false,_validate_username = false,_validate_password = false,_validate_email = false,_validate_contact = false;
+  bool _validate_name = false,_validate_username = false,_validate_password = false,_validate_password2 = false,_validate_email = false,_validate_contact = false;
 
 
  @override
@@ -42,15 +42,20 @@ class RegisterPageState extends State<RegisterPage> {
           "gender": false,
           "username": username
         }));
-
-    var jsonResponse;
+  
     print(response.body);
     if (response.statusCode == 200) {
-      jsonResponse = json.decode(response.body);
-      if (jsonResponse != null) {}
-    } else {
-      print("Error, please check all fields!");
+     
+     return 0;
+    } else if(response.statusCode == 400 ) {
+        if(response.body.contains("Email")){
+          return 1;
+        }
+        if(response.body.contains("Username")){
+          return 2;
+        }
     }
+    
   }
 
   @override
@@ -156,7 +161,7 @@ class RegisterPageState extends State<RegisterPage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
                     height: _validate_email ? 55 : 45,
-                    margin: EdgeInsets.only(top: 32),
+                    margin: EdgeInsets.only(top: 16),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -206,7 +211,7 @@ class RegisterPageState extends State<RegisterPage> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_password ? 55 : 45,
                     margin: EdgeInsets.only(top: 16),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
@@ -218,20 +223,25 @@ class RegisterPageState extends State<RegisterPage> {
                         ]),
                     child: TextField(
                       controller: _password1Controller,
+                      
                       obscureText: true,
                       decoration: InputDecoration(
+                        hintText: _validate_password ? null : 'Password',
+                        errorText: _validate_password
+                            ? validatePassword(_password1Controller.text,_password2Controller.text)
+                            : null,
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.vpn_key,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Password',
+                        
                       ),
                     ),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
+                    height: _validate_password2 ? 55 : 45,
                     margin: EdgeInsets.only(top: 16),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
@@ -245,19 +255,23 @@ class RegisterPageState extends State<RegisterPage> {
                       controller: _password2Controller,
                       obscureText: true,
                       decoration: InputDecoration(
+                        hintText: _validate_password2 ? null : 'Confirm Password',
+                        errorText: _validate_password2
+                            ? validatePassword(_password2Controller.text,_password1Controller.text)
+                            : null,
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.vpn_key,
                           color: Color(0xFF52B788),
                         ),
-                        hintText: 'Confirm Password',
+                       
                       ),
                     ),
                   ),
                    Container(
                     width: MediaQuery.of(context).size.width / 1.2,
                     height: _validate_contact ? 55 : 45,
-                    margin: EdgeInsets.only(top: 32),
+                    margin: EdgeInsets.only(top:16),
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -295,12 +309,12 @@ class RegisterPageState extends State<RegisterPage> {
                             ? _validate_name = true
                             : _validate_name = false;
                      
-                         _password1Controller.text.isEmpty ||_password1Controller.text!=_password2Controller.text
+                         _password1Controller.text.isEmpty ||_password1Controller.text!=_password2Controller.text ||  _password1Controller.text.length<6
                             ? _validate_password = true
                             : _validate_password = false;
-                             _password2Controller.text.isEmpty ||_password2Controller.text!=_password1Controller.text
-                            ? _validate_password = true
-                            : _validate_password = false;
+                             _password2Controller.text.isEmpty ||_password2Controller.text!=_password1Controller.text ||  _password2Controller.text.length<6
+                            ? _validate_password2 = true
+                            : _validate_password2 = false;
                         _emailController.text.isEmpty || (checkEmail(_emailController.text)==false)
                               ? _validate_email = true 
                             : _validate_email= false;
@@ -311,9 +325,23 @@ class RegisterPageState extends State<RegisterPage> {
 
                      
 
+                    if (_validate_email != true &&_validate_name != true && _validate_contact != true){
 
-                      await attemptSignIn(
+                        var state=await attemptSignIn(
                           email, username, password1, name, contact);
+                         if (state == 0) {
+                           Navigator.pop(context);
+                        } else {
+                          print("xd");
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                _showDialog(context,state),
+                          );
+                         
+                        }
+                    }
+                      
 
              
                     },
@@ -405,6 +433,20 @@ String validateContact(String value) {
   return null;
 }
 
+String validatePassword(String value,String value2) {
+  
+ if(value.isEmpty){
+  return "Password can't be empty";
+ }
+  if (value!=value2)  {
+    return "Passwords doesn't match";
+  }
+if(value.length<6){
+   return "Passwords is too small";
+}
+  return null;
+}
+
 bool checkNumber(String string) {
   
   final numericRegex = 
@@ -419,4 +461,37 @@ bool checkEmail(String string) {
 print(emailRegex.hasMatch(string));
   return emailRegex.hasMatch(string);
 }
+
+Widget _showDialog(context, var flag) {
+
+  String text;
+  if(flag==1){
+text="Email already registed!";
+  }  if(flag==2){
+    text="Username already registed!";
+
+  }  if(flag==3){
+     text="Email and Username already registed!";
+  }
+  if(flag==4){
+     text="Password does not match!!";
+  }
+    return AlertDialog(
+      title: new Text(
+        "Error",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+      ),
+      content:
+          new Text(text, textAlign: TextAlign.center),
+      actions: <Widget>[
+        new TextButton(
+          child: new Text("Close"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
 }

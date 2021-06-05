@@ -140,7 +140,7 @@ class _ForumPageState extends State<ForumPage> {
                         validator: (value) {
                           if (value.length < 5 || value.isEmpty) {
                             return 'Title is to short';
-                          } else if (value.length > 20) {
+                          } else if (value.length >50) {
                             return 'Title is to long';
                           }
                           return null;
