@@ -420,7 +420,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
                       controller: _textController,
                     ),
                   ),
-                  Text("\nMedication:"),
+                  item['medication']!=""?Text("\nMedication:"):Text(""),
                   for (var i in meds)
                     Container(
                       width: MediaQuery.of(context).size.width,
