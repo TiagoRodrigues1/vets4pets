@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import '../jwt.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -20,7 +21,7 @@ class ForumDetailPage extends StatefulWidget {
 
 class _ForumDetailPageState extends State<ForumDetailPage> {
   final TextEditingController _answerController = TextEditingController();
-
+bool _switchValue;
   final _formKey = GlobalKey<FormState>();
   int id_user;
   List answers = [];
@@ -34,9 +35,11 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
 
   addAnswer(String answer, int questionid, String attachament) async {
     var jwt = await storage.read(key: "jwt");
+    var type = await storage.read(key: "userType");
     var results = parseJwtPayLoad(jwt);
+    print(results);
     int id = results["UserID"];
-
+    String username = results["username"];
     var response = await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/answer/'),
       body: convert.jsonEncode(
@@ -44,7 +47,9 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
           "answer": answer,
           "userID": id,
           "questionID": questionid,
-          "attachement": null
+          "attachement": null,
+          "username": username,
+          "userType": type
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
@@ -94,6 +99,39 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     if (response.statusCode == 200) {
       print("Answer $id was deleted");
     }
+  }
+
+  editQuestion(
+    
+    int id,
+    bool value,
+      String question,
+      String attachement,
+      int answers,
+      String title,
+    ) async {
+       
+    var jwt = await storage.read(key: "jwt");
+    var results = parseJwtPayLoad(jwt);
+    int id_user = results["UserID"];
+    String username = results["username"];
+    print(results);
+    var response = await http.put(
+      Uri.parse('http://52.47.179.213:8081/api/v1/question/$id'),
+      body: convert.jsonEncode(
+        <String, dynamic>{
+         "question": question,
+        "userID": id_user,
+        "attachement": attachement,
+        "closed": value,
+        "answers":  answers,
+        "questiontitle": title,
+        "username": username
+        },
+      ),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+    print(response.body);
   }
 
   getid() async {
@@ -221,7 +259,7 @@ var timezoneOffset1 = now.timeZoneOffset;
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
-                                      _editQuestion(context),
+                                      _showDialogStatus(context,widget.question),
                                 );
                               }),
                           IconButton(
@@ -359,14 +397,16 @@ var timezoneOffset1 = now.timeZoneOffset;
     return new Container(
       margin: const EdgeInsets.all(5.0),
       decoration: new BoxDecoration(
-        color: Colors.green[100],
+        color:  item['userType'].toString()=="vet"?Colors.blue[100]
+              :Colors.green[100],
         borderRadius: const BorderRadius.all(const Radius.circular(20.0)),
       ),
       child: new Column(
         children: <Widget>[
           new Container(
             decoration: new BoxDecoration(
-              color: Colors.green[100],
+              color:   item['userType'].toString()=="vet"?Colors.blue[100]
+              :Colors.green[100],
               borderRadius: const BorderRadius.only(
                   topLeft: const Radius.circular(20.0),
                   topRight: const Radius.circular(20.0)),
@@ -381,7 +421,12 @@ var timezoneOffset1 = now.timeZoneOffset;
                   child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new Text("User " + item['UserID'].toString()),
+                      item['userType'].toString()=="vet"?Row(children: [
+                          new Text(item['username'].toString()),
+                          Icon(Icons.verified_outlined,
+                                  color: Colors.blue),
+                      ],)
+                      :Text(item['username'].toString()),
                     ],
                   ),
                 ),
@@ -460,6 +505,7 @@ var timezoneOffset1 = now.timeZoneOffset;
                             var answer = _answerController.text;
 
                             addAnswer(answer, widget.question['ID'], "");
+                            sleep(Duration(seconds:1));
                             Navigator.of(context).pop();
                             await Navigator.pushReplacement(
                               context,
@@ -482,57 +528,47 @@ var timezoneOffset1 = now.timeZoneOffset;
     );
   }
 
-  Widget _editQuestion(context) {
-    final TextEditingController _questiontitleController =
-        TextEditingController(text: widget.question['questiontitle']);
-    final TextEditingController _questionController =
-        TextEditingController(text: widget.question['question']);
-    return new AlertDialog(
-      content: Stack(
-        children: <Widget>[
-          Form(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(labelText: "Title"),
-                      controller: _questiontitleController,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(labelText: "Question"),
-                      controller: _questionController,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextButton(
-                      child: Text("Submit"),
-                      style: TextButton.styleFrom(
-                        primary: Colors.green[300],
-                      ),
-                      onPressed: () {
-                        var title = _questiontitleController.text;
-                        var question = _questionController.text;
+    Widget _showDialogStatus(context,item) {
+     
+    bool _switchValue_aux=item['closed'];
+     _switchValue=item['closed'];
 
-                        // editQuestion(title,question,"");
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+    return SimpleDialog(
+     
+      children:[Container(
+         margin: EdgeInsets.only(left: 73,right: 75),
+        child: LiteRollingSwitch(
+    value:  _switchValue,
+    textOn: 'Closed',
+    textOff: 'Not closed',
+    colorOn: Colors.greenAccent[700],
+    colorOff: Colors.redAccent[700],
+    iconOn: Icons.done,
+    iconOff: Icons.remove_circle_outline,
+    textSize: 12.0,
+    onChanged: (bool state) {
+    
+   _switchValue=state;
+      print('Current State of SWITCH IS: $state');
+    
+ 
+    
+    },
+),
+),
+ new TextButton(
+          child: new Text("Save",style: TextStyle(fontWeight: FontWeight.bold),),
+          onPressed: () {
+            if( _switchValue_aux==_switchValue){
+            Navigator.of(context).pop();
+            }else{
+              editQuestion(item['ID'],_switchValue,item['question'],item['attachement'],item['answers'],item['questiontitle']);
+             Navigator.of(context).pop();
+            }
+           
+          },
+        )
+]   
     );
   }
 }

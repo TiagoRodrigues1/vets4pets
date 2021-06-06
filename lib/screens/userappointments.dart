@@ -75,14 +75,20 @@ class _UserAppointmentsState extends State<UserAppointments> {
         appointments.forEach((element) {
           DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss")
               .parse(element['date']); //AS horas
+
           DateTime now = DateTime.now();
           var timezoneOffset1 = now.timeZoneOffset;
-         
+          parseDated_ = parseDated_.add(timezoneOffset1);
+         print(parseDated_);
           DateTime parseDated =
               new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
           String formattedTime = DateFormat.Hm().format(parseDated_);
+          
+          print(formattedTime);
           parseDated = parseDated.add(timezoneOffset1);
+          print(parseDated);
           DateTime parseDate = parseDated.toUtc();
+          print(parseDate);
           if (selectedEvents[parseDate] != null) {
             selectedEvents[parseDate].add(
               AppEvent(title: formattedTime),

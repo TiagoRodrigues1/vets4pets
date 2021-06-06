@@ -45,8 +45,11 @@ class _LongPageState extends State<LoginPage> {
 
         var profilePicture = json.decode(response.body)['profilePicture'];
 
+         var type = json.decode(response.body)['userType'];
+
         await storage.write(key: 'jwt', value: token);
         await storage.write(key: 'profilePicture', value: profilePicture);
+        await storage.write(key: 'userType', value: type);
       }
       return 1;
     } else {

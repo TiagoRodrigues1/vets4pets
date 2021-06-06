@@ -146,10 +146,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     );
     print(result.statusCode);
     if (result.statusCode == 201) {
-      DateTime now = DateTime.now();
-      var timezoneOffset1 = now.timeZoneOffset;
-
-      date = date.subtract(timezoneOffset1);
+    
 
       Event event = Event(
         title: 'Appointment of $name',
@@ -183,9 +180,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
           print(parseDated_);
           DateTime now = DateTime.now();
           var timezoneOffset1 = now.timeZoneOffset;
-          DateTime parseDated =
-              new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
-
+          DateTime parseDated =new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
+            parseDated_ = parseDated_.add(timezoneOffset1);
           String formattedTime = DateFormat.Hm().format(parseDated_);
           print(formattedTime);
           parseDated = parseDated.add(timezoneOffset1);
@@ -773,6 +769,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                 int minutes = int.parse(parts[1]);
                                 finalDay = finalDay.add(
                                     Duration(hours: hours, minutes: minutes));
+                                     DateTime now = DateTime.now();
+                          var timezoneOffset1 = now.timeZoneOffset;
+                                    finalDay= finalDay.subtract(timezoneOffset1);
 
                                 addAppointments(
                                     finalDay,

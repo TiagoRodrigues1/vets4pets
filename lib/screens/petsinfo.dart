@@ -201,7 +201,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
         TextEditingController(text: outputDate);
 
     return Card(
-        elevation: 1.5,
+        elevation: 10.0,
         child: new InkWell(
           onTap: () {},
           child: Padding(
@@ -455,7 +455,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
   }
 
   Widget getCard1(item) {
-    var date = item['date'];
+    var date = item['dateTaken'];
     DateTime parseDate = new DateFormat("yyyy-MM-dd").parse(date);
     var inputDate = DateTime.parse(parseDate.toString());
     var outputFormat = DateFormat('dd/MM/yyyy');

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
@@ -9,6 +10,8 @@ import 'addadoption.dart';
 import 'adoptiondetails.dart';
 import '../jwt.dart';
 import 'leftside_menu.dart';
+import 'package:lite_rolling_switch/lite_rolling_switch.dart';
+
 
 class MyAdoptionsPage extends StatefulWidget {
   @override
@@ -16,6 +19,8 @@ class MyAdoptionsPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<MyAdoptionsPage> {
+  bool _switchValue;
+
   List adoptions = [];
   bool isLoading = false;
   @override
@@ -44,20 +49,46 @@ class _IndexPageState extends State<MyAdoptionsPage> {
     }
   }
 
-  addAdoption(
-      String name, String animaltype, String race, BuildContext context) async {
+  editAdoption(
+    
+    int id,
+    bool value,
+      String name,
+      String city,
+      String text,
+      String email,
+      String phonenumber,
+      String birth,
+      String animaltype,
+      String race,
+      String picture1,
+      String picture2,
+      String picture3,
+      String picture4) async {
+        print(id);
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
-    int id = results["UserID"];
-
-    var response = await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/adoption/'),
+    int id_user = results["UserID"];
+    String username = results["username"];
+    var response = await http.put(
+      Uri.parse('http://52.47.179.213:8081/api/v1/adoption/$id'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "name": name,
-          "userID": id,
-          "race": race,
           "animaltype": animaltype,
+          "race": race,
+          "userID": id_user,
+          "text": text,
+          "adopted": value,
+          "city": city,
+          "birth": birth,
+          "phonenumber": phonenumber,
+          "email": email,
+          "username": username,
+          "attachement1": picture1,
+          "attachement2": picture2,
+          "attachement3": picture3,
+          "attachement4": picture4
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
@@ -182,7 +213,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) =>
-                                _showDialog(id, context),
+                                _showDialogStatus(context, item),
                           );
                         },
                       ),
@@ -244,6 +275,49 @@ class _IndexPageState extends State<MyAdoptionsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[yesButton, noButton])
       ],
+    );
+  }
+   Widget _showDialogStatus(context,item) {
+     
+    bool _switchValue_aux=item['adopted'];
+     _switchValue=item['adopted'];
+
+    return SimpleDialog(
+     
+      children:[Container(
+         margin: EdgeInsets.only(left: 73,right: 75),
+        child: LiteRollingSwitch(
+    value:  _switchValue,
+    textOn: 'Adopted',
+    textOff: 'Not adopted',
+    colorOn: Colors.greenAccent[700],
+    colorOff: Colors.redAccent[700],
+    iconOn: Icons.done,
+    iconOff: Icons.remove_circle_outline,
+    textSize: 12.0,
+    onChanged: (bool state) {
+    
+   _switchValue=state;
+      print('Current State of SWITCH IS: $state');
+    
+ 
+    
+    },
+),
+),
+ new TextButton(
+          child: new Text("Save",style: TextStyle(fontWeight: FontWeight.bold),),
+          onPressed: () {
+            if( _switchValue_aux==_switchValue){
+            Navigator.of(context).pop();
+            }else{
+              editAdoption(item['ID'],_switchValue,item['name'],item['city'],item['text'],item['email'],item['phonenumber'],item['birth'],item['animaltype'],item['item'],item['attachement1'],item['attachement2'],item['attachement3'],item['attachement4']);
+             Navigator.of(context).pop();
+            }
+           
+          },
+        )
+]   
     );
   }
 }

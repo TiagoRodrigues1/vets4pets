@@ -166,7 +166,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   Widget _buildProfileImage() {
     Uint8List bytes;
-    if (picture != "") {
+    if (picture != "" ||picture ==null ) {
       String profileUrl = picture;
       profileUrl = profileUrl.substring(23, profileUrl.length);
       bytes = base64.decode(profileUrl);
