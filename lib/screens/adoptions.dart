@@ -49,6 +49,18 @@ class _IndexPageState extends State<AdoptionsPage> {
       appBar: AppBar(
         title: Text("Latest Adoptions"),
         actions: <Widget>[
+           IconButton(
+            icon: const Icon(
+              Icons.replay_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {
+          Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => super.widget));
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'New Adoption',
@@ -126,7 +138,11 @@ class _IndexPageState extends State<AdoptionsPage> {
                         height: 10,
                       ),
                       Text(
-                        "Type: " + animaltype + " |" + " Race: " + race,
+                        "Type: " + animaltype ,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                        Text(
+                        "Race: " + race,
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],

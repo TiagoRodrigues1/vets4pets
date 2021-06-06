@@ -43,7 +43,7 @@ class RegisterPageState extends State<RegisterPage> {
           "username": username
         }));
   
-    print(response.body);
+   
     if (response.statusCode == 200) {
      
      return 0;
@@ -332,7 +332,7 @@ class RegisterPageState extends State<RegisterPage> {
                          if (state == 0) {
                            Navigator.pop(context);
                         } else {
-                          print("xd");
+                          
                           showDialog(
                             context: context,
                             builder: (BuildContext context) =>

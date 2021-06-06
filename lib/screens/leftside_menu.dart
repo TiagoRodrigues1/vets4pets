@@ -450,11 +450,10 @@ Widget _showDialogInfo(item) {
                       leading: Icon(Icons.star_border),
                       title: Text('My Adoptions'),
                       onTap: () {
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    MyAdoptionsPage()),
-                            (Route<dynamic> route) => false);
+                         Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyAdoptionsPage()),
+                  );
                       }),
                   ListTile(
                       leading: Icon(Icons.access_time),

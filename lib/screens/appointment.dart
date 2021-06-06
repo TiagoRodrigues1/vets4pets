@@ -50,6 +50,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     AppEvent(title: "12:30"),
     AppEvent(title: "14:00"),
     AppEvent(title: "14:30"),
+    AppEvent(title: "15:00"),
     AppEvent(title: "15:30"),
     AppEvent(title: "16:00"),
     AppEvent(title: "16:30"),
@@ -144,7 +145,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(result.statusCode);
+   
     if (result.statusCode == 201) {
     
 
@@ -177,16 +178,16 @@ class _AppointmentPageState extends State<AppointmentPage> {
         appointments.forEach((element) {
           DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss")
               .parse(element['date']); //AS horas
-          print(parseDated_);
+          
           DateTime now = DateTime.now();
           var timezoneOffset1 = now.timeZoneOffset;
           DateTime parseDated =new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
             parseDated_ = parseDated_.add(timezoneOffset1);
           String formattedTime = DateFormat.Hm().format(parseDated_);
-          print(formattedTime);
+    
           parseDated = parseDated.add(timezoneOffset1);
           DateTime parseDate = parseDated.toUtc();
-          print(parseDated);
+     
 
           if (selectedDayAppointment[parseDate] != null) {
             selectedDayAppointment[parseDate].add(
@@ -199,7 +200,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           }
         });
 
-        print(selectedDayAppointment);
+    
       });
     } else {
       appointments = [];
@@ -227,7 +228,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   }
 
   Widget getCardPet(item, flag) {
-    print("Animal" + item['ID'].toString());
+ 
     var name = item['name'];
     var animaltype = item['animaltype'];
     String profileUrl = item['profilePicture'];
@@ -293,12 +294,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
   }
 
   Widget getCardVet(item, flag) {
-    print("Vet" + item['ID'].toString());
+   
     var name = item['name'];
     var animaltype = item['contact'];
-    String profileUrl = item['profilePicture'];
-    profileUrl = profileUrl.substring(23, profileUrl.length);
-    Uint8List bytes = base64.decode(profileUrl);
+    Uint8List bytes = null;
+       String profileUrl2 = item['profilePicture'];
+ if (profileUrl2 != "" && profileUrl2 != null) {
+      profileUrl2 = profileUrl2.substring(23, profileUrl2.length);
+      bytes = base64.decode(profileUrl2);
+    }
     return Card(
         color: item == selectedVet ? Colors.green[100] : Colors.white,
         elevation: 1.5,
@@ -323,7 +327,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         borderRadius: BorderRadius.circular(60 / 2),
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: MemoryImage(bytes),
+                          image:bytes==null?AssetImage("assets/images/defaultuser.jpg")
+                          :MemoryImage(bytes),
                         )),
                   ),
                   SizedBox(
@@ -372,7 +377,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
             var inputDate = DateTime.parse(parseDate.toString());
             var outputFormat = DateFormat('dd/MM/yyyy HH:mm');
             date = outputFormat.format(inputDate);
-            print(date);
+           
           });
         },
         child: Container(
@@ -628,7 +633,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   }
 
   getSlots(DateTime date) {
-    print(selectedDayAppointment);
+
     if (selectedDayAppointment[date] != null) {
       selectedSlots[date] = null;
       List<AppEvent> day_app = selectedDayAppointment[date];
@@ -653,10 +658,19 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
     return Column(
       children: [
-        Text(
-          "Select a day for your appointment",
-          textAlign: TextAlign.center,
-        ),
+        Container(
+                  height: 30,
+                  width: MediaQuery.of(context).size.width,
+                  color: Color.fromRGBO(82, 183, 136, 1),
+                  child: Center(
+                    child: Text(
+                      "Select a day for you appointment",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
         Container(
           child: TableCalendar(
             focusedDay: selectedDay,
@@ -680,7 +694,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 _getEventsfromDay(selectedDay);
                 focusedDay = focusDay;
               });
-              print(focusedDay);
+       
             },
             selectedDayPredicate: (DateTime date) {
               return isSameDay(selectedDay, date);
@@ -714,10 +728,19 @@ class _AppointmentPageState extends State<AppointmentPage> {
             ),
           ),
         ),
-        Text(
-          "Select a hour for your appointment",
-          textAlign: TextAlign.center,
-        ),
+        Container(
+                  height: 30,
+                  width: MediaQuery.of(context).size.width,
+                  color: Color.fromRGBO(82, 183, 136, 1),
+                  child: Center(
+                    child: Text(
+                      "Select a hour for you appointment",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
         SingleChildScrollView(
             child: Container(
           height: 300,
@@ -799,10 +822,20 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   title: new Text('Pet'),
                   content: Column(
                     children: <Widget>[
-                      Text(
-                        "Select a Pet\n",
-                        textAlign: TextAlign.center,
-                      ),
+                  Container(
+                  height: 30,
+                  width: MediaQuery.of(context).size.width,
+                  color: Color.fromRGBO(82, 183, 136, 1),
+                  child: Center(
+                    child: Text(
+                      "Select a Pet",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
+                      
                       _buildContent(),
                     ],
                   ),
@@ -813,10 +846,19 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   title: new Text('Vet'),
                   content: Column(
                     children: <Widget>[
-                      Text(
-                        "Select a Vet\n",
-                        textAlign: TextAlign.center,
-                      ),
+                      Container(
+                  height: 30,
+                  width: MediaQuery.of(context).size.width,
+                  color: Color.fromRGBO(82, 183, 136, 1),
+                  child: Center(
+                    child: Text(
+                      "Select a Vet",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
                       _buildContent2(),
                     ],
                   ),

@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 import 'dart:convert' as convert;
-
 import 'colors.dart';
 
 class ForumPage extends StatefulWidget {
@@ -71,7 +70,7 @@ class _ForumPageState extends State<ForumPage> {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-
+      String username = results["username"];
     await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/question/'),
       body: convert.jsonEncode(
@@ -81,7 +80,8 @@ class _ForumPageState extends State<ForumPage> {
           "attachement": attachament,
           "closed": false,
           "answers": 0,
-          "questiontitle": title
+          "questiontitle": title,
+           "username": username
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
@@ -110,9 +110,17 @@ class _ForumPageState extends State<ForumPage> {
               );
             },
           ),
-          new IconButton(
-            icon: new Icon(Icons.search),
-            onPressed: _onSearchPressed,
+          IconButton(
+            icon: const Icon(
+              Icons.replay_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {
+          Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => super.widget));
+            },
           ),
         ],
       ),

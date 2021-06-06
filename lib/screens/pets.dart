@@ -95,6 +95,20 @@ class _IndexPageState extends State<PetsPage> {
         ),
         title: Text("My Pets List"),
         actions: <Widget>[
+
+        IconButton(
+            icon: const Icon(
+              Icons.replay_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {
+          Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => super.widget));
+            },
+          ),
+
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'New Pet',

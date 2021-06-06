@@ -490,7 +490,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                 children: <Widget>[
                   Container(
                     width: MediaQuery.of(context).size.width / 1.2,
-                    height: _validate_name ? 55 : 45,
+                    height: _validate_name ? 65 : 55,
                     padding:
                         EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
                     decoration: BoxDecoration(
@@ -500,8 +500,10 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                           BoxShadow(color: Colors.black12, blurRadius: 5)
                         ]),
                     child: TextField(
+                      maxLines: 2,
                       controller: _nameController,
                       decoration: InputDecoration(
+                        
                          hintText: _validate_name ? null : 'Title',
                         errorText: _validate_name ? validateTitle(_nameController.text) : null,
                         border: InputBorder.none,
@@ -775,10 +777,10 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                         );
                         return;
                       }
-
+                      print(_nameController.text.length);
 
                            setState(() {
-                        _nameController.text.isEmpty ||  _nameController.text.length>20 || _nameController.text.length<10
+                        _nameController.text.isEmpty ||  _nameController.text.length>50 || _nameController.text.length<10
                             ? _validate_name = true
                             : _validate_name = false;
                         animalTypeValue==null
@@ -801,16 +803,10 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                             : _validate_contact= false;
                       });
 
-                     
-                      /*print(_validate_name);
-                       print(_validate_type);
-                        print(_validate_race);
-                         print(_validate_city);
-                          print(_validate_email);
-                           print(_validate_contact);
-                            print(_validate_birth);*/
+                     print(_validate_name);
+                   
 
-
+                        
 
 
 
@@ -839,7 +835,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
                         animalTypeValue = "N/A";
                         raceValue = "N/A";
                       }
-
+                      
                       addAdoption(
                           _nameController.text,
                           cityValue,
@@ -980,7 +976,7 @@ bool checkDate(String string) {
 bool checkEmail(String string) {
   final emailRegex = 
     RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-print(emailRegex.hasMatch(string));
+
   return emailRegex.hasMatch(string);
 }
 }

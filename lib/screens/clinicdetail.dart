@@ -129,7 +129,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
       child: Column(
         children: <Widget>[
           Text(
-            "Morada\n",
+            "Address\n",
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           Text(
@@ -140,7 +140,7 @@ class _ClinicDetailPageState extends State<ClinicDetailPage> {
             ),
           ),
           Text(
-            "Telemovel\n",
+            "Phone\n",
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           new InkWell(

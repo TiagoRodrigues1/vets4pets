@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 /// Example event class.
 class AppEvent {
   final String title;
-  AppEvent({@required this.title});
+  final Map<String, dynamic> info;
+  AppEvent({@required this.title,this.info});
 
   String toString() => this.title;
 

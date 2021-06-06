@@ -14,7 +14,7 @@ class PhotoPage extends StatefulWidget {
 
 class _PhotoPageState extends State<PhotoPage> {
   Widget build(BuildContext context) {
-    print(widget.image);
+    
     String profileUrl = widget.image;
     profileUrl = profileUrl.substring(23, profileUrl.length);
     Uint8List bytes = base64.decode(profileUrl);

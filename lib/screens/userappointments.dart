@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../utils.dart';
 import 'package:flutter/material.dart';
 import '../jwt.dart';
@@ -9,7 +11,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert' as convert;
-
 
 List appointments = [];
 
@@ -41,7 +42,8 @@ class _UserAppointmentsState extends State<UserAppointments> {
   DateTime focusedDay = DateTime.now();
   bool not;
   TextEditingController _eventController = TextEditingController();
-
+  Map<String, dynamic> pet = null;
+  Map<String, dynamic> vet = null;
   void initState() {
     super.initState();
     this.getAppointements();
@@ -54,8 +56,6 @@ class _UserAppointmentsState extends State<UserAppointments> {
     super.dispose();
   }
 
- 
-
   getAppointements() async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
@@ -65,7 +65,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
       Uri.parse('http://52.47.179.213:8081/api/v1/appointmentOfuser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    
+
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
 
@@ -75,32 +75,63 @@ class _UserAppointmentsState extends State<UserAppointments> {
         appointments.forEach((element) {
           DateTime parseDated_ = new DateFormat("yyyy-MM-dd'T'HH:mm:ss")
               .parse(element['date']); //AS horas
-
           DateTime now = DateTime.now();
           var timezoneOffset1 = now.timeZoneOffset;
           parseDated_ = parseDated_.add(timezoneOffset1);
-         print(parseDated_);
           DateTime parseDated =
               new DateFormat("yyyy-MM-dd").parse(element['date']); //Sacar o dia
           String formattedTime = DateFormat.Hm().format(parseDated_);
-          
-          print(formattedTime);
           parseDated = parseDated.add(timezoneOffset1);
-          print(parseDated);
           DateTime parseDate = parseDated.toUtc();
-          print(parseDate);
           if (selectedEvents[parseDate] != null) {
             selectedEvents[parseDate].add(
-              AppEvent(title: formattedTime),
+              AppEvent(title: formattedTime, info: element),
             );
           } else {
-            selectedEvents[parseDate] = [AppEvent(title: formattedTime)];
+            selectedEvents[parseDate] = [
+              AppEvent(title: formattedTime, info: element)
+            ];
           }
         });
-
       });
     } else {
       appointments = [];
+    }
+  }
+
+  getVet(int id) async {
+    var jwt = await storage.read(key: "jwt");
+
+    var response = await http.get(
+      Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+    vet = null;
+
+    if (response.statusCode == 200) {
+      var item = json.decode(utf8.decode(response.bodyBytes))['data'];
+      setState(() {
+        vet = item;
+        //  log(vet.toString());
+      });
+    }
+  }
+
+  getPet(int id) async {
+    var jwt = await storage.read(key: "jwt");
+
+    var response = await http.get(
+      Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+    pet = null;
+
+    if (response.statusCode == 200) {
+      var item = json.decode(utf8.decode(response.bodyBytes))['data'];
+
+      setState(() {
+        pet = item;
+      });
     }
   }
 
@@ -108,7 +139,6 @@ class _UserAppointmentsState extends State<UserAppointments> {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-   
 
     var response = await http.put(
       Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),
@@ -118,24 +148,23 @@ class _UserAppointmentsState extends State<UserAppointments> {
           "name": widget.name,
           "contact": widget.contact,
           "email": widget.email,
-          "gender":notification,
+          "gender": notification,
           "profilePicture": widget.picture,
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     if (response.statusCode == 200) {
-      //print(notification);
-      //print(notification.toString());
+      
       await storage.write(key: 'notifications', value: notification.toString());
-      //print(notification.toString());
+
     }
   }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-  
+
     var height = screenSize.height;
     return Scaffold(
       appBar: new AppBar(
@@ -156,7 +185,6 @@ class _UserAppointmentsState extends State<UserAppointments> {
                       context: context,
                       builder: (BuildContext context) => _showDialog(),
                     );
-
                   },
                 )
               : IconButton(
@@ -198,17 +226,26 @@ class _UserAppointmentsState extends State<UserAppointments> {
           shrinkWrap: true,
           itemCount: selectedEvents[selectedDay].length,
           itemBuilder: (context, index) {
-            return getCardHour(selectedEvents[selectedDay][index]);
+            return getCardHour(selectedEvents[selectedDay][index],
+                selectedEvents[selectedDay][index].info);
           });
     } else {
       return Container();
     }
   }
 
-  Widget getCardHour(slots) {
+  Widget getCardHour(slots, item) {
     return Card(
       child: new InkWell(
-        onTap: () {},
+        onTap: () async {
+          await getVet(item['VetID']);
+
+          await getPet(item['AnimalID']);
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => _showDialogInfo(item),
+          );
+        },
         child: Container(
           height: 50,
           child: Center(
@@ -219,6 +256,183 @@ class _UserAppointmentsState extends State<UserAppointments> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _showDialogInfo(item) {
+    String profileUrl = pet['profilePicture'];
+
+    Uint8List bytes = null, bytes2 = null;
+    if (profileUrl != "" && profileUrl != null) {
+      profileUrl = profileUrl.substring(23, profileUrl.length);
+      bytes = base64.decode(profileUrl);
+    }
+
+    String profileUrl2 = vet['profilePicture'];
+    if (profileUrl2 != "" && profileUrl2 != null) {
+      profileUrl2 = profileUrl2.substring(23, profileUrl2.length);
+      bytes2 = base64.decode(profileUrl2);
+    }
+
+    var date = item['date'];
+    DateTime parseDate = new DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat('dd/MM/yyyy HH:mm');
+    var outputDate = outputFormat.format(inputDate);
+    final TextEditingController _dateController =
+        TextEditingController(text: outputDate);
+
+    return AlertDialog(
+      content: Container(
+          child: Column(
+        children: [
+          Center(
+            child: Container(
+              width: 100.0,
+              height: 100.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: bytes == null
+                      ? AssetImage("assets/images/petdefault.jpg")
+                      : MemoryImage(bytes),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(40.0),
+                border: Border.all(
+                  color: Color.fromRGBO(82, 183, 136, 1),
+                  width: 5.0,
+                ),
+              ),
+            ),
+          ),
+          Text("\nPet Informations:\n"),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Name: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  pet['name'] + "\n",
+                )
+              ]),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Animal Type: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  pet['animaltype'] + "\n",
+                )
+              ]),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Race: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  pet['race'] + "\n",
+                )
+              ]),
+          Center(
+            child: Container(
+              width: 100.0,
+              height: 100.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: bytes == null
+                      ? AssetImage("assets/images/defaultuser.jpg")
+                      : MemoryImage(bytes2),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(40.0),
+                border: Border.all(
+                  color: Color.fromRGBO(82, 183, 136, 1),
+                  width: 5.0,
+                ),
+              ),
+            ),
+          ),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "\nDr/Dra \n",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+                Text(
+                  "\n" + vet['name'] + "\n",
+                )
+              ]),
+          Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Contact: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  vet['contact'] + "\n",
+                )
+              ]),
+               Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, //Center Row contents vertically,
+              children: [
+                Text(
+                  "Email: \n",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  vet['email'] + "\n",
+                )
+              ]),
+          Container(
+            width: MediaQuery.of(context).size.width / 1.5,
+            height: 45,
+            padding: EdgeInsets.only(top: 4, left: 32, right: 16, bottom: 4),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+                color: Colors.white,
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)]),
+            child: TextField(
+              enabled: false,
+              controller: _dateController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                icon: Icon(
+                  Icons.date_range,
+                  color: Color(0xFF52B788),
+                ),
+              ),
+            ),
+          ),
+        ],
+      )),
     );
   }
 
@@ -331,8 +545,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
             )
           : new Text("Turn off notifications", textAlign: TextAlign.center),
       content: not == false
-          ? Text(
-              "You will not receive any notifications",
+          ? Text("You will not receive any notifications",
               textAlign: TextAlign.center)
           : Text(
               "You will receive notifications about the timing of medications for each of your pets",

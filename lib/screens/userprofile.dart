@@ -47,14 +47,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
     setState(() {});
 
-    print(picture);
+    
   }
 
   editUserPicture(String profilePicture) async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-    print(id);
+    
 
     var response = await http.put(
       Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),

@@ -37,7 +37,7 @@ bool _switchValue;
     var jwt = await storage.read(key: "jwt");
     var type = await storage.read(key: "userType");
     var results = parseJwtPayLoad(jwt);
-    print(results);
+    
     int id = results["UserID"];
     String username = results["username"];
     var response = await http.post(
@@ -54,7 +54,8 @@ bool _switchValue;
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+    sleep(Duration(seconds:1));
+   
   }
 
   getAnswers(int id) async {
@@ -83,7 +84,7 @@ bool _switchValue;
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
-    print(response.body);
+    
     if (response.statusCode == 200) {
       print("Question $id was deleted");
     }
@@ -95,7 +96,7 @@ bool _switchValue;
       Uri.parse('http://52.47.179.213:8081/api/v1/answer/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+  
     if (response.statusCode == 200) {
       print("Answer $id was deleted");
     }
@@ -115,7 +116,7 @@ bool _switchValue;
     var results = parseJwtPayLoad(jwt);
     int id_user = results["UserID"];
     String username = results["username"];
-    print(results);
+
     var response = await http.put(
       Uri.parse('http://52.47.179.213:8081/api/v1/question/$id'),
       body: convert.jsonEncode(
@@ -131,7 +132,7 @@ bool _switchValue;
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+  
   }
 
   getid() async {
@@ -244,7 +245,7 @@ var timezoneOffset1 = now.timeZoneOffset;
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("User " + widget.question['UserID'].toString()),
+                      Text(widget.question['username'].toString()),
                       Text(widget.question['questiontitle']),
                     ],
                   ),
@@ -505,7 +506,7 @@ var timezoneOffset1 = now.timeZoneOffset;
                             var answer = _answerController.text;
 
                             addAnswer(answer, widget.question['ID'], "");
-                            sleep(Duration(seconds:1));
+                            
                             Navigator.of(context).pop();
                             await Navigator.pushReplacement(
                               context,

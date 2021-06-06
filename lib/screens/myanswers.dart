@@ -46,7 +46,7 @@ class _MyAnswersPageState extends State<MyAnswersPage> {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
 
-        // print(_image.path);
+       
       } else {
         print('No image selected.');
       }
@@ -66,7 +66,7 @@ getQuestion(int id) async {
       var item = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
         question=item;
-        print(question);
+     
       });
       return 1;
     } 
@@ -327,7 +327,7 @@ getQuestion(int id) async {
           ]),
         ),
         onTap: () async {
-          print(item['QuestionID']);
+         
           var flag=await getQuestion(item['QuestionID']);
           if(flag==1){
               Navigator.push(

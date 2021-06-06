@@ -65,7 +65,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
       String picture2,
       String picture3,
       String picture4) async {
-        print(id);
+        
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id_user = results["UserID"];
@@ -93,7 +93,6 @@ class _IndexPageState extends State<MyAdoptionsPage> {
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
   }
 
   deleteAdoption(int id) async {
@@ -102,7 +101,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/adoption/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+   
     if (response.statusCode == 200) {
       print("Pet $id was deleted");
     }
@@ -111,17 +110,21 @@ class _IndexPageState extends State<MyAdoptionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => NavDrawer()),
-                (Route<dynamic> route) => false);
-          },
-        ),
+      
         title: Text("My Adoptions"),
         actions: <Widget>[
+           IconButton(
+            icon: const Icon(
+              Icons.replay_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {
+          Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => super.widget));
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'New Adoption',
@@ -199,8 +202,12 @@ class _IndexPageState extends State<MyAdoptionsPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        "Type: " + animaltype + " |" + " Race: " + race,
+                     Text(
+                        "Type: " + animaltype ,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                        Text(
+                        "Race: " + race,
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],
@@ -298,7 +305,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
     onChanged: (bool state) {
     
    _switchValue=state;
-      print('Current State of SWITCH IS: $state');
+    
     
  
     

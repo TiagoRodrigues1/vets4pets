@@ -140,7 +140,7 @@ class _ClinicPageState extends State<ClinicPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               new Text(item['name']),
-              new Text(item['address']),
+              
               new Container(
                   color: Colors.green[300],
                   width: 24.0,
@@ -150,11 +150,12 @@ class _ClinicPageState extends State<ClinicPage> {
                 children: <Widget>[
                   new Icon(Icons.location_on,
                       size: 14.0, color: Colors.green[300]),
-                  new Text("Porto"),
-                  new Container(width: 24.0),
-                  new Icon(Icons.access_time,
-                      size: 14.0, color: Colors.green[300]),
-                  new Text("Open/Not"),
+                      Container(
+                        width: 200,
+                        height: 50,
+                        child: FittedBox(child:Text(item['address']), fit: BoxFit.contain,),)
+              
+                 
                 ],
               )
             ],

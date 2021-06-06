@@ -44,7 +44,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/vaccine/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+   
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
@@ -64,7 +64,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
       Uri.parse('http://52.47.179.213:8081/api/v1/prescription/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
-    print(response.body);
+    
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
@@ -251,7 +251,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
   }
 
   getMeds(String protocol) {
-    print(protocol);
+    
     meds = [];
     List meds_aux;
     meds_aux = protocol.split(";");
