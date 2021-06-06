@@ -25,13 +25,16 @@ func GetSecretKey() []byte {
 
 func GenerateTokenJWT(credentials model.Users) string {
 	// Set expiration time of the token
-	expirationTime := time.Now().Add(15 * time.Minute)
+	expirationTime := time.Now().Add(10080 * time.Minute)
 	
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &model.Claims{
 		UserID: credentials.ID,
 		Email: credentials.Email,
 		Username: credentials.Username,
+		Contact: credentials.Contact,
+		Name: credentials.Name,
+		Gender: credentials.Gender,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
 			ExpiresAt: expirationTime.Unix(),
@@ -87,4 +90,28 @@ func getAuthorizationToken(c *gin.Context) (string, bool, bool) {
 		token = strings.TrimSpace(reqToken)
 	}
 	return token, false, false
+}
+
+func DecodeNonAuthToken(tkStr string) (string, error) {
+	claims := &model.Claims{}
+
+    // Decode token based on parameters provided, if it fails throw err
+	tkn, err := jwt.ParseWithClaims(tkStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return JwtKey, nil
+	})
+
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			return "", err
+		}
+		return "", err
+	}
+
+	if !tkn.Valid {
+		return "", err
+	}
+
+    // Return encoded email
+	str := fmt.Sprint(claims.UserID)
+	return str, nil
 }

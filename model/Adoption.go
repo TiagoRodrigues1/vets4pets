@@ -11,11 +11,12 @@ type Adoption struct {
 	Text string `json:"text"`
 	Adopted bool `json:"adopted"`
 	City string `json:"city"`
-	Birth int `json:"birth"`
+	Birth string `json:"birth"`
 	Email string `json:"email"`
-	Phonenumber string `json:"phonenumber"`
-	Attachement1 []byte `json:"attachement"`
-	Attachement2 []byte `json:"attachement"`
-	Attachement3 []byte`json:"attachement"`
-	Attachement4 []byte `json:"attachement"`	
+	PhoneNumber string `json:"phonenumber"`
+	Attachement1 string `json:"attachement1"`
+	Attachement2 string `json:"attachement2"`
+	Attachement3 string`json:"attachement3"`
+	Attachement4 string `json:"attachement4"`
+	Username string `json:"username"`
 }

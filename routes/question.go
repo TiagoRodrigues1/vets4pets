@@ -23,4 +23,10 @@ func GetQuestionByTime(c *gin.Context) {
 	controllers.GetQuestionByTime(c)
 }
 
+func GetQuestionsOfUser(c *gin.Context) {
+	controllers.GetQuestionsOfUser(c)
+}
 
+func UpdateQuestion(c *gin.Context) {
+	controllers.UpdateQuestion(c)
+}

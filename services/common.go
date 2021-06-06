@@ -26,14 +26,16 @@ func readProperties() {
 		dbPort = lines[4]
 		dbName = lines[5]
 	}
-
 }
 
 func OpenDatabase() {
 	//open a db connection
 	readProperties()
 	var err error
-	Db, err = gorm.Open("postgres", "postgres://"+username+":"+password+"@"+dbHost+":"+dbPort+"/"+dbName+"?sslmode=disable")
+
+	Db, err = gorm.Open("postgres", "postgres://"+username+":"+password+"@"+dbHost+":"+dbPort+"/"+dbName+"?sslmode=disable" )
+	Db.DB().SetMaxOpenConns(1000)
+
 	if err != nil {
 		panic("failed to connect database")
 	}

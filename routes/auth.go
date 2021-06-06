@@ -44,3 +44,16 @@ func GenerateToken(c *gin.Context) {
 func RefreshToken(c *gin.Context) {
 	controllers.RefreshHandler(c)
 }
+
+func ForgotPassword (c *gin.Context) {
+	controllers.ForgotPasswordHandler(c)
+}
+
+func ValidateResetToken (c *gin.Context) {
+	controllers.ValidateToken(c)
+}
+
+func ResetPassword (c *gin.Context) {
+	controllers.ResetPassword(c)
+}
+

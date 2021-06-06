@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"projetoapi/model"
 	"projetoapi/services"
-	 "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 func AddAnimal(c *gin.Context) {
@@ -14,11 +15,12 @@ func AddAnimal(c *gin.Context) {
 		return
 	}
 	var user model.Users
-    services.Db.First(&user, animal.UserID)				//Verifica se existe o user																	//Verifica qual se o User exist
+    services.Db.First(&user, animal.UserID)	
     if user.ID == 0 {
-    	c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusBadRequest,"message": "Error! User does not exist"})
+    	c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusNotFound,"message": "Error! User does not exist"})
         return
     }
+	
 	services.Db.Save(&animal)
 	c.JSON(http.StatusCreated, gin.H{"status":http.StatusCreated, "message": "Created Successfully","resourceId" : animal.ID})
 }
@@ -38,12 +40,29 @@ func DeleteAnimal(c *gin.Context) {
 func GetAnimalById(c *gin.Context) {
 	var animal model.Animal
 	id := c.Param("id")
-
+	userID := c.Param("userID")
 	services.Db.First(&animal, id)
 	if animal.ID == 0 {
 		c.JSON(http.StatusNotFound,gin.H{"status": http.StatusNotFound, "message": "Animal not found!"})
 		return
 	} 
+	
+	userString := fmt.Sprint(animal.UserID)
+	if(userString != userID) {
+		c.JSON(http.StatusUnauthorized,gin.H{"status": http.StatusUnauthorized, "message": "This animal is from other user"})
+		return
+	} 
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": animal})
+}
+
+func GetAnimalVet (c *gin.Context) {
+	var animal model.Animal
+	id := c.Param("id")
+	services.Db.First(&animal, id)
+	if animal.ID == 0 {
+		c.JSON(http.StatusNotFound,gin.H{"status": http.StatusNotFound, "message": "Animal not found!"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": animal})
 }
 
@@ -65,3 +84,4 @@ func UpdateAnimal(c *gin.Context) {
 	services.Db.Save(animal)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Update succeeded!"})
 }
+

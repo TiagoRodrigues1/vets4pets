@@ -17,3 +17,7 @@ func DeleteAnswer(c *gin.Context) {
 func GetAnswers(c *gin.Context) {
 	controllers.GetAnswers(c)
 }
+
+func GetAnswersOfUser(c *gin.Context) {
+	controllers.GetAnswersOfUser(c)
+}

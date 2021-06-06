@@ -1,6 +1,9 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+	"github.com/jinzhu/gorm"
+)
 
 type Users struct {
 	gorm.Model `swaggerignore:"true"`
@@ -11,10 +14,9 @@ type Users struct {
 	UserType   string `json:"userType"`
 	Contact	   string `json:"contact"`
 	ClinicID   int    `json:"idclinic"`
+	Gender 	   bool   `json:"gender"`
+	Birthday  time.Time `json:"birthday"`
+	ProfilePicture string `json:"profilePicture"`
 	NumberOfAnsweredQuestions int `json:"numberOfAnsweredQuestions"`
-	/*Animals []Animal `json:"animals"` //lista de animais do utlizador 
-	Answers []Answer `json:"answers"`//lista de respostas do utilizador
-	Questions []Question `json:"questions"` //lista de perguntas do utilizador
-	Appointment []Appointment `json:"appointment"` //lista de appointments do utilizador*/
 }
 

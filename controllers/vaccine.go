@@ -2,7 +2,7 @@ package controllers
 
 import
  (
-	_ "fmt"
+	 "fmt"
 	"net/http"
 	"projetoapi/model"
 	"projetoapi/services"
@@ -12,7 +12,10 @@ import
 
 func AddVaccine(c *gin.Context) {
 	var vaccine model.Vaccines
+	//x, _ := ioutil.ReadAll(c.Request.Body)
+      //  fmt.Printf("%s", string(x))
 	if err := c.ShouldBindJSON(&vaccine); err != nil {
+		fmt.Print(err)
 		c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusBadRequest,"message": "Error! Check All Fields"})
 		return
 	}
@@ -20,7 +23,7 @@ func AddVaccine(c *gin.Context) {
 	var animal model.Animal
 	services.Db.First(&animal, vaccine.AnimalID)		//Verifica se existe o animal
 	if animal.ID == 0 {
-		c.JSON(http.StatusNotFound,gin.H{"status": http.StatusNotFound, "message": "Animal não existe"})
+		c.JSON(http.StatusNotFound,gin.H{"status": http.StatusNotFound, "message": "Animal doesn't exist"})
 		return
 	} 
 	vaccine.Taken=false
@@ -30,7 +33,7 @@ func AddVaccine(c *gin.Context) {
     	c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusBadRequest,"message": "Error! User does not exist"})
         return
     }*/
-	services.Db.Save(&vaccine)						//Guarda a nova pergunta
+	services.Db.Save(&vaccine)						
 	c.JSON(http.StatusCreated, gin.H{"status":http.StatusCreated,"message":"Created Successfully","resourceId" : vaccine.ID})
 }
 
@@ -52,10 +55,9 @@ func GetVaccines(c *gin.Context) {
 	id := c.Param("id")
 	services.Db.First(&animal, id)
 	if animal.ID == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "animal not found!"})
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Animal not found!"})
 		return
 	}
 	services.Db.Where("animal_id = ?", animal.ID).Find(&vaccines)	
-
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": vaccines})
 }

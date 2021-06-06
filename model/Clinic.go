@@ -2,8 +2,6 @@
 package model
 
 import (
-	
-
 	"github.com/jinzhu/gorm"
 )
 type Clinic struct {
@@ -15,5 +13,7 @@ type Clinic struct {
 	UserID uint `gorm:"TYPE:integer REFERENCES users"` //quem fez a pergunta
 	Latitude   string `json:"latitude"`
 	Longitude  string `json:"longitude"`
-
+	Description string `json:"description"`
+	ProfilePicture string `json:"profilePicture"`
+		
 }

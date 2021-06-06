@@ -20,3 +20,7 @@ func GetAnimalById(c *gin.Context) {
 func UpdateAnimal(c *gin.Context) {
 	controllers.UpdateAnimal(c)
 }
+
+func GetAnimalVet(c *gin.Context) {
+	controllers.GetAnimalVet(c)
+}

@@ -9,7 +9,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	
 )
 
 var identityKey = "id"
@@ -64,7 +63,6 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	
-
 	// AUTH
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
@@ -74,6 +72,9 @@ func main() {
 	{
 		auth.POST("/login", routes.GenerateToken)
 		auth.POST("/register", routes.RegisterUser)
+		auth.POST("/forgot_password", routes.ForgotPassword) //sends email
+		auth.POST("/validate_reset_token", routes.ValidateResetToken)
+		auth.POST("/reset_password",routes.ResetPassword)
 		auth.PUT("/refresh_token", services.AuthorizationRequired(), routes.RefreshToken)
 	}
 
@@ -82,7 +83,7 @@ func main() {
 	{
 		user.GET("/:id", routes.GetUserByID)
 		user.PUT("/:id", routes.UpdateUser)
-		
+		user.GET("/",routes.GetUsers)
 	}
 
 	userAnimals := router.Group("api/v1/userAnimals")
@@ -96,32 +97,9 @@ func main() {
 	{
 		animal.POST("/", routes.AddAnimal)
 		animal.DELETE("/:id", routes.DeleteAnimal)
-		animal.GET("/:id", routes.GetAnimalById)
+		animal.GET("/:id/:userID", routes.GetAnimalById)
 		animal.PUT("/:id", routes.UpdateAnimal)
-	}
-
-	question := router.Group("api/v1/question")
-	question.Use(services.AuthorizationRequired())
-	{
-		question.POST("/", routes.AddQuestion)
-		question.DELETE("/:id", routes.DeleteQuestion)
-		question.GET("/:id", routes.GetQuestion)
-	}
-
-	questions := router.Group("api/v1/questions")
-	questions.Use(services.AuthorizationRequired())
-	{
-		questions.GET("/", routes.GetQuestionByTime)
-	
-	}
-
-	answer := router.Group("api/v1/answer")
-	answer.Use(services.AuthorizationRequired())
-	{
-		
-		answer.POST("/", routes.AddAnswer)
-		answer.DELETE("/:id",routes.DeleteAnswer)
-		answer.GET("/:id",routes.GetAnswers)
+		animal.GET("/:id",routes.GetAnimalVet)
 	}
 
 	appointment := router.Group("api/v1/appointment")
@@ -130,18 +108,23 @@ func main() {
 		appointment.POST("/",routes.AddAppointment)
 		appointment.PUT("/:id",routes.UpdateAppointment)
 		appointment.DELETE("/:id",routes.DeleteAppointment)
+		appointment.GET("/vet/:id",routes.GetAppointmentByVetID)
 	}
-
+	
+	appointment_user := router.Group("api/v1/appointmentOfuser")
+    appointment_user.Use(services.AuthorizationRequired())
+    {
+        appointment_user.GET("/:id",routes.GetAppointmentsOfUser)
+    }
 	adoption := router.Group("api/v1/adoption")
 	adoption.Use(services.AuthorizationRequired())
 	{
 		adoption.POST("/", routes.AddAdoption)
 		adoption.DELETE("/:id",routes.DeleteAdoption)
 		adoption.GET("/:id",routes.GetAdoptionsByUser)
-		adoption.PUT("/:id", routes.UpdateAdoption)
+		adoption.PUT("/:id",routes.UpdateAdoption)
 	}
 
-	
 	adoptionbytime := router.Group("api/v1/adoptionByTime")
 	adoptionbytime.Use(services.AuthorizationRequired())
 	{
@@ -155,7 +138,6 @@ func main() {
 		clinic.DELETE("/:id",routes.DeleteClinic)
 		clinic.PUT("/:id/:UserID",routes.AddVet)
 		clinic.GET("/",routes.GetClinics)
-		
 	}
 
 	vetsclinic := router.Group("api/v1/vetsClinic")
@@ -167,22 +149,80 @@ func main() {
 	clinic1 := router.Group("api/v1/clinicRem")
 	clinic1.Use(services.AuthorizationRequired())
 	{
-	
 		clinic1.PUT("/:UserID",routes.RemVet)
 	}
 
 	vaccine := router.Group("api/v1/vaccine")
 	vaccine.Use(services.AuthorizationRequired())
-	{
+	{	
 		vaccine.POST("/", routes.AddVaccine)
 		vaccine.DELETE("/:id/",routes.DeleteVaccine)
-		vaccine.GET("/:id/",routes.GetVaccines)
-		
+		vaccine.GET("/:id/",routes.GetVaccines)		
+	}
+	question := router.Group("api/v1/question")
+    question.Use(services.AuthorizationRequired())
+    {
+        question.POST("/", routes.AddQuestion)
+        question.DELETE("/:id", routes.DeleteQuestion)
+        question.GET("/:id", routes.GetQuestion)
+		question.PUT("/:id",routes.UpdateQuestion)
+    }
+
+    questions := router.Group("api/v1/questions")
+    questions.Use(services.AuthorizationRequired())
+    {
+        questions.GET("/", routes.GetQuestionByTime)
+    
+    }
+
+    questions_user := router.Group("api/v1/questionsByUser")
+    questions_user.Use(services.AuthorizationRequired())
+    {
+        questions_user.GET("/:id", routes.GetQuestionsOfUser)
+    
+    }
+
+    answer := router.Group("api/v1/answer")
+    answer.Use(services.AuthorizationRequired())
+    {
+        
+        answer.POST("/", routes.AddAnswer)
+        answer.DELETE("/:id",routes.DeleteAnswer)
+        answer.GET("/:id",routes.GetAnswers)
+    }
+
+    answer_user := router.Group("api/v1/answersByUser")
+    answer_user.Use(services.AuthorizationRequired())
+    {
+        answer_user.GET("/:id",routes.GetAnswersOfUser)
+    }
+
+	usernormal := router.Group("api/v1/userNormal")
+	usernormal.Use(services.AuthorizationRequired())
+	{
+		usernormal.GET("/",routes.GetNormalUsers)
 	}
 
+	uservet := router.Group("api/v1/userVet")
+	uservet.Use(services.AuthorizationRequired())
+	{
+		uservet.GET("/:id",routes.GetVetUsers)
+	}
 
-	
-	
+	prescription := router.Group("api/v1/prescription")
+	prescription.Use(services.AuthorizationRequired())
+	{
+		prescription.POST("/",routes.AddPrescription)
+		prescription.DELETE("/:id",routes.DeletePrescription)
+		prescription.GET("/:id",routes.GetPrescriptionsByAnimalID)
+	}
+
+	prescriptionUser := router.Group("api/v1/prescriptionUser")
+	prescriptionUser.Use(services.AuthorizationRequired())
+	{
+		prescriptionUser.GET("/:id",routes.GetPrescriptionsByUserID)
+	}
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
 }

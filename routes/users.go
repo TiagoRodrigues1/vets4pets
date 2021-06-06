@@ -17,3 +17,15 @@ func UpdateUser(c *gin.Context) {
 func GetAnimalsFromUserID(c *gin.Context) {
 	controllers.GetAnimalsFromUserID(c)
 }
+
+func GetUsers(c *gin.Context) {
+	controllers.GetUsers(c)
+}
+
+func GetNormalUsers(c *gin.Context) {
+	controllers.GetNormalUsers(c)
+}
+
+func GetVetUsers(c *gin.Context) {
+	controllers.GetVetUsers(c)
+}

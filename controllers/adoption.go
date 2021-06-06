@@ -50,12 +50,12 @@ func GetAdoptionsByUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": adoptions})
 }
 
-
 func GetAdoptionsByTime(c *gin.Context) {
 	var adoptions []model.Adoption
 	services.Db.Order("created_at desc").Find(&adoptions)	
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": adoptions})
 }
+
 
 func UpdateAdoption(c *gin.Context) {
 	var adoption model.Adoption

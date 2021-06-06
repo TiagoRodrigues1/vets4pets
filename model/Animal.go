@@ -7,7 +7,7 @@ type Animal struct {
 	Name string `json:"name"`
 	AnimalType string `json:"animaltype"`
 	Race string `json:"race"`
-	Picture []byte `json:"picture"`
-	VaccinationCard []byte	`json:"vaccinationCard"`
+	ProfilePicture string `json:"profilePicture"`
+	Picture string `json:"picture"`
 	UserID uint `gorm:"TYPE:integer REFERENCES users"`
 }

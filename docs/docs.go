@@ -133,6 +133,111 @@ var doc = `{
                 }
             }
         },
+        "/auth/forgot_password": {
+            "post": {
+                "description": "Sends email",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Forgot password",
+                "parameters": [
+                    {
+                        "description": "Forgot pw",
+                        "name": "email",
+                        "in": "body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        /auth/validate_reset_token": {
+            "post": {
+                "description": "Validates JWT  token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "JWT Validate",
+                "parameters": [
+                    {
+                        "description": "Validate Jwt",
+                        "name": "token",
+                        "in": "body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        /auth/reset_password": {
+            "post": {
+                "description": "Resets user PW",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "JWT Validate",
+                "parameters": [
+                    {
+                        "description": "JWT Token",
+                        "name": "token",
+                        "in": "body",
+                        "required": true
+                    },
+                    {
+                        "description": "Password",
+                        "name": "password",
+                        "in": "body",
+                        "required": true
+                    },
+                    {
+                        "description": "Password Confirm",
+                        "name": "passwordConfirm",
+                        "in": "body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
         "/animal": {
             "post": {
                 "security": [
@@ -196,7 +301,7 @@ var doc = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Exclui um animal",
+                "description": "Exclui um animal pelo ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -205,49 +310,6 @@ var doc = `{
                 ],
                 "summary": "Exclui um animal pelo ID",
                 "operationId": "delete-animal",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Animal ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.Animal"
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            },
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Exibe os detalhes do Animal de dado ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Recupera um Animal pelo id",
-                "operationId": "get-animal-by-int",
                 "parameters": [
                     {
                         "type": "string",
@@ -289,7 +351,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Atualiza um Animal",
+                "summary": "Atualiza um Animal pelo ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -329,6 +391,101 @@ var doc = `{
                         "description": "Not found"
                     }
                 }
+            },
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe os detalhes do Animal de dado ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera um Animal pelo ID",
+                "operationId": "get-animal-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Animal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Animal"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/animal/{id}/{userID}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe os detalhes do Animal de dado ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera um Animal pelo ID",
+                "operationId": "get-animal-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Animal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "userID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Animal"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
             }
         },
         "/user/{id}": {
@@ -345,7 +502,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Recupera um Usuario pelo id",
+                "summary": "Recupera um Usuario pelo ID",
                 "operationId": "get-user-by-int",
                 "parameters": [
                     {
@@ -388,7 +545,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Atualiza um Usuario",
+                "summary": "Atualiza um Usuario pelo ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -403,7 +560,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Users"
+                            "$ref": "#/definitions/model.Claims"
                         }
                     },
                     {
@@ -430,6 +587,127 @@ var doc = `{
                 }
             }
         },
+        "/user": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Todos os users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera os Users",
+                "operationId": "get-users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Claims"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/userNormal": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Recupera todos os users normal",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera os Users Normal",
+                "operationId": "get-users-normal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Claims"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/userVet": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Recupera todos os users normal",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera os Users Normal",
+                "operationId": "get-users-normal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Claims"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
         "/userAnimals/{id}": {
             "get": {
                 "security": [
@@ -444,7 +722,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Recupera os Animais pelo id do Usuario",
+                "summary": "Recupera os Animais pelo ID do Usuario",
                 "operationId": "get-animals-by-user-int",
                 "parameters": [
                     {
@@ -467,6 +745,188 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Animal"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/prescription": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a Prescription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create Prescription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Create Prescription",
+                        "name": "prescription",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Prescription"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.Prescription"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/prescription/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe os detalhes de uma Prescription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera uma prescription por ID",
+                "operationId": "get-prescription-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Prescription ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Prescription"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exclui uma prescription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exclui uma prescription pelo ID",
+                "operationId": "delete-pescription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Prescription ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Prescription"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/prescriptionUser/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Auxiliar Notificações",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Recupera uma prescription por ID",
+                "operationId": "get-prescriptionUser-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Prescription ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Prescription"
                         }
                     },
                     "404": {
@@ -538,7 +998,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Recupera uma pergunta por id",
+                "summary": "Recupera uma pergunta por ID",
                 "operationId": "get-question-by-int",
                 "parameters": [
                     {
@@ -605,6 +1065,60 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/model.Question"
                         }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Edita uma Pergunta",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Edita Pergunta",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Question",
+                        "name": "question",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Question"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID da pergunta",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Question"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
                     },
                     "404": {
                         "description": "Not found"
@@ -787,21 +1301,22 @@ var doc = `{
                 }
             } 
         },
-        "/vaccine": {
-            "post": {
+        "/answersByUser/{id}": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Adiciona uma vacina",
+                "description": "Exibe as repostas de um User",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Adds a awnser",
+                "summary": "Exibe as repostas de um user",
+                "operationId": "get-answners-by-user-int",
                 "parameters": [
                     {
                         "type": "string",
@@ -811,12 +1326,101 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "description": "Adiciona uma vacina",
-                        "name": "vacina",
+                        "type": "integer",
+                        "description": "ID do User",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Answer"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            } 
+        },
+        "/questionsByUser/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe as perguntas de um User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exibe as perguntas de um user",
+                "operationId": "get-questions-by-user-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID do User",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Question"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            } 
+        },
+        "/vaccine": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Adds a vaccine",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Adds a vaccine",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Adds a vaccine",
+                        "name": "question",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Vaccine"
+                            "$ref": "#/definitions/model.Vaccines"
                         }
                     }
                 ],
@@ -824,7 +1428,7 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/model.Vaccine"
+                            "$ref": "#/definitions/model.Vaccines"
                         }
                     },
                     "400": {
@@ -872,7 +1476,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Vaccine"
+                            "$ref": "#/definitions/model.Vaccines"
                         }
                     },
                     "404": {
@@ -915,7 +1519,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Vaccine"
+                            "$ref": "#/definitions/model.Vaccines"
                         }
                     },
                     "404": {
@@ -978,14 +1582,14 @@ var doc = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Exibe as clinicas ordenadas por id",
+                "description": "Exibe as clinicas ordenadas por ID",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Exibe as clinicas ordenadas por id",
+                "summary": "Exibe as clinicas ordenadas por ID",
                 "operationId": "get-adoptions-by-time-int",
                 "parameters": [
                     {
@@ -1008,10 +1612,8 @@ var doc = `{
                     }
                 }
             }
-         
         },
         "/clinic/{id}": {
-          
             "delete": {
                 "security": [
                     {
@@ -1025,7 +1627,7 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Exclui uma resposta pelo ID",
+                "summary": "Exclui uma Clinica pelo ID",
                 "operationId": "delete-answer",
                 "parameters": [
                     {
@@ -1037,7 +1639,7 @@ var doc = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Resposta ID",
+                        "description": "Clinica ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1047,7 +1649,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Answer"
+                            "$ref": "#/definitions/model.Clinic"
                         }
                     },
                     "404": {
@@ -1055,7 +1657,6 @@ var doc = `{
                     }
                 }
             }
-         
         },
         "/clinic/{id}/{UserID}": {
             "put": {
@@ -1536,6 +2137,96 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/appointment/vet/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Appointments do Vet",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exibe os appoitnments de um vet",
+                "operationId": "get-appoitnments-by-vet-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Vet ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Appointment"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/appointmentOfuser/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe as consultas de um User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exibe as consultas de um User",
+                "operationId": "get-appointment-by-user-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID do User",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                         
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            } 
         }
     },
     "definitions": {
@@ -1544,6 +2235,19 @@ var doc = `{
             "properties": {
                 "username": {
                     "type": "string"
+                },
+                "name" : {
+                    "type": "string"
+                },
+                "contact": {
+                   "type":"string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type":"boolean" 
+                    
                 }
             }
         },
@@ -1586,24 +2290,39 @@ var doc = `{
                 },
                 "animaltype": {
                     "type": "string"
+                },
+                "profilePicture" : {
+                    "type": "string",
+                },
+                "picture" : {
+                    "type": "string",
                 }
             }
         },
         "model.Question": {
             "type": "object",
             "properties": {
-                "questiontitle": {
-                    "type": "string"
-                },
                 "question": {
                     "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
+                },
+                "attachement": {
+                    "type": "string"
+                },
+                "closed" : {
+                    "type": "boolean"
                 },
                 "answers": {
                     "type": "integer"
                 },
-                "userID": {
-                    "type": "integer"
-                }
+                "questiontitle": {
+                    "type" : "string"
+                },
+                "username": {
+                    "type" : "string"
+                },
             }
         },
         "model.Answer": {
@@ -1617,17 +2336,41 @@ var doc = `{
                 },
                 "questionID": {
                     "type": "integer"
-                }
-            }
-        },
-        "model.Vaccine": {
-            "type": "object",
-            "properties": {
-                "vacineName": {
+                },
+                "attachement" : {
                     "type": "string"
                 },
-                "AnimalID": {
+                "username": {
+                    "type": "string"
+                },
+                "userType": {
+                    "type": "string"
+                },
+            }
+        },
+        "model.Vaccines": {
+            "type": "object",
+            "properties": {
+                "vaccineName": {
+                    "type": "string"
+                },
+                "animalID": {
                     "type": "integer"
+                },
+                "date": {
+                    "type":"string",
+                    "format": "date-time"
+                },
+                "taken": {
+                    "type": "boolean"
+                },
+                "dateTaken": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "validity": {
+                    "type": "string",
+                    "format": "date-time"
                 }
             }
         },
@@ -1649,11 +2392,14 @@ var doc = `{
                 "text": {
                     "type": "string"
                 },
+                "adopted": {
+                    "type":"boolean" 
+                },
                 "city": {
                     "type": "string"
                 },
                 "birth": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "phonenumber": {
                     "type": "string"
@@ -1661,10 +2407,20 @@ var doc = `{
                 "email": {
                     "type": "string"
                 },
-                "adopted": {
-                    "type":"boolean" ,
-                    "default": false
-                    
+                "username": {
+                    "type": "string"
+                },
+                "attachement1": {
+                    "type": "string"
+                },
+                "attachement2": {
+                    "type": "string"
+                },
+                "attachement3": {
+                    "type": "string"
+                },
+                "attachement4": {
+                    "type": "string"
                 }
             }
         },
@@ -1674,6 +2430,38 @@ var doc = `{
                 "userID": {
                     "type": "integer"
                 }
+            }
+        },
+        "model.Prescription": {
+            "type": "object",
+            "properties": {
+                "weight": {
+                    "type": "number",
+                    "format":"float"
+                },
+                "price": {
+                    "type": "number",
+                    "format":"float"
+                },
+                "medication": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "animalID": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type":"string"
+                },
+                "petname": {
+                    "type": "string"
+                },
+                "vetID": {
+                    "type": "integer"
+                },
             }
         },
         "model.Clinic": {
@@ -1699,6 +2487,12 @@ var doc = `{
                 }, 
                 "longitude": {
                     "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "profilePicture": {
+                    "type": "string"
                 }
             }
         },
@@ -1717,6 +2511,9 @@ var doc = `{
                 },
                 "animalID": {
                     "type":"integer" 
+                },
+                "canceled" : {
+                    "type":"boolean"
                 }
             }
         }

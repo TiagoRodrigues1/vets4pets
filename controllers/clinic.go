@@ -10,25 +10,20 @@ import (
 )
 
 func AddClinic(c *gin.Context) {
-	
-
-	
 	var clinic model.Clinic
-	
-	
 	if err := c.ShouldBindJSON(&clinic); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status":http.StatusBadRequest, "message": "Error! Check All Fields"})
 		return
 	}
 	var user model.Users
-	fmt.Print(clinic.UserID);
     services.Db.First(&user, clinic.UserID)				//Verifica se existe o user		
 	
     if user.ID == 0 {
     	c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusBadRequest,"message": "Error! User does not exist"})
         return
     }
-	if user.UserType != "manager" &&  user.UserType != "admin"{
+	fmt.Println(user.UserType)
+	if (user.UserType != "manager" && user.UserType != "admin") {
 		c.JSON(http.StatusBadRequest,gin.H{"status": http.StatusBadRequest,"message": "Error! User does not have permission"})
 		return
 	}
@@ -64,7 +59,7 @@ func AddVet(c *gin.Context) {
 		user.ClinicID=intID;
 		services.Db.Save(&user)
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Veterinario adicionado!"})
-	}else{																			//Se for admin/manager/vet
+	}else {																			//Se for admin/manager/vet
 		c.JSON(http.StatusNotFound,gin.H{"status": http.StatusNotFound, "message": "Cannot add that user"})
 		return
 	}
@@ -97,12 +92,16 @@ func GetVetsClinic(c *gin.Context) {
 	id := c.Param("id")
 	services.Db.First(&clinic, id)
 	if clinic.ID == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "clinic not found!"})
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Clinic not found!"})
 		return
 	}
-	fmt.Print(id)
-	services.Db.Where("clinic_id = ?", clinic.ID).Select("id,name,email,contact").Find(&vets)  //select id,name,email,contact from users where clinic_id = x;
+	services.Db.Where("clinic_id = ?", clinic.ID).Select("id,name,email,contact,profile_picture").Find(&vets)  //select id,name,email,contact from users where clinic_id = x;
+	if len(vets) <= 0 {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "This clinic doens't have any registered Veterinarians"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": vets})
 }
+
 
 

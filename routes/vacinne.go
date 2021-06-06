@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func AddVaccine(c *gin.Context) {
 	controllers.AddVaccine(c)
 }
