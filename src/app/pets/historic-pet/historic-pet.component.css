@@ -1,0 +1,13 @@
+.example-card {
+    max-width: 90px;
+    width: 90px;
+    height: 95px;
+    max-height: 95px;
+  }
+
+  .close1 {
+    color: #52b788 !important;
+    background-color: #ffff !important;
+   }
+
+   

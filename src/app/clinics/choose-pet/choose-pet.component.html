@@ -104,7 +104,6 @@
     </div>
   </form>  
     </mat-step>
-  
     <mat-step > 
       <ng-template matStepLabel>You're Finished!</ng-template>
       <div style ="text-align: center;">
@@ -117,9 +116,7 @@
         <img src = "../../../assets/img/default-user-image.png" style = "border-radius: 50%;width: 75px;height:75px;border:3px solid #52b788;">
       </ng-template>
         <p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase;">Vet Name</p>
-        <p style ="font-family: 'Raleway',sans-serif; font-size: 13px; font-weight: 500;">{{vet?.name}}</p>
-        <!--<p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Vet Contact</p>
-        <p style ="font-family: 'Raleway',sans-serif; font-size: 12px; font-weight: 300;">{{vet?.contact}}</p> -->
+        <p style ="font-family: 'Raleway',sans-serif; font-size: 13px; font-weight: 500;">Dr.{{vet?.name}}</p>
         <p style =" font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase;" >Pet Picture</p>
         <div *ngIf = "pet?.profilePicture; else defaultpet">
           <img src = "{{pet?.profilePicture}}" style = "border-radius: 50%;width: 75px;height:75px;border:3px solid #52b788;">
@@ -129,8 +126,6 @@
         </ng-template>
         <p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase;">Pet Name</p>
         <p style ="font-family: 'Raleway',sans-serif; font-size: 13px; font-weight: 500;">{{pet?.name}}</p>
-        <!--<p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Vet Contact</p>
-        <p style ="font-family: 'Raleway',sans-serif; font-size: 12px; font-weight: 300;">{{vet?.contact}}</p> -->
         <p style = "font-family: 'Raleway',sans-serif; font-size: 15px; font-weight: 600;  text-transform: uppercase;" >Date</p>
         <p style ="font-family: 'Raleway',sans-serif; font-size: 13px; font-weight: 500;" >{{dateString}}</p>
       </div>

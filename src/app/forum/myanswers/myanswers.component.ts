@@ -34,7 +34,6 @@ export class MyanswersComponent implements OnInit {
     this.accountService.getAnswersOfUser(this.idUser).subscribe(
       (response: Answer[]) => {
       this.answers = response['data'];
-      console.log(this.answers);
     },
     (error: HttpErrorResponse) => {
       alert(error.message);

@@ -10,15 +10,15 @@ export class AdminService {
   constructor(private formBuilder: FormBuilder) { }
   form: FormGroup = this.formBuilder.group({
     ID: null,
-    name: ['',[Validators.required,Validators.maxLength(20)]],
+    name: ['',[Validators.required,Validators.maxLength(40)]],
     contact: ['',Validators.required],
     email: ['',[Validators.required,Validators.pattern(this.emailPattern)]],
     address: ['',Validators.required],
+    description: ['',Validators.required],
     profilePicture:[],
     UserID: []
   });
   populateForm(clinic) {
-    console.log(clinic);
     this.form.setValue(_.omit(clinic,'CreatedAt','UpdatedAt','DeletedAt','latitude','longitude'));
   }
 }

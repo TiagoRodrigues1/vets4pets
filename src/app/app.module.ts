@@ -2,7 +2,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
@@ -10,7 +9,6 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule} from '@angular/material/form-field';
-
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatToolbarModule} from '@angular/material/toolbar';
 import { MatIconModule} from '@angular/material/icon';
@@ -75,6 +73,14 @@ import { MyanswersComponent } from './forum/myanswers/myanswers.component';
 import { MyquestionsComponent } from './forum/myquestions/myquestions.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import { MapsComponent } from './maps/maps.component';
+import { AddPrescriptionComponent } from './backoffice/vet/add-prescription/add-prescription.component';
+import { HistoricPetComponent } from './pets/historic-pet/historic-pet.component';
+import { HistoricDetailsComponent } from './pets/historic-details/historic-details.component';
+import { StatsComponent } from './pets/stats/stats.component';
+import { ChartsModule } from 'ng2-charts'; 
+import { DatePipe } from '@angular/common';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
   interactionPlugin
@@ -121,6 +127,10 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     MyanswersComponent,
     MyquestionsComponent,
     MapsComponent,
+    AddPrescriptionComponent,
+    HistoricPetComponent,
+    HistoricDetailsComponent,
+    StatsComponent,
   ],
   imports: [
     BrowserModule,
@@ -135,7 +145,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     MatDividerModule,
     MatListModule,
     MatButtonModule,
-    RouterModule,
+    RouterModule, 
     MatCardModule,    
     MatInputModule,
     MatDialogModule,
@@ -154,17 +164,19 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     MatStepperModule,
     FormsModule,
     NgImageSliderModule,
-
+    ChartsModule,
+    MatSlideToggleModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    LeftMenuComponent], 
+    LeftMenuComponent,
+  DatePipe], 
   exports: [
     HeaderComponent,
     LeftMenuComponent,
     AlertComponent],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent], 
   entryComponents:[AddPetComponent]
 })
 export class AppModule { }

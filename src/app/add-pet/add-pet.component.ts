@@ -53,6 +53,7 @@ export class AddPetComponent implements OnInit {
     {race: 'Rottweiler',viewValue : 'Rottweiler',key:'Dog'},
     {race: 'Boxer',viewValue : 'Boxer',key:'Dog'},
     {race: 'Husky',viewValue : 'Husky',key:'Dog'},
+    {race: 'PitBull',viewValue:'PitBull',key:'Dog'},
     {race: 'N/A',viewValue:'Other',key:'Dog'},
 
     {race: 'Devon Rex',viewValue : 'Devon Rex',key:'Cat'},
@@ -118,21 +119,25 @@ onSubmit() {
   }
   this.petService.form.get('UserID').setValue(this.val.getUserId());
   this.petService.form.get('picture').setValue(this.image);
-  console.log(this.petService.form.value);
   this.accountService.createPet(this.petService.form.value).pipe(first()).subscribe({
     next: () => {
       this.router.navigate(['../pets'],{relativeTo: this.route});
     }
   });
   this.onClose();
-  //window.location.reload();
+  setTimeout(() => {
+    window.location.reload();
+  },500);
 } else {
   if (this.petService.form.invalid) {
     return;
 }
+  this.petService.form.get('picture').setValue(this.image);
   this.accountService.editPet(this.petService.form.get('ID').value,this.petService.form.value).subscribe();
   this.onClose();
-  window.location.reload();
+  setTimeout(() => {
+    window.location.reload();
+  },1500);
   }
 }
 

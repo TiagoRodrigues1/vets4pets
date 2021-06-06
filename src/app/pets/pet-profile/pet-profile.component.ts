@@ -8,7 +8,9 @@ import { AccountService } from 'src/app/services/account.service';
 import { CustomValidatorService } from 'src/app/services/custom-validator.service';
 import { PetService } from 'src/app/services/pet.service';
 import { DeletePetComponent } from '../delete-pet/delete-pet.component';
+import { HistoricPetComponent } from '../historic-pet/historic-pet.component';
 import { ShowVaccinesComponent } from '../show-vaccines/show-vaccines.component';
+import { StatsComponent } from '../stats/stats.component';
 
 @Component({
   selector: 'app-pet-profile',
@@ -33,7 +35,7 @@ export class PetProfileComponent implements OnInit {
 }
   showVaccines() {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
+    dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;  
     dialogConfig.width = "60%"
     dialogConfig.data = this.id;
@@ -75,7 +77,6 @@ export class PetProfileComponent implements OnInit {
                   image.onload = rs => {
                       const img_height = rs.currentTarget['height'];
                       const img_width = rs.currentTarget['width'];
-                      console.log(img_height, img_width);
                       if (img_height > max_height && img_width > max_width) {
                           this.imageError =
                               'Maximum dimentions allowed ' +
@@ -87,7 +88,8 @@ export class PetProfileComponent implements OnInit {
                       } else {
                           const imgBase64Path = e.target.result;
                           this.pet.profilePicture = imgBase64Path;
-                          this.editPet(this.id,this.pet);
+                          this.accountService.editPet(this.id,this.pet).subscribe();
+                          
                           //window.location.reload();
                       }
                   };
@@ -96,9 +98,7 @@ export class PetProfileComponent implements OnInit {
           }
       }
 
-    //editPet(id:number,pet:Pet) {
-    //  this.accountService.editPet(id,pet).subscribe();
-    //}
+      
 
     deletePet(pet:Pet) {
       this.petService.form.reset();
@@ -118,4 +118,23 @@ export class PetProfileComponent implements OnInit {
       dialogConfig.width = "35%"
       this.dialog.open(AddPetComponent,dialogConfig);
     }
+
+    showHistoric(pet:Pet) {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.autoFocus = true;  
+      dialogConfig.disableClose = true;
+      dialogConfig.width = "35%"
+      dialogConfig.data = pet;
+      this.dialog.open(HistoricPetComponent,dialogConfig);
+    }
+
+    showStats(pet:Pet) {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.autoFocus = true;  
+      dialogConfig.disableClose = false;
+      dialogConfig.width = "40%"
+      dialogConfig.data = pet;
+      this.dialog.open(StatsComponent,dialogConfig);
+    }
+
 }

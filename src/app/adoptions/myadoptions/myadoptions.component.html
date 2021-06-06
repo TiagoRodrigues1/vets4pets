@@ -61,16 +61,17 @@
 
                   <ng-container matColumnDef="profilePicture">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Profile Picture </th>
-                    <td mat-cell *matCellDef="let element"> <img src = "{{element.attachement1}}" width="50" height="50" class = "circular" style = "border:3px solid #52b788;"> </td>
+                    <td mat-cell *matCellDef="let element"> <img src="{{element.attachement1}}" width="50" height="50"
+                        class="circular" style="border:3px solid #52b788;"> </td>
                   </ng-container>
 
                   <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
                     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                   </ng-container>
                   <ng-container matColumnDef="animaltype">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal Type </th>
-                    <td mat-cell *matCellDef="let element"> {{element.animaltype}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.animaltype}} </td>
                   </ng-container>
                   <ng-container matColumnDef="race">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Race </th>
@@ -84,9 +85,11 @@
                       <button mat-icon-button color="warn" (click)="deleteAdoption(element.ID)">
                         <mat-icon>delete</mat-icon>
                       </button>
-                      <button mat-icon-button color="primary" floating="true">
-                        <mat-icon (click)="editAdoption(element)" style="color:rgb(82,183,136)">edit</mat-icon>
-                      </button>
+                      <form  [formGroup] = "form">
+                        
+                      <mat-slide-toggle [color]="color" checked="element?.adopted" style ="width: 35px;height: 35px;" formControlName = "adoption" (change) ="cancelAdoption(element)"></mat-slide-toggle>
+                   
+                    </form>
                     </td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

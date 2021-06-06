@@ -17,9 +17,10 @@
             <mat-label style = "font-size:18px">Pet Race</mat-label>
             <p>{{pet?.race}}</p>
             <p style ="color:red;font-size: small;">{{error}}</p>
-        <!-- <div mat-dialog-actions> 
-          <button mat-button class="close1" (click) ="onNoClick()">CLOSE</button>
-          
-      </div> -->
+            <p *ngIf = "app.canceled" style = "color: red;font-size: small;">Appoitment is canceled</p> 
+         <div mat-dialog-actions> 
+          <button mat-button class = "close1"(click) ="onNoClick()">CLOSE</button>
+          <button mat-button class = "cancel"(click) ="cancelAppointment()">CANCEL APPOINTMENT</button>
+      </div> 
       </form>  
 </div>

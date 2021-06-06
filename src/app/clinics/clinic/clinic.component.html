@@ -6,33 +6,24 @@
   <mat-sidenav-content >
     <div class="main_content">
       <div style="padding: 20px;display:flex; flex-direction: row;flex-wrap: wrap;">
-        <mat-card appAppMaterialElevation class="example-card" *ngFor = "let clinic of Clinic" style ="padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;cursor: pointer;" (click) = "goProfile(clinic.ID,clinic)" [ngClass]="{'selected-card':titleSelected === clinic.name}">
+        <mat-card appAppMaterialElevation class="example-card" *ngFor = "let clinic of Clinic" style ="padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;cursor: pointer;text-align: center;" (click) = "goProfile(clinic.ID,clinic)" [ngClass]="{'selected-card':titleSelected === clinic.name}">
           <span [matTooltip]="selected ? 'Select' : 'Not Selected'" class="selection">
             <mat-icon>check_circle</mat-icon>
             </span>
           <mat-card-header>
-            <div mat-card-avatar class="example-header-image" *ngIf = "clinic.profilePicture; else defaultProfile"  class="example-header-image" [ngStyle] = "{'background-image': 'url(' + clinic?.profilePicture + ')'}" ></div>
-         <ng-template #defaultProfile>
-          <div mat-card-avatar class="example-header-image" class="example-header-image" style = "background-image: url('../../../assets/img/default_pet.jpg')" ></div>
-         </ng-template> 
-     
-            <mat-card-title>{{clinic?.name}}</mat-card-title>
-            <mat-card-subtitle>{{clinic?.address}}</mat-card-subtitle>
+            <div  *ngIf = "clinic?.profilePicture; else defaultProfile" style = "text-align: center;position: relative;padding-left: 29px;">
+              <img src = "{{clinic?.profilePicture}}" class = "circular" style = "border:3px solid #52b788;"/> 
+             </div>
+           <div *ngIf = "!clinic?.profilePicture" style = "text-align: center;position: relative;padding-left: 28px;">
+             <img src = "../../../assets/img/default_pet.jpg" class = "circular" style ="border:3px solid #52b788;" >
+           </div>
+            
           </mat-card-header>
-         <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
-          <mat-card-content >
-            <div style = "display: flex;justify-content: center;align-items: center;">
-           <!-- <button mat-icon-button color = "primary" (click) = "editPet(pet)" floating ="true" >
-              <mat-icon style ="color:rgb(82,183,136)">edit</mat-icon>
-            </button>
-            <button mat-icon-button color = "warn" (click) = "deletePet(pet.ID)">
-              <mat-icon>delete</mat-icon>
-            </button>
-            -->
-          </div>
+          <mat-card-content>
+            <mat-card-title style = "font-size: 18px;">{{clinic?.name}}</mat-card-title>
+            <mat-card-subtitle style ="font-size: 12px;">{{clinic?.address}}</mat-card-subtitle>
           </mat-card-content>
         </mat-card>
-      <!--  <button mat-button style = "padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;color: #52b788;font-size : 100px;width:340px;height:420px" (click) = "onCreate()">+</button> -->
       </div>
     </div>
   </mat-sidenav-content>

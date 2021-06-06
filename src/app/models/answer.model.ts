@@ -6,4 +6,6 @@ export class Answer {
     updatedAt: Date;
     UserID: number;
     attachement:string;
+    username:string;
+    userType:string;
 }

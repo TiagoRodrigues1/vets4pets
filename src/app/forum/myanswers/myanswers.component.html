@@ -52,8 +52,14 @@
                             <div class="card-body">
                                 <div class="media forum-item">
                                     <a href="javascript:void(0)" class="card-link">
+                                        <div *ngIf = "user?.profilePicture;else default">
                                         <img src="{{user?.profilePicture}}" width="50" alt="User" class="circular" alt="User" />
                                         <small class="d-block text-center text-muted"></small>
+                                    </div>
+                                    <ng-template #default>
+                                        <img src="../../../assets/img/default-user-image.png" width="50" alt="User" class="circular" alt="User" />
+                                        <small class="d-block text-center text-muted"></small>
+                                    </ng-template>
                                     </a>
                                     <div class="media-body ml-3">
                                         <a href="javascript:void(0)" class="text-secondary">{{user?.username}}</a>

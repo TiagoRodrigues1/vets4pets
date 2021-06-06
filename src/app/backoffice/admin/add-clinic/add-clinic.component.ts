@@ -32,14 +32,19 @@ export class AddClinicComponent implements OnInit {
       }
     });
     this.onClose();
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    },500);
+   
   } else {
     if(this.adminService.form.invalid) {
       return;
     }
     this.accountService.editClinic(this.adminService.form.get('ID').value,this.adminService.form.value).subscribe();
     this.onClose();
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    },500);
   }
 }
   onNoClick() {
@@ -55,7 +60,6 @@ export class AddClinicComponent implements OnInit {
   }
 
   populateForm() {
-    console.log(this.adminService);
     this.adminService.form.setValue(this.adminService);
   }
 
@@ -86,7 +90,6 @@ export class AddClinicComponent implements OnInit {
                   image.onload = rs => {
                       const img_height = rs.currentTarget['height'];
                       const img_width = rs.currentTarget['width'];
-                      console.log(img_height, img_width);
                       if (img_height > max_height && img_width > max_width) {
                           this.imageError =
                               'Maximum dimentions allowed ' +

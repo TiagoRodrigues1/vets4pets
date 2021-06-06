@@ -29,9 +29,12 @@
     "@ng-bootstrap/ng-bootstrap": "^9.1.0",
     "@syncfusion/ej2-angular-calendars": "^19.1.56",
     "@syncfusion/ej2-angular-navigations": "^19.1.54",
+    "angular-bootstrap-md": "^11.1.0",
     "bootstrap": "^4.5.0",
+    "chart.js": "^2.9.3",
     "lodash-es": "^4.17.21",
     "ng-image-slider": "^2.8.0",
+    "ng2-charts": "^2.2.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.3"

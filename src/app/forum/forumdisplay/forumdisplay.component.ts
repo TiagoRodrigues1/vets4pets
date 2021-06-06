@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute, Params} from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Question } from 'src/app/models/question.model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -42,8 +42,7 @@ export class ForumdisplayComponent implements OnInit {
   setTimeout(() => {
     this.getAnswers();
   },500);
-  
-  }
+}
 
   getQuestion(){
       this.accountService.GetQuestion(this.id).subscribe(
@@ -99,7 +98,7 @@ export class ForumdisplayComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = false;  
     dialogConfig.width = "40%"
-    dialogConfig.height = "48%"
+    dialogConfig.height = "40%"
     dialogConfig.data=id;
     this.dialog.open(AddanswerComponent,dialogConfig);
   }
@@ -127,4 +126,6 @@ export class ForumdisplayComponent implements OnInit {
       this.questionString.push(this.question.question.substring(i,i+=200));
     }
   }
+
+
 }

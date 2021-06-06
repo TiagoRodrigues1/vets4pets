@@ -5,6 +5,7 @@ import { AccountService } from 'src/app/services/account.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddquestionComponent } from 'src/app/forum/addquestion/addquestion.component';
 import { CustomValidatorService } from 'src/app/services/custom-validator.service';
+import { User } from 'src/app/models/user.model';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { CustomValidatorService } from 'src/app/services/custom-validator.servic
   styleUrls: ['./myquestions.component.css']
 })
 export class MyquestionsComponent implements OnInit {
-
+  user:User;
   user_id;
   string : string;
   payload;
@@ -25,13 +26,13 @@ export class MyquestionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.questions();
+    this.user = this.formService.user;
   }
 
   public questions() {
     this.accountService.getQuestionsOfUser(this.user_id).subscribe(
       (response: Question[]) => {
       this.Questions = response['data'];
-      console.log(this.Questions);
     },
     (error: HttpErrorResponse) => {
       alert(error.message);

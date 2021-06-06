@@ -1,0 +1,33 @@
+<div style="text-align: center;">
+    <h1>Details</h1>
+    <div *ngIf="pet?.profilePicture; else defaultpet">
+        <img src="{{pet?.profilePicture}}" style="border-radius: 50%;width: 75px;height:75px;border:3px solid #52b788;">
+    </div>
+    <ng-template #defaultpet> <img src="../../../assets/img/default.png" class="company-header-avatar"
+            style="border-radius: 50%;border:3px solid #52b788;"></ng-template>
+            <p>{{pet?.name}}</p>
+    <h2>Some Informations:</h2>
+    <mat-icon style="color:#52b788">calendar_today</mat-icon>
+    <p>{{displayData?.date | date: 'dd/MM/yyyy'}}</p>
+    <mat-icon style="color:#52b788">how_to_vote</mat-icon>
+    <p>{{displayData?.weight}} kg</p>
+    <mat-icon style="color:#52b788">paid_outline</mat-icon>
+    <p>{{displayData?.price}} €</p>
+    <h2>About Appointment:</h2>
+    <div style="text-align: center;">
+        <mat-form-field appearance="outline" class="textbox"
+            style="outline-color: #52b788;position: relative;right: 23%;">
+            <textarea matInput disabled maxlength="1000"
+                style="color: black;resize: none;">{{displayData?.Description}}</textarea>
+        </mat-form-field>
+    </div>
+    <h2 style="position: relative;bottom: 15px;">Medication:</h2>
+    <div *ngFor="let medicine of medication; let i = index" style="position: relative;bottom: 20px;">
+        <mat-icon style="color:#52b788">medication_outlined</mat-icon>
+        <p>{{medicine[0]}} starting on {{medicine[1] | date: 'dd/MM/yyyy'}} for {{medicine[2]}} days on {{medicine[3]}}
+        </p>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button class="close1" (click)="onNoClick()">CLOSE</button>
+</div>

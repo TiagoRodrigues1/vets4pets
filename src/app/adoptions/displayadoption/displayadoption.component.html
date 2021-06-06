@@ -29,7 +29,8 @@
   
          <mat-form-field appearance="outline" class="textbox" style="outline-color: #52b788;width: 35.5%;">
           <mat-label>Description</mat-label>
-          <input matInput value="{{adoption?.text}}" wrap="hard" readonly>
+          <textarea matInput placeholder="Description" style="resize: none;"
+             readonly>{{adoption?.text}} </textarea>
            </mat-form-field>
   
            <mat-label>Contacts:</mat-label>
@@ -41,9 +42,6 @@
               <mat-label>City</mat-label>
                <input matInput  value="{{adoption?.city}}" readonly>
              </mat-form-field> 
-            <!-- <a *ngFor="let image of attachements ; let i=index" class="rounded mb-3">
-              <img [src]='image' *ngIf = "image" width="70" height="70" style="padding-left: 5px;padding-top: 5px;">
-        </a>  -->
         <div style="width: 640px; height: 100px; text-align:center;margin:0; padding:0;">
       <ng-image-slider #nav
       [images]="imageObject"

@@ -1,0 +1,110 @@
+<script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+
+<div fxFlex="row" fxLayoutGap="10px" class="header" style="background-color:#52b788">
+  <h1
+    style="padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white;">
+    Prescription</h1>
+</div>
+<form style="padding-left:20px;padding-top: 20px;" fxLayoutAlign="stretch" fxLayout="column" [formGroup]="form" (ngSubmit)="onSubmit()">
+<div formArrayName="medication">
+    <div *ngFor = "let medication of medicineFormGroup.controls; let i = index">
+        <div [formGroupName] = "i">
+          <table>
+            <tr>
+             <td> 
+               <mat-form-field style="width:95%">
+              <input matInput placeholder="Medication" formControlName="medicine" >
+            </mat-form-field>
+            
+          </td>
+             <td>
+              <mat-form-field style="width:95%">
+                <mat-label>Choose Duration</mat-label>
+                <mat-select formControlName="howlong">
+                  <mat-option *ngFor="let duration of durations" [value]="duration.value">
+                    {{duration.viewValue}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          <td><div style ="position: relative;bottom: 5px;">
+            <mat-form-field appearance="fill" style = "width: 95%;position: relative;">
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName = "start" >
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker ></mat-datepicker>
+              </mat-form-field>
+          </div></td>
+          <td><mat-form-field style="width:95%">
+            <mat-label>Choose Hours to take Medicine</mat-label>
+            <mat-select formControlName="hour">
+              <mat-option *ngFor="let hour of hours" [value]="hour.viewValue">
+                {{hour.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field></td>
+          <td><mat-form-field style="width:95%">
+            <mat-label>Choose Hours to take Medicine</mat-label>
+            <mat-select formControlName="hour1">
+              <mat-option *ngFor="let hour of hours" [value]="hour.viewValue">
+                {{hour.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field></td>
+          <td><mat-form-field style="width:95%">
+            <mat-label>Choose Hours to take Medicine</mat-label>
+            <mat-select formControlName="hour2">
+              <mat-option *ngFor="let hour of hours" [value]="hour.viewValue">
+                {{hour.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field></td>
+          <td><button *ngIf = "i != 0"mat-icon-button aria-label="" (click) = "removeMedicine(i)">
+            <mat-icon style = "color:red">close</mat-icon>
+          </button></td>
+            </tr>
+           </table>
+        
+        </div>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+     <td style ><mat-form-field style="width:95%">
+      <input matInput placeholder="Weight of Pet" formControlName="weight" maxlength="5" type = "number" min = "0" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" >
+      <span matSuffix>KG</span>
+    </mat-form-field>
+    <div *ngIf="(form.controls.weight.touched || form.controls.weight.dirty) && form.controls.weight.errors">
+      <div *ngIf="form.controls.weight.errors.required" style="color:red;font-size: small;">Weight is
+        <strong>required</strong></div>
+    </div></td>
+     <td ><mat-form-field style="width:95%">
+      <input matInput placeholder="Price of Appointment" formControlName="price" maxlength="7" type = "number" min ="0" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+      <span matSuffix>€</span>
+    
+    </mat-form-field>
+    <div *ngIf="(form.controls.price.touched || form.controls.price.dirty) && form.controls.price.errors">
+      <div *ngIf="form.controls.price.errors.required" style="color:red;font-size: small;">Price is
+        <strong>required</strong></div>
+    </div></td>
+    <td style = "width:75%"><mat-form-field style="width:95%">
+      <input matInput placeholder="Description" formControlName="description" >
+    </mat-form-field>
+    <div *ngIf="(form.controls.description.touched || form.controls.description.dirty) && form.controls.description.errors">
+      <div *ngIf="form.controls.description.errors.required" style="color:red;font-size: small;">Description is
+        <strong>required</strong></div>
+    </div></td>
+    </tr>
+   </table>
+  
+
+  <div fxLayout="row">
+    <div mat-dialog-actions>
+      <button mat-button type="submit">SUBMIT</button>
+      <button mat-button class="close" (click)="onNoClick()">CLOSE</button>
+      <button mat-button *ngIf = "medicineList.length < 6"(click) = "addMedicine()">ADD MEDICINE</button>
+    </div>
+  </div>
+
+</form>

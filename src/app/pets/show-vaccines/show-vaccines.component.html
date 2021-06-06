@@ -1,36 +1,29 @@
 <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
-    <h2 style = "padding-left: 20px;font-family: Arial, Helvetica, sans-serif;display: inline-block;">Vaccines</h2>
-      <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
-      <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource">
-      
-         <ng-container matColumnDef="vaccineName">
-            <th mat-header-cell *matHeaderCellDef> Vaccine Name </th>
-            <td mat-cell *matCellDef="let vac"> {{vac.vaccineName}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef> Date </th>
-            <td mat-cell *matCellDef="let vac"> {{vac.date |  date : "dd/MM/yyyy " }} </td>
-          </ng-container>
-      
-          <ng-container matColumnDef="dateTaken">
-            <th mat-header-cell *matHeaderCellDef> Date Taken </th>
-            <td mat-cell *matCellDef="let vac"> {{vac.dateTaken |  date : "dd/MM/yyyy"}} </td>
-          </ng-container>
-      
-          <ng-container matColumnDef="validity">
-            <th mat-header-cell *matHeaderCellDef> Validity </th>
-            <td mat-cell *matCellDef="let vac"> {{vac.validity |  date : "dd/MM/yyyy"}} </td>
-          </ng-container>
-          
-          <ng-container matColumnDef="taken">
-            <th mat-header-cell *matHeaderCellDef>Taken</th>
-            <td mat-cell *matCellDef ="let vac">{{vac.taken | pipeVaccine}}</td>
-          </ng-container>
- 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <mat-paginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
-</div>  
+<div fxFlex="row" fxLayoutGap="10px" class="header" style="background-color:#52b788">
+  <h1
+    style="padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white;">
+    Vaccines</h1>
+</div>
+  <div *ngIf = "error; else default" style = "align-items: center;color: red;font-size: medium;">
+    {{error}}
+  </div>
+  <ng-template #default>
+    <div style="padding: 20px;display:flex; flex-direction: row;flex-wrap: wrap;">
+      <mat-card appAppMaterialElevation class="example-card" *ngFor = "let vaccine of vac" style ="padding-right:23px;padding-left: 23px;margin-right: 1% ;margin-bottom:1%;text-align: center;" [ngClass]="{'selected-card':titleSelected === vaccine.ID}">
+        <mat-card-content>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1.5em" height="1.5em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M11.15 15.18l-1.42-1.41l1.42-1.42l1.41 1.42l1.41-1.42l-1.41-1.41l1.41-1.41l1.42 1.41l1.41-1.41l-2.83-2.83l-7.07 7.07l2.83 2.83l1.42-1.42M3.08 19l3.12-3.11l-2.12-2.12l9.89-9.9L16.1 6l1.4-1.42l-1.4-1.42l1.4-1.41L21.75 6l-1.41 1.4L18.92 6L17.5 7.4l2.13 2.13l-9.9 9.89l-2.12-2.12l-4.53 4.54V19z" fill="#52b788"/></svg>  
+          <small style = "color:grey">Vaccine Name</small>
+          <p>{{vaccine?.vaccineName}}</p>
+          <mat-icon style ="color:#52b788;font-size: 16px;">calendar_today</mat-icon>
+          <small style = "color:grey">Date Taken</small>
+          <p>{{vaccine?.dateTaken | date: 'dd/MM/yyyy'}}</p>
+          <mat-icon style = "color:#52b788;font-size: 16px;">calendar_today</mat-icon>
+          <small style = "color:grey">Validity</small>
+          <p>{{vaccine?.validity | date: 'dd/MM/yyyy'}}</p>
+        </mat-card-content>
+      </mat-card>      
+    </div>
+</ng-template>
+<div mat-dialog-actions>
+  <button mat-button class="close1" (click)="onClose()">CLOSE</button>
+</div>

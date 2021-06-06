@@ -58,7 +58,6 @@ export class LastadoptionsComponent implements OnInit {
      dialogConfig.width = "40%"
      dialogConfig.height = "85%"
      dialogConfig.data=adoption;
-     console.log(adoption);
      this.dialog.open(DisplayadoptionComponent,dialogConfig);
    }
 

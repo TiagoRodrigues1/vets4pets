@@ -8,4 +8,5 @@ export class Question {
     closed: boolean;
     answers: number;
     attachement:string;
+    username:string;
 }

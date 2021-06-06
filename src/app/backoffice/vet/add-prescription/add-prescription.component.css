@@ -1,0 +1,86 @@
+.main-div mat-card {
+  padding: 0px;
+  margin-top: 9%;
+}
+
+.register-form {
+  padding: 20px
+}
+
+.mat-toolbar {
+  background: #52b788;
+  color: #fff;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  opacity: 0.0005 !important;     /*click effect color change*/
+  background-color: #52b788 !important;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #52b788!important;   /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+ border-color:#52b788!important; /*outer ring color change*/
+}
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+  /*change color of label*/
+  color: #52b788 !important;
+ }
+
+ ::ng-deep.mat-form-field-underline {
+  /*change color of underline*/
+  background-color: #52b788 !important;
+} 
+
+::ng-deep.mat-form-field-ripple {
+ /*change color of underline when focused*/
+ background-color: #52b788 !important;
+}
+
+::ng-deep.mat-calendar-header{background-color: #52b788;}
+
+ .mat-calendar-body-cell-content{
+     background: #52b788 !important;
+}
+
+::ng-deep.mat-calendar-body-selected {
+  background: #52b788 !important;
+}
+:ng-deep.mat-focus-indicator  {
+  color:#52b788 !important;
+  
+}
+:ng-deep.mat-icon-button {
+  color:#52b788 !important;
+  
+}
+:ng-deep.mat-button-base {
+  color:#52b788 !important;
+}
+
+.mat-raised-button{
+  color: #52b788 !important;
+}  
+
+:ng-deep.mat-calendar-body-cell-content .mat-focus-indicator:hover {
+  color:#52b788 !important;
+}
+
+mat-datepicker-toggle {
+  color: #52b788 !important;
+}
+
+.mat-button{
+  color: #ffff !important;
+  background-color: #52b788 !important;
+}
+.close {
+  color: #52b788 !important;
+  background-color: #ffff !important;
+ }

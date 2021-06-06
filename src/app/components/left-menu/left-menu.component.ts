@@ -1,6 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { animateText, onSideNavChange } from 'src/app/animations/animations';
 import { Pet } from 'src/app/models/pet.model';
 import { User } from 'src/app/models/user.model';
@@ -33,16 +31,17 @@ export class LeftMenuComponent implements OnInit {
     {name: 'Pets', link:'/pets', icon: 'pets'},
     {name: 'Adoptions', link:'/adoptions', icon: 'favorite'},
     {name: 'Forum', link:'/forum', icon: 'supervisor_account'},
-    {name: 'Near Vets', link:'/maps', icon: 'place'},
   ]
 
   public pagesVet: Page[] = [
+    {name: 'Forum', link:'/forum', icon: 'supervisor_account'},
     {name: 'Appointments',link:'/vet',icon:'calendar_today'},
   ]
 
   public pagesAdm: Page [] = [
     {name: 'BackOffice',link:'/admin',icon:'lock'},
   ]
+  
   string: string;
   
   constructor(private _sidenavService: SidenavService,private accountService: AccountService) { 

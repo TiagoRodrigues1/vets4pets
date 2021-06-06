@@ -14,7 +14,10 @@ export class AnswersService {
   answer: ['',Validators.required],
   questionID: ['',Validators.required],
   UserID: [this.val.getUserId()],
+  username:[this.val.getUsername()],
+  userType:[this.val.getUserType()],
   attachement:[],
+
 });
 
 populateForm(question) {

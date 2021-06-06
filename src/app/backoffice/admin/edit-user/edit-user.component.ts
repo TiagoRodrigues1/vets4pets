@@ -38,7 +38,6 @@ export class EditUserComponent implements OnInit {
     delete this.data.idclinic;
     this.user = this.data;
     this.user.userType = this.form.get('userType').value;
-    console.log(this.user);  
     
     this.accountService.editUser(parseInt(this.data.ID),this.user).subscribe();
     this.onNoClick();

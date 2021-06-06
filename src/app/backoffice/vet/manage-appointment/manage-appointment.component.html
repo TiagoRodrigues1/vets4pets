@@ -1,52 +1,56 @@
 <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
-
-<div fxLayoutAlign = "center center"  class = "main-div" fxFlexFill>
-  <div fxFlex="row" fxLayoutGap="10px" class="header" style ="background-color:#52b788">
-    <h1 style = "padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white">Appoitment Details</h1>
+<div fxLayoutAlign="center center" class="main-div" fxFlexFill>
+  <div fxFlex="row" fxLayoutGap="10px" class="header" style="background-color:#52b788">
+    <h1
+      style="padding-left: 20px;padding-top:10px;font-family: Arial, Helvetica, sans-serif;display: inline-block;color:white">
+      Appoitment Details</h1>
   </div>
-      <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
-      <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "form" (ngSubmit) = "onSubmit()">
-            <mat-label style = "font-size:18px">Title</mat-label>
-            <p>{{displayData.title}}</p>
-            <tr> 
-            <div style = "vertical-align: top;float:right;position:relative;left:65%;bottom:50px">
-              <div *ngIf = "pet?.profilePicture; else default">
-              <img src = "{{pet.profilePicture}}" style="width:160px;height:140px;border:2px solid #52b788;">
-            </div>
-            <ng-template #default>
-              <img src = "../../../../assets/img/default.png" style="width:160px;height:140px;border:2px solid #52b788;" >
-            </ng-template>            
-          </div>
-          <div style = "display: inline-block;">
-            <mat-label style = "font-size:18px">Start Date</mat-label>
-            <p>{{date}}</p>
-            <mat-label style = "font-size:18px">Pet Name</mat-label>
-            <p>{{pet?.name}}</p>
-            <mat-label style = "font-size:18px">Pet Type</mat-label>
-            <p>{{pet?.animaltype}}</p>
-            <mat-label style = "font-size:18px">Pet Race</mat-label>
-            <p>{{pet?.race}}</p>
-              <mat-form-field>
-                <mat-label>Showed Up</mat-label>
-                <mat-select formControlName = "showedUp">
-                  <ng-container *ngFor = "let s of showed">
-                  <mat-option [value] = "s.value" >
-                  {{s.viewValue}}
-                  </mat-option >
-                </ng-container>
-                </mat-select>
-              </mat-form-field>
-          </div> 
-          <p *ngIf = "error" style ="color:red;font-size:medium;">{{error}}</p>
-        <div mat-dialog-actions >
-          <button mat-button type="submit" >SUBMIT</button>
-          <button mat-button class="close" (click) ="onNoClick()">CLOSE</button>   
-          <div *ngIf = "selected" style = "padding-left: 2%;">
-          <button mat-button (click) = "openAddVaccine()">VACCINES</button>
+  <form style="padding-left:20px;padding-top: 20px;" fxLayoutAlign="stretch" fxLayout="column" [formGroup]="form"
+    (ngSubmit)="onSubmit()">
+    <mat-label style="font-size:18px">Title</mat-label>
+    <p>{{displayData.title}}</p>
+    <tr>
+      <div style="vertical-align: top;float:right;position:relative;left:65%;bottom:50px">
+        <div *ngIf="pet?.profilePicture; else default">
+          <img src="{{pet.profilePicture}}" style="width:160px;height:140px;border:2px solid #52b788;">
         </div>
-        <div *ngIf = "selected" style = "padding-left: 1%;">
-          <button mat-button (click) = "openAddPrescription()">PRESC</button>
+        <ng-template #default>
+          <img src="../../../../assets/img/default.png" style="width:160px;height:140px;border:2px solid #52b788;">
+        </ng-template>
+      </div>
+      <div style="display: inline-block;">
+        <mat-label style="font-size:18px">Start Date</mat-label>
+        <p>{{date}}</p>
+        <mat-label style="font-size:18px">Pet Name</mat-label>
+        <p>{{pet?.name}}</p>
+        <mat-label style="font-size:18px">Pet Type</mat-label>
+        <p>{{pet?.animaltype}}</p>
+        <mat-label style="font-size:18px">Pet Race</mat-label>
+        <p>{{pet?.race}}</p>
+        <mat-form-field>
+          <mat-label>Showed Up</mat-label>
+          <mat-select formControlName="showedUp">
+            <ng-container *ngFor="let s of showed">
+              <mat-option [value]="s.value">
+                {{s.viewValue}}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <div>
+        <button mat-button class = "cancel" (click)="cancelAppointment()">CANCEL APPOINTMENT</button>
+      </div>
+      </div>
+      <p *ngIf="error" style="color:red;font-size:medium;">{{error}}</p>
+      <div mat-dialog-actions>
+        <button mat-button type="submit">SUBMIT</button>
+        <button mat-button class="close" (click)="onNoClick()">CLOSE</button>
+        <div *ngIf="selected" style="padding-left: 2%;">
+          <button mat-button (click)="openAddVaccine(pet.ID)">VACCINES</button>
+        </div>
+        <div *ngIf="selected" style="padding-left: 1%;">
+          <button mat-button (click)="openAddPrescription(pet)">PRESC</button>
         </div>
       </div>
-      </form>  
+  </form>
 </div>

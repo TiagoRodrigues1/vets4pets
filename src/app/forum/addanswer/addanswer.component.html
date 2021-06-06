@@ -17,12 +17,6 @@
           <div *ngIf = "image">
             <img src= "{{image}}" width="60" height="60">
           </div>
-           <div fxLayout="row" style="padding-top: 5px;">
-         <div class="file-upload">
-           <input type="file" name="image" accept="image/x-png,image,image/jpeg" multiple (change)="fileChangeEvent($event)" />
-         </div>
-         <div *ngIf = "imageError">{{imageError}}</div>
-           </div>
      </div>   
      <div mat-dialog-actions>
       <button  mat-raised-button type="submit">SUBMIT</button>

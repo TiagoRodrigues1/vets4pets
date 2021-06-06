@@ -39,7 +39,6 @@ export class EditUserProfileComponent implements OnInit {
       this.payload = window.atob(this.payload);
       const userString =  JSON.parse(this.payload);
       this.user = userString;
-      console.log(userString);
    }
   }
 

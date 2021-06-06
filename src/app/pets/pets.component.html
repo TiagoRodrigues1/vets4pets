@@ -26,11 +26,11 @@
             </mat-card-header>
             <div *ngIf="pet.picture; else default" >
               <img mat-card-image src="{{pet?.picture}}" alt=" picture of {{pet?.name}}"
-                style="width: 280px;height: 191.94px;position: relative;margin-bottom: 20px;">
+                style="width: 280px;height: 191.94px;position: relative;margin-bottom: 20px;" class = "cover">
             </div>
             <ng-template #default>
               <img mat-card-image src="../../assets/img/default-image-620x600.jpg"
-                alt=" default picture" style="width: 280px;height: 191.94px;position: relative;bottom: 19px;">
+                alt=" default picture" style="width: 280px;height: 191.94px;position: relative;bottom: 19px;" class = "cover">
             </ng-template>
             <mat-card-content >
               

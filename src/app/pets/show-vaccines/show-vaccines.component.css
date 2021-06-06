@@ -28,3 +28,8 @@ table {
 ::ng-deep.mat-select-arrow {
     color: #52b788 !important;
 }
+
+.close1 {
+    color: #52b788 !important;
+    background-color: #ffff !important;
+   }

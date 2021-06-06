@@ -16,6 +16,7 @@ export class QuestionService {
     question: ['',[Validators.required,Validators.maxLength(1000)]],
     UserID: [this.val.getUserId()],
     attachement:[],
+    username:[this.val.getUsername()],
   });
 
   populateForm(question) {

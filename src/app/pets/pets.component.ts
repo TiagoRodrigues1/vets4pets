@@ -56,7 +56,7 @@ export class PetsComponent implements OnInit {
     this.petService.form.reset();
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;  
+    dialogConfig.autoFocus = false;  
     dialogConfig.width = "35%"
     dialogConfig.height = "50%"
     this.dialog.open(AddPetComponent,dialogConfig);

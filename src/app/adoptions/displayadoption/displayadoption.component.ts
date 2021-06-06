@@ -13,6 +13,7 @@ export class DisplayadoptionComponent implements OnInit  {
   adoption:Adoption;
   attachements:string[] = [];
   imageObject:any;
+  adoptionString:String[] = [];
 
   constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<LastadoptionsComponent>) { 
     this.adoption=data;      //Remove informação inutil (createAt,updateAt,deletedAt)

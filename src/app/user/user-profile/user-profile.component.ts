@@ -25,6 +25,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
+    
   }
 
   getUser() {
@@ -33,8 +34,9 @@ export class UserProfileComponent implements OnInit {
     this.user = (JSON.parse(this.string));
     if (this.userAux.token) {
       this.payload = this.userAux.token.split(".")[1];
+      console.log(this.payload)
       this.payload = window.atob(this.payload);
-      const userString =  JSON.parse(this.payload);
+      const userString = JSON.parse(this.payload);
       this.user = userString;
       this.user.profilePicture = this.userAux.profilePicture;
       this.user.userType = this.userAux.userType;
@@ -91,7 +93,6 @@ export class UserProfileComponent implements OnInit {
                   image.onload = rs => {
                       const img_height = rs.currentTarget['height'];
                       const img_width = rs.currentTarget['width'];
-                      console.log(img_height, img_width);
                       if (img_height > max_height && img_width > max_width) {
                           this.imageError =
                               'Maximum dimentions allowed ' +
@@ -105,7 +106,7 @@ export class UserProfileComponent implements OnInit {
                           this.user.profilePicture = imgBase64Path;
                           
                           this.accountService.editUser(this.val.getUserId(),this.user).subscribe();
-                          
+        
                           localStorage.setItem('user',JSON.stringify(this.user));
                           //window.location.reload();
                       }

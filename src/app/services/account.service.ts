@@ -11,6 +11,7 @@ import { Answer } from '../models/answer.model';
 import { Appointment } from '../models/appointment.model';
 import { Clinic } from '../models/clinic.model';
 import { Pet } from '../models/pet.model';
+import { Prescription } from '../models/prescription.model';
 import { Question } from '../models/question.model';
 import { User } from '../models/user.model';
 import { Vaccines } from '../models/vaccines';
@@ -191,6 +192,7 @@ getUsers(): Observable<User[]> {
 getRecentAdoptions(): Observable<Adoption[]> {  
   return this.http.get<Adoption[]>(`${environment.apiUrl}/adoptionByTime/`);
 }
+
 getUsersNormal() : Observable<User[]> {
   return this.http.get<User[]>(`${environment.apiUrl}/userNormal/`)
 }
@@ -231,7 +233,17 @@ remVetClinic(idUser:number,user:User){
   return this.http.put(`${environment.apiUrl}/clinicRem/${idUser}`,user);
 }
 
+addPrescription(presc:Prescription) {
+  return this.http.post(`${environment.apiUrl}/prescription/`,presc);
+}
 
+addVaccine(vaccine:Vaccines) {
+  return this.http.post(`${environment.apiUrl}/vaccine/`,vaccine);
+}
+
+getPrescription(id:number):Observable<Prescription[]> {
+  return this.http.get<Prescription[]>(`${environment.apiUrl}/prescription/${id}`);
+}
 
 public get userValue(): User {
   return this.userSubject.value;

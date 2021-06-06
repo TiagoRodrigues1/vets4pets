@@ -9,7 +9,7 @@
     <div mat-dialog-content>
 
         <mat-form-field style="width:95%;padding-top: 10px;">
-          <input matInput placeholder="Name" formControlName="name">
+          <input matInput placeholder="Title" formControlName="name">
           <div *ngIf="(service.form.controls.name.touched || service.form.controls.name.dirty) && service.form.controls.name.errors">
             <div *ngIf="service.form.controls.name.required" style="color:red;font-size: small;">
               Name is <strong>required</strong>
@@ -87,12 +87,11 @@
           </mat-select>
         </mat-form-field>
         <a *ngFor="let url of urls ; let i=index" class="rounded mb-3">
-            <img [src]='url'   width="70" height="70" style="padding-left: 5px;padding-top: 5px;">
-      
+        <img [src]='url'   width="70" height="70" style="padding-left: 5px;padding-top: 5px;">
     </a>
       <div fxLayout="row" style="padding-top: 5px;">
         <div class="file-upload" *ngIf = "urls.length < 4">
-          <input type="file" name="image" accept="image/x-png,image,image/jpeg" multiple
+          <input type="file" name="image" accept="image/jpeg" multiple
             (change)="onSelectFile($event)"/>
         </div>
       </div>

@@ -100,6 +100,7 @@ export class ChoosePetComponent implements OnInit {
     if(this.selectVet != null) {
     let resp = this.accountService.getAppointmentByVet2(this.selectVet);
     resp.subscribe(report => { this.apps = report['data'] as Appointment[]; }, error => this.errorAppApi = error);
+    
   }
 }
 
@@ -128,7 +129,6 @@ export class ChoosePetComponent implements OnInit {
     } else { //
       this.selectApp = null;
       this.errorApp = "Please Select a Hour first";
-      console.log(this.selectApp);
       control.setErrors({ "required": true })
     }
     this.selectedVet = !this.selectedVet;
@@ -176,7 +176,6 @@ export class ChoosePetComponent implements OnInit {
     this.app = new Appointment(this.select, this.selectVet, this.d);
     this.accountService.createAppointment(this.app).pipe(first()).subscribe({
       next: () => {
-        //this.router.navigate([`../clinic/${this.data[0]}`],{relativeTo: this.route});
         this.suc = 'Your Appointment was created, check your profile to see all of your appointments';
         this.form.controls.date.setErrors(null);
         this.isEditable = false;

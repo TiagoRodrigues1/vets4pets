@@ -30,3 +30,8 @@
     top: 0;
     left: 0;
 }
+
+.cancel {
+  color: #ffff !important;
+  background-color: #f07167 !important;
+ }

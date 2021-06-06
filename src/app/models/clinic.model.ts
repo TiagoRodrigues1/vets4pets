@@ -4,6 +4,7 @@ export class Clinic {
     contact: string;
     email: string;
     address: string;
-    UserID: number; //manager da clinica
+    UserID: number; 
     profilePicture:string;
+    description:string;
 }

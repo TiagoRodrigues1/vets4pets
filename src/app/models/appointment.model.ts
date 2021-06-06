@@ -4,6 +4,7 @@ export class Appointment {
     vetID: number;
     date: Date;
     showedUp: boolean;
+    canceled:boolean;
     
     constructor(animalID:number,vetID:number,date:Date) {
         this.AnimalID = animalID;

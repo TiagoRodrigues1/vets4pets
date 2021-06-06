@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Appointment } from 'src/app/models/appointment.model';
 import { Pet } from 'src/app/models/pet.model';
 import { AccountService } from 'src/app/services/account.service';
 import { CustomValidatorService } from 'src/app/services/custom-validator.service';
@@ -19,10 +20,12 @@ export class AppointmentDetailsComponent implements OnInit {
   hour:number;
   minutes:number;
   error:string;
+  app:Appointment
   constructor(@Inject(MAT_DIALOG_DATA) public data:any, private dialogRef: MatDialogRef<DisplayAppointmentComponent>, private accountService: AccountService, private val: CustomValidatorService) { }
 
   ngOnInit(): void {
     this.getPet();
+    this.app = this.data.extendedProps.appointment;
   }
 
   onNoClick() {
@@ -48,6 +51,13 @@ export class AppointmentDetailsComponent implements OnInit {
       this.date = `${this.day}/${this.month + 1}/${this.year} ${this.hour}:${this.minutes}0`;
     } else {
       this.date = `${this.day}/${this.month + 1}/${this.year} ${this.hour}:${this.minutes}`;
+    }
+  }
+
+  cancelAppointment() {
+    if(!this.app.canceled) {
+    this.app.canceled = true;
+    this.accountService.editAppointment(this.app.ID,this.app).subscribe();
     }
   }
 }

@@ -23,7 +23,6 @@ export class PetService {
   });
 
   populateForm(pet) {
-    console.log(pet);
     this.form.setValue(_.omit(pet,'CreatedAt','UpdatedAt','DeletedAt','vaccinationCard'));
   }
   

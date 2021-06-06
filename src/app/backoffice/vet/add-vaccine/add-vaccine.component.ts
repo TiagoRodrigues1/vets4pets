@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { first } from 'rxjs/operators';
 import { Pet } from 'src/app/models/pet.model';
 import { Vaccines } from 'src/app/models/vaccines';
 import { AccountService } from 'src/app/services/account.service';
@@ -16,7 +17,8 @@ export class AddVaccineComponent implements OnInit {
   form:FormGroup;
   submitted = false;
   vaccine:Vaccines;
-  constructor(private formBuilder: FormBuilder, private matDialogRef: MatDialogRef<ManageAppointmentComponent>, private accountService: AccountService,@Inject(MAT_DIALOG_DATA) public data:any) { }
+  error:string;
+  constructor(private formBuilder: FormBuilder, private matDialogRef: MatDialogRef<ManageAppointmentComponent>, private accountService: AccountService,@Inject(MAT_DIALOG_DATA) public data:any ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -27,21 +29,24 @@ export class AddVaccineComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    this.vaccine.taken = true;
-    this.vaccine.dateTaken = new Date();
-    if(!this.form.valid || this.form.errors) {
-        return;
-    }
-
-    this.vaccine.validity = this.form.get('validity').value;
-    this.vaccine.vaccineName = this.form.get('vaccineName').value;
-    this.vaccine.AnimalID = this.data;
-    console.log(this.vaccine);
+  onSubmit() {  
+    if(!this.form.invalid || this.form.errors) {
+      return;
+  }
+  this.vaccine = new Vaccines(this.data,null,true,this.form.get('validity').value,this.form.get('vaccineName').value,new Date());
+  this.accountService.addVaccine(this.vaccine).pipe(first())
+  .subscribe({
+      next: () => {
+        this.form.reset();
+        this.matDialogRef.close();
+      },
+      error: error => {
+        this.error = error;
+      }
+  });
   }
 
   onNoClick() {
-    this.form.reset();
     this.matDialogRef.close();
   }
 }

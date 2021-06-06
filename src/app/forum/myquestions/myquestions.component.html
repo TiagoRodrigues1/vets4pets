@@ -63,7 +63,16 @@
                         <div class="card mb-2">
                             <div class="card-body p-2 p-sm-3">
                                 <div class="media forum-item">
-                                    <a data-toggle="collapse" ><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                    <a data-toggle="collapse" >
+                                        <div *ngIf = "user?.profilePicture;else default">
+                                            <img src="{{user?.profilePicture}}" width="50" alt="User" class="circular" alt="User" />
+                                            <small class="d-block text-center text-muted"></small>
+                                        </div>
+                                        <ng-template #default>
+                                            <img src="../../../assets/img/default-user-image.png" width="50" alt="User" class="circular" alt="User" />
+                                            <small class="d-block text-center text-muted"></small>
+                                        </ng-template>
+                                    </a>
                                     <div class="media-body">
                                         <h6><a data-toggle="collapse" routerLink="/forumdisplay/{{question.ID}}" class="text-body">{{question?.questiontitle}}</a></h6>
                                         <p class="text-secondary">

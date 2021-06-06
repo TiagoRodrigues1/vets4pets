@@ -28,23 +28,28 @@ export class AddanswerComponent implements OnInit   {
 
   onSubmit() {
     this.answerService.form.get('questionID').setValue(this.question_id);
-    console.log(this.answerService.form.value);
     if(!this.service.form.get('ID').value) {
       if (this.answerService.form.invalid) {
         return;
     }
+    
     this.accountService.createAnswer(this.answerService.form.value).pipe(first()).subscribe({
       next: () => {
-        this.router.navigate(['../forum'],{relativeTo: this.route});
+        //this.router.navigate(['../forum'],{relativeTo: this.route});
       }
     });
   this.onClose();
-  window.location.reload();
+  setTimeout(() => {
+    window.location.reload();
+  },500);
+ 
   } else {
     if (this.answerService.form.invalid) {
       return;
   }
+  setTimeout(() => {
     window.location.reload();
+  },500);
   }
 }
 
@@ -86,7 +91,6 @@ export class AddanswerComponent implements OnInit   {
                   image.onload = rs => {
                       const img_height = rs.currentTarget['height'];
                       const img_width = rs.currentTarget['width'];
-                      //console.log(img_height, img_width);
                       if (img_height > max_height && img_width > max_width) {
                           this.imageError =
                               'Maximum dimentions allowed ' +

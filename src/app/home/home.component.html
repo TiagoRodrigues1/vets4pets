@@ -6,9 +6,65 @@
       </mat-sidenav>
       <mat-sidenav-content [@onMainContentChange]="onSideNavChange ? 'open': 'close'">
         <div class="main_content">
-          <div style="padding: 20px">
+          <div style="padding-left: 5px;padding-top: 5x;">
+              <div *ngFor = "let pet of Pet">
+                <div *ngIf = "pet?.profilePicture;else default" class = "company-header-avatar" [ngStyle] = "{'background-image': 'url(' + pet?.profilePicture + ')'}" routerLink = "/pets/{{pet.ID}}" routerLinkActive = "active" ></div>
+                <ng-template #default> <div class = "company-header-avatar" style ="background-image: url('../../assets/img/default.png');border:3px solid #52b788;" routerLink = "/pets/{{pet.ID}}" routerLinkActive = "active" ></div></ng-template>
+            </div>
+            <button mat-fab
+            style="margin-right: 0.5% ;margin-bottom:0.5%;margin-top: 0.5%;margin-left: 0.5%;color: #52b788;font-size: 30px;background-color: transparent;width: 70px;height: 70px;" (click) = "onCreate()"
+            >+</button>
+          </div>
+          <div style="padding: 20px;display:flex; flex-direction: row;flex-wrap: wrap;">
+            <mat-card appAppMaterialElevation class="example-card" style ="padding-right:20px;padding-left: 20px;margin-right: 1% ;margin-bottom:1%;cursor: pointer;text-align: center;" routerLink = "/userprofile" routerLinkActive="active" >
+              <mat-card-header>
+                <mat-card-title>Upcoming Appointments</mat-card-title>
+              </mat-card-header>
+             <div>
+              <mat-card-content *ngFor = "let a of dates;let i = index">
+                <div *ngIf ="i < 3">
+                  <mat-icon style = "color:#52b788">calendar_today</mat-icon>
+                <mat-card-title style = "font-size: 12px;">{{a | date: 'dd/MM/yyyy'}}</mat-card-title>
+              </div>
+              </mat-card-content>
+            </div> 
+            </mat-card>
           </div>
         </div>
+        <body>
+          <div class="footer-dark">
+              <footer>
+                  <div class="container">
+                      <div class="row">
+                          <div class="col-sm-6 col-md-3 item">
+                              <h3>Made By</h3>
+                              <ul>
+                                  <li><a>Vasco Silva </a></li>
+                                  <li><a>Tiago Rodrigues </a></li>
+                                  <li><a>Miguel Costa</a></li>
+                              </ul>
+                          </div>
+                          <div class="col-sm-6 col-md-3 item">
+                              <h3>Contact:</h3>
+                              <ul>
+                                  <li><a>vet4pets@vets4pets.pt</a></li>
+                                  <li><a></a></li>
+                                  <li><a ></a></li>
+                              </ul>
+                          </div>
+                          <div class="col-md-6 item text">
+                              <h3>VETS4PETS</h3>
+                              <p>Idea was born when a theme was needed for the final year project of Computer Engineering at Universidade Fernando Pessoa</p>
+                          </div>
+                      </div>
+                      <p class="copyright">VETS4PETS © 2021</p>
+                  </div>
+              </footer>
+          </div>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+      </body>
+
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>

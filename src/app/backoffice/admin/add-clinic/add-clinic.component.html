@@ -4,11 +4,11 @@
       <!--<button  mat-raised-button type="button" style = "margin-left: 390px;" (click) = "onClose()">X</button> -->
       <form style ="padding-left:20px;padding-top: 20px;" fxLayoutAlign = "stretch" fxLayout = "column" [formGroup] = "service.form" (ngSubmit) = "onSubmit()">
         <mat-form-field style = "width:95%">
-          <input matInput placeholder="Name" formControlName = "name" maxlength="20">
+          <input matInput placeholder="Name" formControlName = "name" >
         </mat-form-field>
         <div *ngIf="(service.form.controls.name.touched || service.form.controls.name.dirty) && service.form.controls.name.errors">
             <div *ngIf="service.form.controls.name.errors.required" style="color:red;font-size: small;" >Name is <strong>required</strong></div>
-            <div *ngIf="service.form.controls.name.errors.maxlength" style="color:red;font-size: small;" >Name exceeds <strong>20</strong>characters</div>
+            <div *ngIf="service.form.controls.name.errors.maxlength" style="color:red;font-size: small;" >Name exceeds <strong>40 </strong>characters</div>
         </div>
        
         <mat-form-field style = "width:95%">
@@ -32,6 +32,14 @@
           <div *ngIf="(service.form.controls.address.touched || service.form.controls.address.dirty) && service.form.controls.address.errors">
             <div *ngIf="service.form.controls.address.errors.required" style="color:red;font-size: small;" >Address is <strong>required</strong></div>
         </div>
+
+        <mat-form-field appearance="outline" class="textbox" style="outline-color: #52b788;padding-top: 4px;width: 35.5%;">
+          <textarea matInput placeholder="Description" formControlName="description" style="resize: none;"
+            maxlength="1000"> </textarea>
+            <div *ngIf="(service.form.controls.description.touched || service.form.controls.description.dirty) && service.form.controls.description.errors">
+              <div *ngIf = "service.form.controls.description.required" style="color:red;font-size: small;" >Description is <strong>required</strong></div>
+            </div>
+        </mat-form-field>
 
         <div class="file-upload">
           <input type="file" name="image" accept="image/x-png,image/jpeg" (change)="fileChangeEvent($event)"/>
