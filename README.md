@@ -16,8 +16,8 @@ Contém toda a aplicação android desenvolvida em flutter - Basta correr o emul
 
 ## Próximos Passos
 
-Implementar Forecast - identificando anomalias em animais de raça características semelhantes (e.g. variações de peso)
-Implementar Integração de documentos em Papel c/ OCR (e.g., faturas / recibos do veterinário adicionados com base numa fotografia)
+- Implementar Forecast - identificando anomalias em animais de raça características semelhantes (e.g. variações de peso).
+- Implementar Integração de documentos em Papel c/ OCR (e.g., faturas / recibos do veterinário adicionados com base numa fotografia)
 
 ## Apresentação
 
