@@ -19,10 +19,13 @@ Contém toda a aplicação android desenvolvida em flutter - Basta correr o emul
 - Implementar Forecast - identificando anomalias em animais de raça características semelhantes (e.g. variações de peso).
 - Implementar Integração de documentos em Papel c/ OCR (e.g., faturas / recibos do veterinário adicionados com base numa fotografia)
 
-## Apresentação
+## Apresentação && Relatório
 
 Link da nossa [apresentação](https://docs.google.com/presentation/d/1YPRH3fQ700nfCGLi3LbFuLYgzijivEWY56ZyA_ADQ5M/edit?usp=sharing).
+Nooso [relatório] (https://github.com/TiagoRodrigues1/LPI/blob/master/Relatorio_Final_LPI.pdf)
 
 ## Downloads
 
 ![Screenshot](qr-code.png)
+
+
