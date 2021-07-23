@@ -1,25 +1,29 @@
+
 import 'package:flutter/material.dart';
-import 'package:Vets4Pets/screens/forumdetail.dart';
+import 'package:Vets4Pets/screens/forum/forumdetail.dart';
 import 'package:image_picker/image_picker.dart';
-import '../jwt.dart';
+import '../extras/jwt.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import '../../main.dart';
 import 'dart:convert' as convert;
+import 'package:intl/intl.dart';
 
-import 'colors.dart';
+import '../extras/colors.dart';
 
-class MyQuestionsPage extends StatefulWidget {
-  MyQuestionsPage({Key key, this.title}) : super(key: key);
-
+class MyAnswersPage extends StatefulWidget {
+  
+  MyAnswersPage({Key key, this.title}) : super(key: key);
+  
   final String title;
 
   @override
-  _MyQuestionsPageState createState() => new _MyQuestionsPageState();
+  _MyAnswersPageState createState() => new _MyAnswersPageState();
 }
 
-class _MyQuestionsPageState extends State<MyQuestionsPage> {
+class _MyAnswersPageState extends State<MyAnswersPage> {
+  Map<String, dynamic> question;
   // ignore: avoid_init_to_null
   File _image = null;
   final picker = ImagePicker();
@@ -28,11 +32,11 @@ class _MyQuestionsPageState extends State<MyQuestionsPage> {
   final TextEditingController _questionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  List questions = [];
+  List answers = [];
   bool isLoading = false;
 
   void initState() {
-    this.getQuestions();
+    this.getAnswers();
     super.initState();
   }
 
@@ -41,30 +45,53 @@ class _MyQuestionsPageState extends State<MyQuestionsPage> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+
+       
       } else {
         print('No image selected.');
       }
     });
   }
 
-  getQuestions() async {
+getQuestion(int id) async {
+
+  var jwt = await storage.read(key: "jwt");
+    var response = await http.get(
+      Uri.parse('http://52.47.179.213:8081/api/v1/question/$id'),
+      headers: {HttpHeaders.authorizationHeader: jwt},
+    );
+   
+    if (response.statusCode == 200) {
+      
+      var item = json.decode(utf8.decode(response.bodyBytes))['data'];
+      setState(() {
+        question=item;
+     
+      });
+      return 1;
+    } 
+    return 0;
+}
+
+
+
+
+  getAnswers() async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-
-
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/questionsByUser/$id'),
+      Uri.parse('http://52.47.179.213:8081/api/v1/answersByUser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
-        questions = items;
+        answers = items;
         isLoading = false;
       });
     } else {
-      questions = [];
+      answers = [];
       isLoading = false;
     }
   }
@@ -73,6 +100,7 @@ class _MyQuestionsPageState extends State<MyQuestionsPage> {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
+
     await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/question/'),
       body: convert.jsonEncode(
@@ -96,14 +124,14 @@ class _MyQuestionsPageState extends State<MyQuestionsPage> {
         centerTitle: false,
         elevation: 0.0,
         title: new Text(
-          "My posts",
+          "My responses",
           textScaleFactor: 1.3,
         ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
             color: Colors.white,
-            tooltip: 'New Post',
+            tooltip: 'Post something',
             onPressed: () async {
               showDialog(
                 context: context,
@@ -212,8 +240,6 @@ class _MyQuestionsPageState extends State<MyQuestionsPage> {
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
 
                             var title = _questiontitleController.text;
                             var question = _questionController.text;
@@ -243,35 +269,42 @@ class _MyQuestionsPageState extends State<MyQuestionsPage> {
   }
 
   Widget getBody() {
-    if(questions.length==0){
-       return Center(child: Text("No questions :("));
+
+    if(answers.length==0){
+       return Center(child: Text("No answers :("));
     }
-    if (questions.contains(null) || questions.length == 0 || isLoading) {
+    if (answers.contains(null) || answers.length == 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
-        itemCount: questions.length,
+        itemCount: answers.length,
         itemBuilder: (context, index) {
-          return entryItem(context, questions[index]);
+          return entryItem(context, answers[index]);
         });
   }
 
   void _onSearchPressed() {
     Navigator.pop(context);
   }
-}
 
-Widget entryItem(context, item) {
-  var title = item['questiontitle'];
-  var answers = item['answers'];
-  String question = item['question'];
-  var closed = item['closed'];
+  Widget entryItem(context, item) {
+  var date = item['CreatedAt'];
+  DateTime now = DateTime.now();
+  var timezoneOffset1 = now.timeZoneOffset;
+  DateTime parseDate = new DateFormat("yyyy-MM-dd").parse(date);
+  parseDate = parseDate.add(timezoneOffset1);
+  var inputDate = DateTime.parse(parseDate.toString());
+  var outputFormat = DateFormat('dd/MM/yyyy');
+  var outputDate = outputFormat.format(inputDate);
+ 
+  String answer = item['answer'];
+  
 
-  if (question.length > 20) {
-    question = question.substring(0, 23);
-    question = question + " ...";
+  if ( answer.length > 25) {
+     answer =  answer.substring(0, 17);
+    answer =  answer + " ...";
   } else {
-    question = question;
+     answer =  answer;
   }
 
   return Container(
@@ -283,31 +316,55 @@ Widget entryItem(context, item) {
         borderRadius: new BorderRadius.all(new Radius.circular(15.0)),
       ),
       child: new ListTile(
-        title: new Text(title),
-        subtitle: new Text(question),
-        leading: IconButton(
-          icon: closed == true
-              ? const Icon(Icons.check_circle, color: Colors.green)
-              : const Icon(Icons.cancel, color: Colors.red),
-          onPressed: () {},
-        ),
+        title:new Text(answer),
+        subtitle: Text("Answered on: " +outputDate),
+      
         trailing: new Container(
           padding: const EdgeInsets.only(top: 10),
           child: Column(children: <Widget>[
-            new Icon(
-              Icons.comment,
-              color: Colors.black,
-            ),
-            new Text(answers.toString()),
+            
+            
           ]),
         ),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+         
+          var flag=await getQuestion(item['QuestionID']);
+          if(flag==1){
+              Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ForumDetailPage(question: item)),
+                builder: (context) => ForumDetailPage(question: question)),
           );
+          }else{
+            showDialog(
+                    context: context,
+                    builder: (BuildContext context) => _showDialog(context),
+                  );
+          }
         },
       ));
 }
+
+Widget _showDialog(context) {
+    return AlertDialog(
+      title: new Text(
+        "Error",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+      ),
+      content:
+          new Text("Question was deleted!", textAlign: TextAlign.center),
+      actions: <Widget>[
+        new TextButton(
+          child: new Text("Close"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+
 

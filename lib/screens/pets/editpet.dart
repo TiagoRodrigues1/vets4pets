@@ -1,28 +1,29 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show base64Encode;
+import 'dart:convert' show base64, base64Encode;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../main.dart';
+import '../../main.dart';
 import 'dart:convert' as convert;
-import '../jwt.dart';
+import '../extras/jwt.dart';
 
-class AddPetPage extends StatefulWidget {
+class EditPetPage extends StatefulWidget {
+  final Map<String, dynamic> pet;
+  EditPetPage({Key key, this.pet}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() {
-    return _AddPetPageState();
-  }
+  State<StatefulWidget> createState() => new _EditPetPageState();
 }
 
-class _AddPetPageState extends State<AddPetPage> {
+class _EditPetPageState extends State<EditPetPage> {
   // ignore: avoid_init_to_null
   File _image = null;
   final picker = ImagePicker();
-  final TextEditingController _nameController = TextEditingController();
 
   String animalTypeValue, raceValue, cityValue;
   bool _validate_name = false,_validate_type = false,_validate_race = false;
-  
+
   List animalTypeList = [
     "Dog",
     "Cat",
@@ -34,26 +35,6 @@ class _AddPetPageState extends State<AddPetPage> {
     "Other"
   ];
 
-  List cityList = [
-    "Aveiro",
-    "Beja",
-    "Braga",
-    "Bragança",
-    "Castelo Branco",
-    "Coimbra",
-    "Évora",
-    "Faro",
-    "Guarda",
-    "Leiria",
-    "Lisboa",
-    "Portalegre",
-    "Porto",
-    "Santarém",
-    "Setúbal",
-    "Viana do Castelo",
-    "Vila Real",
-    "Viseu"
-  ];
   Map<String, List<String>> data = {
     'Dog': [
       'Labrador Retriever',
@@ -128,8 +109,18 @@ class _AddPetPageState extends State<AddPetPage> {
     ],
     'Other': ['N/A'],
   };
+
   @override
   void initState() {
+    animalTypeValue = widget.pet['animaltype'];
+    raceValue = widget.pet['race'];
+       if(widget.pet['animaltype']=="N/A"){
+      animalTypeValue="Other";
+      raceValue=null;
+    }
+    if(widget.pet['race']=="N/A"){
+      raceValue=null;
+    }
     super.initState();
   }
 
@@ -147,18 +138,21 @@ class _AddPetPageState extends State<AddPetPage> {
     });
   }
 
-  addPet(String name, String animaltype, String race, String picture,
+  editPet(String name, String animaltype, String race, String picture,
       BuildContext context) async {
+    print(name);
+    int id = widget.pet['ID'];
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
-    int id = results["UserID"];
 
-    await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
+    int id_user = results["UserID"];
+
+    var response = await http.put(
+      Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "name": name,
-          "userID": id,
+          "userID": id_user,
           "race": race,
           "animaltype": animaltype,
           "profilePicture": picture,
@@ -167,13 +161,26 @@ class _AddPetPageState extends State<AddPetPage> {
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
+   
   }
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _nameController =
+        TextEditingController(text: widget.pet['name']);
+
+            String profileUrl = widget.pet['profilePicture'];
+        
+    Uint8List bytes=null;
+    if(profileUrl!="" && profileUrl!=null  ){
+   profileUrl = profileUrl.substring(23, profileUrl.length);
+     bytes = base64.decode(profileUrl);
+    }
+ 
+ 
     return Scaffold(
       appBar: AppBar(
-        title: Text("New Pet"),
+        title: Text("Edit Pet"),
       ),
       body: Container(
         child: ListView(
@@ -195,7 +202,6 @@ class _AddPetPageState extends State<AddPetPage> {
                       bottomLeft: Radius.circular(90),
                       bottomRight: Radius.circular(90))),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Spacer(),
@@ -232,8 +238,10 @@ class _AddPetPageState extends State<AddPetPage> {
                                           ),
                                         ),
                                         radius: 50.0,
-                                        backgroundImage: AssetImage(
-                                            "assets/images/petdefault.jpg"),
+                                        backgroundImage:  bytes==null
+                                            ? AssetImage(
+                                                "assets/images/petdefault.jpg")
+                                            : MemoryImage(bytes),
                                       )
                                     : CircleAvatar(
                                         child: Align(
@@ -261,7 +269,7 @@ class _AddPetPageState extends State<AddPetPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 32, right: 32),
                       child: Text(
-                        'New Pet',
+                        'Edit Pet',
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
@@ -288,15 +296,17 @@ class _AddPetPageState extends State<AddPetPage> {
                         ]),
                     child: TextField(
                       controller: _nameController,
+
                       decoration: InputDecoration(
                         hintText: _validate_name ? null : 'Pet name',
                         errorText: _validate_name ? validateName(_nameController.text) : null,
-                        //contentPadding: EdgeInsets.fromLTRB(40.0, 10.0, 20.0, 10.0),
+                       
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.pets_sharp,
                           color: Color(0xFF52B788),
                         ),
+                      
                       ),
                     ),
                   ),
@@ -307,7 +317,7 @@ class _AddPetPageState extends State<AddPetPage> {
                       padding: EdgeInsets.only(
                           top: 4, left: 16, right: 16, bottom: 4),
                       decoration: BoxDecoration(
-                          border: _validate_type?Border.all(width: 2.0, color: Colors.red[300]):null,
+                       border: _validate_type?Border.all(width: 2.0, color: Colors.red[300]):null,
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                           color: Colors.white,
                           boxShadow: [
@@ -378,16 +388,15 @@ class _AddPetPageState extends State<AddPetPage> {
                                   isExpanded: true,
                                   focusColor: Colors.green,
                                   hint: Text("Race"),
-                                  
                                   value: raceValue,
                                   onChanged: (newValue) {
                                     setState(() {
                                       raceValue = newValue;
                                       _validate_race=false;
+
                                     });
                                   },
-                                  items: animalTypeValue != null &&
-                                          animalTypeValue != "Other"
+                                  items:  animalTypeValue != null && animalTypeValue != "Other"
                                       ? data[animalTypeValue].map((valueType) {
                                           return DropdownMenuItem(
                                             value: valueType,
@@ -402,8 +411,8 @@ class _AddPetPageState extends State<AddPetPage> {
                   Spacer(),
                   InkWell(
                     onTap: () async {
-                      
-                      setState(() {
+
+                    setState(() {
                         _nameController.text.isEmpty ||  _nameController.text.length>20 ||_nameController.text.length<3
                             ? _validate_name = true
                             : _validate_name = false;
@@ -414,34 +423,36 @@ class _AddPetPageState extends State<AddPetPage> {
                              ? _validate_race = true 
                             : _validate_race = false;
                       });
+                    if (_validate_name != true && _validate_type!= true && _validate_race != true) {
+                      var name = _nameController.text;
 
-                      if (_validate_name != true && _validate_type!= true && _validate_race != true) {
-                        String type = animalTypeValue;
-                        String race = raceValue;
-
-                        if (animalTypeValue != "Other" &&
-                            raceValue == "Other") {
-                          race = "N/A";
-                        }
-                        if (animalTypeValue == "Other") {
-                          type = "N/A";
-                          race = "N/A";
-                        }
-
-                        if (_image != null) {
-                          List<int> imgBytes = await _image.readAsBytes();
-                          String base64img = base64Encode(imgBytes);
-                          String prefix = "data:image/jpeg;base64,";
-                          base64img = prefix + base64img;
-                          addPet(_nameController.text, type, race, base64img,
-                              context);
-                        } else {
-                          addPet(
-                              _nameController.text, type, race, null, context);
-                        }
-
-                        Navigator.of(context).pop();
+                             String type= animalTypeValue;
+                          String race= raceValue;
+                
+                      if (animalTypeValue!= "Other" && raceValue=="Other") {
+                        
+                        race = "N/A";
                       }
+                      if (animalTypeValue== "Other") {
+                        type="N/A";
+                        race = "N/A";
+                      }
+
+
+                      if (_image != null) {
+                        List<int> imgBytes = await _image.readAsBytes();
+                        String base64img = base64Encode(imgBytes);
+                        String prefix = "data:image/jpeg;base64,";
+                        base64img = prefix + base64img;
+
+                        editPet(name, type, race, base64img,
+                            context);
+                      } else {
+                        editPet(name, type, race,
+                            widget.pet['picture'], context);
+                      }
+                      Navigator.of(context).pop();
+                    }
                     },
                     child: Container(
                       height: 45,
@@ -456,7 +467,7 @@ class _AddPetPageState extends State<AddPetPage> {
                           borderRadius: BorderRadius.all(Radius.circular(50))),
                       child: Center(
                         child: Text(
-                          'Create'.toUpperCase(),
+                          'Save'.toUpperCase(),
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
@@ -475,8 +486,7 @@ class _AddPetPageState extends State<AddPetPage> {
     );
   }
 
-
-  String validateName(String value) {
+    String validateName(String value) {
   
   if(value.isEmpty){
     return "Name can't be empty";

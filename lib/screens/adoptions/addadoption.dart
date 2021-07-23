@@ -3,9 +3,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' show base64Encode;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../main.dart';
+import '../../../main.dart';
 import 'dart:convert' as convert;
-import '../../jwt.dart';
+import '../extras/jwt.dart';
+
 
 class AddAdoptionPage extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class AddAdoptionPage extends StatefulWidget {
 }
 
 class _AddAdoptionPageState extends State<AddAdoptionPage> {
-  // ignore: avoid_init_to_null
+
   File _image = null, _image2 = null, _image3 = null, _image4 = null;
   bool _validate_name = false,_validate_type = false,_validate_race = false, _validate_birth = false,_validate_text = false,_validate_email = false,_validate_contact = false,_validate_city = false;
 

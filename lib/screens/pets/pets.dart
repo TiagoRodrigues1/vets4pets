@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:Vets4Pets/screens/petsinfo.dart';
+import 'package:Vets4Pets/screens/pets/petsinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
-import '../main.dart';
-import '../jwt.dart';
+import '../../main.dart';
+import '../extras/jwt.dart';
 import 'addpet.dart';
 import 'editpet.dart';
-import 'leftside_menu.dart';
+import '../start/leftside_menu.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();

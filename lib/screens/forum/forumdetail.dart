@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
-import '../jwt.dart';
+import '../extras/jwt.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import '../../main.dart';
 import 'dart:convert' show json;
 import 'dart:convert' as convert;
-import 'showpic.dart';
+import '../extras/showpic.dart';
 
 class ForumDetailPage extends StatefulWidget {
   final Map<String, dynamic> question;

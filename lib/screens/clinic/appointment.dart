@@ -1,10 +1,10 @@
-import '../utils.dart';
+import '../extras/utils.dart';
 import 'package:flutter/material.dart';
-import '../jwt.dart';
+import '../extras/jwt.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import '../../main.dart';
 import 'dart:typed_data';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -877,7 +877,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       _currentStep >= 3 ? StepState.complete : StepState.date,
                 ),
                 Step(
-                    title: new Text('Date'),
+                    title: new Text('Done'),
                     content: Column(
                       children: <Widget>[
                         Text(

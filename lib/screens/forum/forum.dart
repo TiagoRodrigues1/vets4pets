@@ -1,29 +1,24 @@
-
 import 'package:flutter/material.dart';
-import 'package:Vets4Pets/screens/forumdetail.dart';
+import 'package:Vets4Pets/screens/forum/forumdetail.dart';
 import 'package:image_picker/image_picker.dart';
-import '../jwt.dart';
+import '../extras/jwt.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import '../../main.dart';
 import 'dart:convert' as convert;
-import 'package:intl/intl.dart';
+import '../extras/colors.dart';
 
-import 'colors.dart';
+class ForumPage extends StatefulWidget {
+  ForumPage({Key key, this.title}) : super(key: key);
 
-class MyAnswersPage extends StatefulWidget {
-  
-  MyAnswersPage({Key key, this.title}) : super(key: key);
-  
   final String title;
 
   @override
-  _MyAnswersPageState createState() => new _MyAnswersPageState();
+  _ForumPageState createState() => new _ForumPageState();
 }
 
-class _MyAnswersPageState extends State<MyAnswersPage> {
-  Map<String, dynamic> question;
+class _ForumPageState extends State<ForumPage> {
   // ignore: avoid_init_to_null
   File _image = null;
   final picker = ImagePicker();
@@ -32,11 +27,11 @@ class _MyAnswersPageState extends State<MyAnswersPage> {
   final TextEditingController _questionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  List answers = [];
+  List questions = [];
   bool isLoading = false;
 
   void initState() {
-    this.getAnswers();
+    this.getQuestions();
     super.initState();
   }
 
@@ -46,52 +41,27 @@ class _MyAnswersPageState extends State<MyAnswersPage> {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
 
-       
+        // print(_image.path);
       } else {
         print('No image selected.');
       }
     });
   }
 
-getQuestion(int id) async {
-
-  var jwt = await storage.read(key: "jwt");
-    var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/question/$id'),
-      headers: {HttpHeaders.authorizationHeader: jwt},
-    );
-   
-    if (response.statusCode == 200) {
-      
-      var item = json.decode(utf8.decode(response.bodyBytes))['data'];
-      setState(() {
-        question=item;
-     
-      });
-      return 1;
-    } 
-    return 0;
-}
-
-
-
-
-  getAnswers() async {
+  getQuestions() async {
     var jwt = await storage.read(key: "jwt");
-    var results = parseJwtPayLoad(jwt);
-    int id = results["UserID"];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/answersByUser/$id'),
+      Uri.parse('http://52.47.179.213:8081/api/v1/questions'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     if (response.statusCode == 200) {
       var items = json.decode(utf8.decode(response.bodyBytes))['data'];
       setState(() {
-        answers = items;
+        questions = items;
         isLoading = false;
       });
     } else {
-      answers = [];
+      questions = [];
       isLoading = false;
     }
   }
@@ -100,7 +70,7 @@ getQuestion(int id) async {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-
+      String username = results["username"];
     await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/question/'),
       body: convert.jsonEncode(
@@ -110,7 +80,8 @@ getQuestion(int id) async {
           "attachement": attachament,
           "closed": false,
           "answers": 0,
-          "questiontitle": title
+          "questiontitle": title,
+           "username": username
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
@@ -124,14 +95,14 @@ getQuestion(int id) async {
         centerTitle: false,
         elevation: 0.0,
         title: new Text(
-          "My responses",
+          "Forum",
           textScaleFactor: 1.3,
         ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
             color: Colors.white,
-            tooltip: 'Post something',
+            tooltip: 'Answer this question',
             onPressed: () async {
               showDialog(
                 context: context,
@@ -139,9 +110,17 @@ getQuestion(int id) async {
               );
             },
           ),
-          new IconButton(
-            icon: new Icon(Icons.search),
-            onPressed: _onSearchPressed,
+          IconButton(
+            icon: const Icon(
+              Icons.replay_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () {
+          Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => super.widget));
+            },
           ),
         ],
       ),
@@ -169,7 +148,7 @@ getQuestion(int id) async {
                         validator: (value) {
                           if (value.length < 5 || value.isEmpty) {
                             return 'Title is to short';
-                          } else if (value.length > 50) {
+                          } else if (value.length >50) {
                             return 'Title is to long';
                           }
                           return null;
@@ -240,6 +219,8 @@ getQuestion(int id) async {
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
+                            // If the form is valid, display a snackbar. In the real world,
+                            // you'd often call a server or save the information in a database.
 
                             var title = _questiontitleController.text;
                             var question = _questionController.text;
@@ -269,42 +250,32 @@ getQuestion(int id) async {
   }
 
   Widget getBody() {
-
-    if(answers.length==0){
-       return Center(child: Text("No answers :("));
-    }
-    if (answers.contains(null) || answers.length == 0 || isLoading) {
+    if (questions.contains(null) || questions.length < 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
-        itemCount: answers.length,
+        itemCount: questions.length,
         itemBuilder: (context, index) {
-          return entryItem(context, answers[index]);
+          return entryItem(context, questions[index]);
         });
   }
 
   void _onSearchPressed() {
     Navigator.pop(context);
   }
+}
 
-  Widget entryItem(context, item) {
-  var date = item['CreatedAt'];
-  DateTime now = DateTime.now();
-  var timezoneOffset1 = now.timeZoneOffset;
-  DateTime parseDate = new DateFormat("yyyy-MM-dd").parse(date);
-  parseDate = parseDate.add(timezoneOffset1);
-  var inputDate = DateTime.parse(parseDate.toString());
-  var outputFormat = DateFormat('dd/MM/yyyy');
-  var outputDate = outputFormat.format(inputDate);
- 
-  String answer = item['answer'];
-  
+Widget entryItem(context, item) {
+  var title = item['questiontitle'];
+  var answers = item['answers'];
+  String question = item['question'];
+  var closed = item['closed'];
 
-  if ( answer.length > 25) {
-     answer =  answer.substring(0, 17);
-    answer =  answer + " ...";
+  if (question.length > 20) {
+    question = question.substring(0, 23);
+    question = question + " ...";
   } else {
-     answer =  answer;
+    question = question;
   }
 
   return Container(
@@ -316,55 +287,30 @@ getQuestion(int id) async {
         borderRadius: new BorderRadius.all(new Radius.circular(15.0)),
       ),
       child: new ListTile(
-        title:new Text(answer),
-        subtitle: Text("Answered on: " +outputDate),
-      
+        title: new Text(title),
+        subtitle: new Text(question),
+        leading: IconButton(
+          icon: closed == true
+              ? const Icon(Icons.check_circle, color: Colors.green)
+              : const Icon(Icons.cancel, color: Colors.red),
+          onPressed: () {},
+        ),
         trailing: new Container(
           padding: const EdgeInsets.only(top: 10),
           child: Column(children: <Widget>[
-            
-            
+            new Icon(
+              Icons.comment,
+              color: Colors.black,
+            ),
+            new Text(answers.toString()),
           ]),
         ),
-        onTap: () async {
-         
-          var flag=await getQuestion(item['QuestionID']);
-          if(flag==1){
-              Navigator.push(
+        onTap: () {
+          Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ForumDetailPage(question: question)),
+                builder: (context) => ForumDetailPage(question: item)),
           );
-          }else{
-            showDialog(
-                    context: context,
-                    builder: (BuildContext context) => _showDialog(context),
-                  );
-          }
         },
       ));
 }
-
-Widget _showDialog(context) {
-    return AlertDialog(
-      title: new Text(
-        "Error",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
-      ),
-      content:
-          new Text("Question was deleted!", textAlign: TextAlign.center),
-      actions: <Widget>[
-        new TextButton(
-          child: new Text("Close"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
-  }
-}
-
-
-

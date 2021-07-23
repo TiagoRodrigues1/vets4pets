@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:Vets4Pets/screens/forumdetail.dart';
+import 'package:Vets4Pets/screens/forum/forumdetail.dart';
 import 'package:image_picker/image_picker.dart';
-import '../jwt.dart';
+import '../extras/jwt.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import '../../main.dart';
 import 'dart:convert' as convert;
-import 'colors.dart';
 
-class ForumPage extends StatefulWidget {
-  ForumPage({Key key, this.title}) : super(key: key);
+import '../extras/colors.dart';
+
+class MyQuestionsPage extends StatefulWidget {
+  MyQuestionsPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _ForumPageState createState() => new _ForumPageState();
+  _MyQuestionsPageState createState() => new _MyQuestionsPageState();
 }
 
-class _ForumPageState extends State<ForumPage> {
+class _MyQuestionsPageState extends State<MyQuestionsPage> {
   // ignore: avoid_init_to_null
   File _image = null;
   final picker = ImagePicker();
@@ -40,8 +41,6 @@ class _ForumPageState extends State<ForumPage> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-
-        // print(_image.path);
       } else {
         print('No image selected.');
       }
@@ -50,8 +49,12 @@ class _ForumPageState extends State<ForumPage> {
 
   getQuestions() async {
     var jwt = await storage.read(key: "jwt");
+    var results = parseJwtPayLoad(jwt);
+    int id = results["UserID"];
+
+
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/questions'),
+      Uri.parse('http://52.47.179.213:8081/api/v1/questionsByUser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     if (response.statusCode == 200) {
@@ -70,7 +73,6 @@ class _ForumPageState extends State<ForumPage> {
     var jwt = await storage.read(key: "jwt");
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
-      String username = results["username"];
     await http.post(
       Uri.parse('http://52.47.179.213:8081/api/v1/question/'),
       body: convert.jsonEncode(
@@ -80,8 +82,7 @@ class _ForumPageState extends State<ForumPage> {
           "attachement": attachament,
           "closed": false,
           "answers": 0,
-          "questiontitle": title,
-           "username": username
+          "questiontitle": title
         },
       ),
       headers: {HttpHeaders.authorizationHeader: jwt},
@@ -95,14 +96,14 @@ class _ForumPageState extends State<ForumPage> {
         centerTitle: false,
         elevation: 0.0,
         title: new Text(
-          "Forum",
+          "My posts",
           textScaleFactor: 1.3,
         ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
             color: Colors.white,
-            tooltip: 'Answer this question',
+            tooltip: 'New Post',
             onPressed: () async {
               showDialog(
                 context: context,
@@ -110,17 +111,9 @@ class _ForumPageState extends State<ForumPage> {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.replay_outlined,
-              color: Colors.white,
-            ),
-            onPressed: () {
-          Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => super.widget));
-            },
+          new IconButton(
+            icon: new Icon(Icons.search),
+            onPressed: _onSearchPressed,
           ),
         ],
       ),
@@ -148,7 +141,7 @@ class _ForumPageState extends State<ForumPage> {
                         validator: (value) {
                           if (value.length < 5 || value.isEmpty) {
                             return 'Title is to short';
-                          } else if (value.length >50) {
+                          } else if (value.length > 50) {
                             return 'Title is to long';
                           }
                           return null;
@@ -250,7 +243,10 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Widget getBody() {
-    if (questions.contains(null) || questions.length < 0 || isLoading) {
+    if(questions.length==0){
+       return Center(child: Text("No questions :("));
+    }
+    if (questions.contains(null) || questions.length == 0 || isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
@@ -314,3 +310,4 @@ Widget entryItem(context, item) {
         },
       ));
 }
+

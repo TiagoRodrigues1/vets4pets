@@ -1,10 +1,10 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
-import 'package:Vets4Pets/screens/register_screen.dart';
+import 'package:Vets4Pets/screens/start/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'leftside_menu.dart';
-import '../main.dart';
+import '../../main.dart';
 
 class LoginPage extends StatefulWidget {
   @override

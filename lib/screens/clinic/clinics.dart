@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import '../../main.dart';
 import 'clinicdetail.dart';
 
 class ClinicPage extends StatefulWidget {

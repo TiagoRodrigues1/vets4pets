@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:Vets4Pets/screens/graph.dart';
+import 'package:Vets4Pets/screens/extras/graph.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import '../../main.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert' show json;
 

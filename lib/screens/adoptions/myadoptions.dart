@@ -4,12 +4,12 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../main.dart';
+import '../../main.dart';
 import 'dart:convert' as convert;
 import 'addadoption.dart';
 import 'adoptiondetails.dart';
-import '../jwt.dart';
-import 'leftside_menu.dart';
+import '../extras/jwt.dart';
+import '../start/leftside_menu.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
 

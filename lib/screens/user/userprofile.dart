@@ -6,9 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import 'userappointments.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show base64, base64Encode;
-import '../main.dart';
+import '../../main.dart';
 import 'dart:convert' as convert;
-import '../jwt.dart';
+import '../extras/jwt.dart';
 
 class UserProfilePage extends StatefulWidget {
   final String picture, username, contact, email, name;
