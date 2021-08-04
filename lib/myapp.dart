@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:Vets4Pets/screens/leftside_menu.dart';
-import 'screens/login_screen.dart';
-import 'screens/leftside_menu.dart';
+import 'package:Vets4Pets/screens/start/leftside_menu.dart';
+import 'screens/start/login_screen.dart';
+import 'screens/start/leftside_menu.dart';
 import 'main.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
