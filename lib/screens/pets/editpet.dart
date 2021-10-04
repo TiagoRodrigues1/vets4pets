@@ -148,7 +148,7 @@ class _EditPetPageState extends State<EditPetPage> {
     int id_user = results["UserID"];
 
     var response = await http.put(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
+      Uri.parse('$SERVER_IP/animal/$id'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "name": name,

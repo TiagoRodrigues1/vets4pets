@@ -1,5 +1,6 @@
 import 'dart:convert' as convert;
-import 'dart:convert';
+import '../../main.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,7 +34,7 @@ class RegisterPageState extends State<RegisterPage> {
   attemptSignIn(String email, String username, String password, String name,
       String contact) async {
     var response = await http.post(
-        Uri.parse('http://52.47.179.213:8081/api/v1/auth/register'),
+        Uri.parse('$SERVER_IP/auth/register'),
         body: convert.jsonEncode(<String, dynamic>{
           "email": email,
           "password": password,

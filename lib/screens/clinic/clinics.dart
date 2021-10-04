@@ -30,7 +30,7 @@ class _ClinicPageState extends State<ClinicPage> {
   getClinics() async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/clinic'),
+      Uri.parse('$SERVER_IP/clinic'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 

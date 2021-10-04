@@ -57,7 +57,7 @@ getQuestion(int id) async {
 
   var jwt = await storage.read(key: "jwt");
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/question/$id'),
+      Uri.parse('$SERVER_IP/question/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
    
@@ -81,7 +81,7 @@ getQuestion(int id) async {
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/answersByUser/$id'),
+      Uri.parse('$SERVER_IP/answersByUser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     if (response.statusCode == 200) {
@@ -102,7 +102,7 @@ getQuestion(int id) async {
     int id = results["UserID"];
 
     await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/question/'),
+      Uri.parse('$SERVER_IP/question/'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "question": question,

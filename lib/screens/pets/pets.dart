@@ -52,7 +52,7 @@ class _IndexPageState extends State<PetsPage> {
 
     int id = results["UserID"];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
+      Uri.parse('$SERVER_IP/userAnimals/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
@@ -72,7 +72,7 @@ class _IndexPageState extends State<PetsPage> {
   deletePet(int id) async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.delete(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
+      Uri.parse('$SERVER_IP/animal/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 

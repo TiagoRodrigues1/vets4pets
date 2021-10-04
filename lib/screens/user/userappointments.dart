@@ -62,7 +62,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
 
     int id = results["UserID"];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/appointmentOfuser/$id'),
+      Uri.parse('$SERVER_IP/appointmentOfuser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
@@ -103,7 +103,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
     var jwt = await storage.read(key: "jwt");
 
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),
+      Uri.parse('$SERVER_IP/user/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     vet = null;
@@ -121,7 +121,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
     var jwt = await storage.read(key: "jwt");
 
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
+      Uri.parse('$SERVER_IP/animal/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     pet = null;
@@ -141,7 +141,7 @@ class _UserAppointmentsState extends State<UserAppointments> {
     int id = results["UserID"];
 
     var response = await http.put(
-      Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),
+      Uri.parse('$SERVER_IP/user/$id'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "username": widget.username,

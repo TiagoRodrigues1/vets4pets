@@ -41,7 +41,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
     var jwt = await storage.read(key: "jwt");
 
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/vaccine/$id'),
+      Uri.parse('$SERVER_IP/vaccine/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
    
@@ -61,7 +61,7 @@ class _PetsInfoState extends State<PetsInfoPage> {
     var jwt = await storage.read(key: "jwt");
 
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/prescription/$id'),
+      Uri.parse('$SERVER_IP/prescription/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     

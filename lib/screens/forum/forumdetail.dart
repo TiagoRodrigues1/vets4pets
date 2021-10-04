@@ -41,7 +41,7 @@ bool _switchValue;
     int id = results["UserID"];
     String username = results["username"];
     var response = await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/answer/'),
+      Uri.parse('$SERVER_IP/answer/'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "answer": answer,
@@ -61,7 +61,7 @@ bool _switchValue;
   getAnswers(int id) async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/answer/$id'),
+      Uri.parse('$SERVER_IP/answer/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
@@ -80,7 +80,7 @@ bool _switchValue;
   deleteQuestion(int id) async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.delete(
-      Uri.parse('http://52.47.179.213:8081/api/v1/question/$id'),
+      Uri.parse('$SERVER_IP/question/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
@@ -93,7 +93,7 @@ bool _switchValue;
   deleteAnswer(int id) async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.delete(
-      Uri.parse('http://52.47.179.213:8081/api/v1/answer/$id'),
+      Uri.parse('$SERVER_IP/answer/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
   
@@ -118,7 +118,7 @@ bool _switchValue;
     String username = results["username"];
 
     var response = await http.put(
-      Uri.parse('http://52.47.179.213:8081/api/v1/question/$id'),
+      Uri.parse('$SERVER_IP/question/$id'),
       body: convert.jsonEncode(
         <String, dynamic>{
          "question": question,

@@ -51,7 +51,7 @@ class _ForumPageState extends State<ForumPage> {
   getQuestions() async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/questions'),
+      Uri.parse('$SERVER_IP/questions'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     if (response.statusCode == 200) {
@@ -72,7 +72,7 @@ class _ForumPageState extends State<ForumPage> {
     int id = results["UserID"];
       String username = results["username"];
     await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/question/'),
+      Uri.parse('$SERVER_IP/question/'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "question": question,

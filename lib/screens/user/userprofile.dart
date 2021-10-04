@@ -57,7 +57,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     
 
     var response = await http.put(
-      Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),
+      Uri.parse('$SERVER_IP/user/$id'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "username": widget.username,

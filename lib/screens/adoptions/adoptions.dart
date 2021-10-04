@@ -24,7 +24,7 @@ class _IndexPageState extends State<AdoptionsPage> {
   getAdoptions() async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/adoptionByTime'),
+      Uri.parse('$SERVER_IP/adoptionByTime'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 

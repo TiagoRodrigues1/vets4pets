@@ -54,7 +54,7 @@ class _MyQuestionsPageState extends State<MyQuestionsPage> {
 
 
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/questionsByUser/$id'),
+      Uri.parse('$SERVER_IP/questionsByUser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     if (response.statusCode == 200) {
@@ -74,7 +74,7 @@ class _MyQuestionsPageState extends State<MyQuestionsPage> {
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
     await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/question/'),
+      Uri.parse('$SERVER_IP/question/'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "question": question,

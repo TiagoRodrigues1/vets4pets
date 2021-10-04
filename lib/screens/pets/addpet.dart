@@ -154,7 +154,7 @@ class _AddPetPageState extends State<AddPetPage> {
     int id = results["UserID"];
 
     await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/'),
+      Uri.parse('$SERVER_IP/animal/'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "name": name,

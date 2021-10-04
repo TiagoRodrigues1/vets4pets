@@ -111,7 +111,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     var results = parseJwtPayLoad(jwt);
     int id = results["UserID"];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
+      Uri.parse('$SERVER_IP/userAnimals/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
@@ -134,7 +134,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     String dates = date.toString();
     dates.replaceAll("T", " ");
     var result = await http.post(
-      Uri.parse('http://52.47.179.213:8081/api/v1/appointment/'),
+      Uri.parse('$SERVER_IP/appointment/'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "date": date.toIso8601String(),
@@ -165,7 +165,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     var jwt = await storage.read(key: "jwt");
 
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/appointment/vet/$id'),
+      Uri.parse('$SERVER_IP/appointment/vet/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     sleep(Duration(seconds: 1));
@@ -211,7 +211,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     var jwt = await storage.read(key: "jwt");
     int id = widget.clinic['ID'];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/vetsClinic/$id'),
+      Uri.parse('$SERVER_IP/vetsClinic/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 

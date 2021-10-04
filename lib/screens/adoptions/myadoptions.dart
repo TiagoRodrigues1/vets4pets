@@ -33,7 +33,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
     var jwt = await storage.read(key: "jwt");
 
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/adoption/1'),
+      Uri.parse('$SERVER_IP/adoption/1'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
@@ -71,7 +71,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
     int id_user = results["UserID"];
     String username = results["username"];
     var response = await http.put(
-      Uri.parse('http://52.47.179.213:8081/api/v1/adoption/$id'),
+      Uri.parse('$SERVER_IP/adoption/$id'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "name": name,
@@ -98,7 +98,7 @@ class _IndexPageState extends State<MyAdoptionsPage> {
   deleteAdoption(int id) async {
     var jwt = await storage.read(key: "jwt");
     var response = await http.delete(
-      Uri.parse('http://52.47.179.213:8081/api/v1/adoption/$id'),
+      Uri.parse('$SERVER_IP/adoption/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
    

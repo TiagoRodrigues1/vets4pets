@@ -3,7 +3,8 @@ import 'package:Vets4Pets/screens/start/leftside_menu.dart';
 import 'screens/start/login_screen.dart';
 import 'screens/start/leftside_menu.dart';
 import 'main.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+
 
 Map<int, Color> color = {
   50: Color.fromRGBO(82, 183, 136, .1),
@@ -22,10 +23,6 @@ MaterialColor colorCustom = MaterialColor(0xFF52B788, color);
 
 class MyApp extends StatelessWidget {
  
-
-
-
-
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
     if (jwt == null) return "";

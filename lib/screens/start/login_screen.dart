@@ -32,8 +32,9 @@ class _LongPageState extends State<LoginPage> {
 
   Future<int> attemptLogIn(
       String email, String password, BuildContext context) async {
+        
     var response = await http.post(
-        Uri.parse('http://52.47.179.213:8081/api/v1/auth/login'),
+        Uri.parse('$SERVER_IP/auth/login'),
         body: convert.jsonEncode(
             <String, String>{"password": password, "email": email}));
     var jsonResponse;

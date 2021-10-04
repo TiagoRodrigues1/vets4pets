@@ -54,7 +54,7 @@ class _NavDrawerState extends State<NavDrawer> {
 
     int id = results["UserID"];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/userAnimals/$id'),
+      Uri.parse('$SERVER_IP/userAnimals/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
@@ -82,7 +82,7 @@ class _NavDrawerState extends State<NavDrawer> {
     var jwt = await storage.read(key: "jwt");
     
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/user/$id'),
+      Uri.parse('$SERVER_IP/user/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     vet=null;
@@ -102,7 +102,7 @@ class _NavDrawerState extends State<NavDrawer> {
 
    
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/animal/$id'),
+      Uri.parse('$SERVER_IP/animal/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
     pet=null;
@@ -123,7 +123,7 @@ class _NavDrawerState extends State<NavDrawer> {
 
     int id = results["UserID"];
     var response = await http.get(
-      Uri.parse('http://52.47.179.213:8081/api/v1/appointmentOfuser/$id'),
+      Uri.parse('$SERVER_IP/appointmentOfuser/$id'),
       headers: {HttpHeaders.authorizationHeader: jwt},
     );
 
