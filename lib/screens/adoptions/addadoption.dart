@@ -174,7 +174,7 @@ class _AddAdoptionPageState extends State<AddAdoptionPage> {
     int id = results["UserID"];
     String username = results["username"];
     var response = await http.post(
-      Uri.parse('$SERVER_IP//adoption/'),
+      Uri.parse('$SERVER_IP/adoption/'),
       body: convert.jsonEncode(
         <String, dynamic>{
           "name": name,
