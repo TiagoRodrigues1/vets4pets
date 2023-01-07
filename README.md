@@ -1,28 +1,27 @@
 # LPI - VETS4PETS
 
-Projeto Realizado para cadeira de Laboratório de Projeto Integrado - Foi desenvolvida uma aplicação web e android veterinária, onde é possível toda a gestão de animais do utilizador, marcação de consultas na clinicas registadas na aplicação. Por parte do veterinário é possível ver todas as suas consultas adicionar vacinas a um animal, e prescrições.
+Project made for the end of university class "Laboratório de Projeto Integrado" - Developed a mobile and web app where is possible to manage all the information about a user's pet. Appointments can be made in registered vets. There's also a vet dashboard where he can check his appointments and manage the pets by adding dates to vaccination, vaccination taken and prescriptions.
 
 ## master
 
-Contem toda a api de suporte ás aplicações web e android - Com o docker instalado, basta fazer docker-compose up no diretório onde o código se encontra. 
+Has all the backend that supports both the web and mobile app. Theres a need of having docker installed and run it by using docker-compose.
 
 ## angular master
 
-Contém toda a aplicação web desenvolvida em angular - Com o node.js instalado e o com o devkit do angular instalado, basta fazer ng serve no diretório onde o código se encontra.
+Has all the web application made in angular. With node.js installed and devkit installed all you need to do is ng serve
 
 ## flutter master
 
-Contém toda a aplicação android desenvolvida em flutter - Basta correr o emulador no android studio e abrir a aplicação no emulador.
+Has all the mobile app made with flutter.
 
-## Próximos Passos
+## Next Steps
+- Forecast implementaion - Identify anomalies in pets of similar caracteristics (ex. weight variations).
+- OCR implementation - To be used by the prescriptions, billing ...
 
-- Implementar Forecast - identificando anomalias em animais de raça características semelhantes (e.g. variações de peso).
-- Implementar Integração de documentos em Papel c/ OCR (e.g., faturas / recibos do veterinário adicionados com base numa fotografia)
+## Presentation && Report
 
-## Apresentação && Relatório
-
-- Link da nossa [apresentação](https://docs.google.com/presentation/d/1YPRH3fQ700nfCGLi3LbFuLYgzijivEWY56ZyA_ADQ5M/edit?usp=sharing).
-- Nosso [relatório](https://github.com/TiagoRodrigues1/LPI/blob/master/Relatorio_Final_LPI.pdf)
+- Link to our [presentation](https://docs.google.com/presentation/d/1YPRH3fQ700nfCGLi3LbFuLYgzijivEWY56ZyA_ADQ5M/edit?usp=sharing).
+- Our [report](https://github.com/TiagoRodrigues1/LPI/blob/master/Relatorio_Final_LPI.pdf)
 
 ## Downloads
 
